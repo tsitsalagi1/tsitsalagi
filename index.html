@@ -4,164 +4,409 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tsitsalagi — Cherokee Citizen Action Hub</title>
-  <meta name="description" content="A nonpartisan Cherokee citizen action hub for voter registration, district awareness, issue tracking, public records, and sovereignty accountability." />
+  <meta name="description" content="An independent, nonpartisan Cherokee citizen action hub for voter registration, district awareness, issue tracking, public records, and sovereignty accountability." />
+  <meta property="og:title" content="Tsitsalagi — Cherokee Citizen Action Hub" />
+  <meta property="og:description" content="Register. Know your district. Track issues. Ask for records. Hold leaders accountable." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#2d4b3a" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
     <nav class="nav" aria-label="Main navigation">
-      <a class="brand" href="#top">Tsitsalagi</a>
+      <a class="brand" href="#top" aria-label="Tsitsalagi home">
+        <span class="brand-mark">Ꮳ</span>
+        <span>
+          <strong>Tsitsalagi</strong>
+          <small>Citizen Action Hub</small>
+        </span>
+      </a>
       <button class="menu-button" aria-expanded="false" aria-controls="nav-links">Menu</button>
       <div class="nav-links" id="nav-links">
-        <a href="#register">Register</a>
-        <a href="#council">Council</a>
+        <a href="#start">Start</a>
         <a href="#issues">Issues</a>
         <a href="#records">Records</a>
-        <a href="#take-action">Take Action</a>
+        <a href="#templates">Templates</a>
+        <a href="#submit">Submit</a>
       </div>
     </nav>
-    <section class="hero" id="top">
-      <p class="eyebrow">Independent • Nonpartisan • Citizen-led</p>
-      <h1>A Cherokee Citizen Action Hub</h1>
-      <p class="hero-text">Helping Cherokee Nation citizens register, find their district, contact leaders, track issues, request public records, and protect Cherokee sovereignty.</p>
-      <div class="hero-actions">
-        <a class="button primary" href="#register">Start Here</a>
-        <a class="button secondary" href="#issues">View Issue Tracker</a>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Independent • Nonpartisan • Citizen-led</p>
+        <h1>Register. Know your district. Track the issues.</h1>
+        <p class="hero-text">A simple public hub helping Cherokee Nation citizens find official resources, organize local issues, request records, and compare written answers from public officials.</p>
+        <div class="hero-actions" aria-label="Primary actions">
+          <a class="button primary" href="#start">Start here</a>
+          <a class="button secondary" href="#issues">View issue board</a>
+        </div>
+        <p class="notice">Not an official website of the Cherokee Nation, the Cherokee Nation Election Commission, any public office, or any candidate.</p>
       </div>
-      <p class="notice">This is not an official website of the Cherokee Nation, the Cherokee Nation Election Commission, or any candidate.</p>
+
+      <aside class="hero-panel" aria-label="Core project principles">
+        <h2>Citizen rules</h2>
+        <ul class="check-list">
+          <li>Use official sources whenever possible.</li>
+          <li>Ask one clear question at a time.</li>
+          <li>Publish responses fairly and without edits.</li>
+          <li>Do not collect private voter documents.</li>
+        </ul>
+      </aside>
     </section>
   </header>
 
-  <main>
-    <section class="section" id="register">
-      <div class="section-header">
-        <p class="eyebrow">Step 1</p>
-        <h2>Register and verify directly with the Election Commission</h2>
+  <main id="main">
+    <section class="section stats-section" aria-label="Why this matters">
+      <div class="stat-card">
+        <span class="stat-number">450k+</span>
+        <span class="stat-label">Cherokee Nation citizens worldwide</span>
       </div>
-      <div class="card-grid two">
-        <article class="card">
-          <h3>Important</h3>
-          <p>Being a Cherokee Nation citizen does not automatically mean a person is registered to vote in Cherokee Nation elections. Do not send private voter documents to this website.</p>
+      <div class="stat-card">
+        <span class="stat-number">17</span>
+        <span class="stat-label">Tribal Council members</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">10</span>
+        <span class="stat-label">Citizens each person can help register/verify</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">0</span>
+        <span class="stat-label">Private IDs this site should collect</span>
+      </div>
+    </section>
+
+    <section class="section" id="start">
+      <div class="section-header narrow">
+        <p class="eyebrow">Start here</p>
+        <h2>Three simple actions</h2>
+        <p>This project works best when it stays simple: official voter information, public issue tracking, and written answers.</p>
+      </div>
+      <div class="step-grid">
+        <article class="step-card">
+          <span class="step-number">01</span>
+          <h3>Verify voter registration</h3>
+          <p>Citizens should verify registration directly with the Cherokee Nation Election Commission. Do not send private voter documents to this website.</p>
+          <a href="https://election.cherokee.org/" target="_blank" rel="noopener">Open Election Commission</a>
         </article>
-        <article class="card">
-          <h3>Official contact</h3>
-          <p><strong>Cherokee Nation Election Commission</strong><br>
-          Phone: 918-458-5899<br>
-          Email: election-commission@cherokee.org<br>
-          Voter registration forms: election-forms@cherokee.org</p>
-          <p><a href="https://election.cherokee.org/" target="_blank" rel="noopener">Open official Election Commission site</a></p>
+        <article class="step-card">
+          <span class="step-number">02</span>
+          <h3>Know your councilor</h3>
+          <p>Find your district or at-large representation, then ask the same written question so answers can be compared fairly.</p>
+          <a href="https://www.cherokee.org/our-government/legislative-branch/" target="_blank" rel="noopener">Open Legislative Branch</a>
+        </article>
+        <article class="step-card">
+          <span class="step-number">03</span>
+          <h3>Track records publicly</h3>
+          <p>Keep a public log of questions, records requests, responses, and follow-up dates so citizens are not starting from zero every time.</p>
+          <a href="https://attorneygeneral.cherokee.org/foia-gra-requests/" target="_blank" rel="noopener">Open FOIA/GRA page</a>
         </article>
       </div>
     </section>
 
-    <section class="section" id="council">
+    <section class="section section-dark" id="issues">
       <div class="section-header">
-        <p class="eyebrow">Step 2</p>
-        <h2>Know your councilor and ask for written answers</h2>
+        <p class="eyebrow">Issue board</p>
+        <h2>Track issues as questions, not rumors</h2>
+        <p>Each issue should have a clear citizen question, a records request, and a source link. Keep it nonpartisan and focused on documents.</p>
       </div>
-      <div class="card-grid two">
-        <article class="card">
-          <h3>Why this matters</h3>
-          <p>The Tribal Council controls laws, oversight, and public accountability. Citizens should know who represents their district or at-large community.</p>
+
+      <div class="filter-row" role="group" aria-label="Issue filters">
+        <button class="filter-button active" data-filter="all">All</button>
+        <button class="filter-button" data-filter="governance">Governance</button>
+        <button class="filter-button" data-filter="services">Services</button>
+        <button class="filter-button" data-filter="sovereignty">Sovereignty</button>
+        <button class="filter-button" data-filter="infrastructure">Infrastructure</button>
+      </div>
+
+      <div class="issue-grid" id="issue-grid">
+        <article class="issue-card" data-category="governance">
+          <span class="tag">Governance</span>
+          <h3>Voter registration & district awareness</h3>
+          <p><strong>Citizen question:</strong> How many Cherokee citizens know whether they are registered, what district they are in, and who represents them?</p>
+          <p><strong>Records/data to track:</strong> official registration links, district maps, at-large voting information, public deadlines.</p>
+          <a href="https://election.cherokee.org/" target="_blank" rel="noopener">Official source</a>
         </article>
-        <article class="card">
-          <h3>Official council resources</h3>
-          <p><a href="https://www.cherokee.org/our-government/legislative-branch/" target="_blank" rel="noopener">Cherokee Nation Legislative Branch</a></p>
-          <p><a href="https://www.cherokee.org/our-government/legislative-branch/downloads/" target="_blank" rel="noopener">Council districts, map, and contact downloads</a></p>
+
+        <article class="issue-card" data-category="services infrastructure">
+          <span class="tag">Services</span>
+          <h3>EMS & rural emergency response</h3>
+          <p><strong>Citizen question:</strong> Where are response gaps, and what is the long-term plan for stronger Cherokee-controlled emergency coverage?</p>
+          <p><strong>Records/data to track:</strong> EMS coverage maps, response-time reports, county agreements, funding transfers, ambulance locations.</p>
+          <a href="https://anadisgoi.com/index.php/government-stories/chief-hoskin-declares-state-of-emergency-in-adair-county-over-county-ems-crisis" target="_blank" rel="noopener">Recent EMS source</a>
+        </article>
+
+        <article class="issue-card" data-category="services">
+          <span class="tag">Services</span>
+          <h3>Health access</h3>
+          <p><strong>Citizen question:</strong> Which communities face the longest drive times, appointment delays, or gaps in specialty care?</p>
+          <p><strong>Records/data to track:</strong> clinic locations, patient access reports, expansion plans, purchased/referred care data.</p>
+          <a href="https://health.cherokee.org/" target="_blank" rel="noopener">Official source</a>
+        </article>
+
+        <article class="issue-card" data-category="services infrastructure">
+          <span class="tag">Infrastructure</span>
+          <h3>Housing & home repair</h3>
+          <p><strong>Citizen question:</strong> How many citizens are waiting for housing, repairs, rental assistance, or accessibility improvements?</p>
+          <p><strong>Records/data to track:</strong> waitlists, program criteria, district-level spending, completed units, repair backlogs.</p>
+          <a href="https://www.hacn.org/" target="_blank" rel="noopener">Official source</a>
+        </article>
+
+        <article class="issue-card" data-category="services sovereignty">
+          <span class="tag">Culture</span>
+          <h3>Cherokee language</h3>
+          <p><strong>Citizen question:</strong> What actions most increase fluent speakers, language access, and community use of Cherokee?</p>
+          <p><strong>Records/data to track:</strong> class availability, immersion capacity, teacher pipeline, technology tools, funding by program.</p>
+          <a href="https://language.cherokee.org/" target="_blank" rel="noopener">Official source</a>
+        </article>
+
+        <article class="issue-card" data-category="infrastructure sovereignty">
+          <span class="tag">Infrastructure</span>
+          <h3>Broadband & digital sovereignty</h3>
+          <p><strong>Citizen question:</strong> Which Cherokee communities still lack reliable service, and how are broadband funds being mapped?</p>
+          <p><strong>Records/data to track:</strong> tower locations, coverage maps, federal grant reporting, service availability by community.</p>
+          <a href="https://anadisgoi.com/index.php/government-stories/chief-hoskin-deputy-chief-warner-sign-cherokee-connect-broadband-initiative" target="_blank" rel="noopener">Broadband source</a>
+        </article>
+
+        <article class="issue-card" data-category="infrastructure sovereignty">
+          <span class="tag">Environment</span>
+          <h3>Water, air & environmental protection</h3>
+          <p><strong>Citizen question:</strong> Are environmental programs, maps, and water-quality data visible enough for citizens to understand local risks?</p>
+          <p><strong>Records/data to track:</strong> monitoring data, water reports, permits, hazardous sites, pesticide/herbicide policies, public GIS layers.</p>
+          <a href="https://naturalresources.cherokee.org/environmental-programs/" target="_blank" rel="noopener">Official source</a>
+        </article>
+
+        <article class="issue-card" data-category="governance">
+          <span class="tag">Transparency</span>
+          <h3>FOIA/GRA & public records</h3>
+          <p><strong>Citizen question:</strong> Are agreements, spending, resolutions, opinions, and public records easy for citizens to find?</p>
+          <p><strong>Records/data to track:</strong> request dates, response deadlines, documents received, denied records, follow-up dates.</p>
+          <a href="https://attorneygeneral.cherokee.org/foia-gra-requests/" target="_blank" rel="noopener">Official source</a>
+        </article>
+
+        <article class="issue-card" data-category="sovereignty governance">
+          <span class="tag">Sovereignty</span>
+          <h3>State tax & retail transparency</h3>
+          <p><strong>Citizen question:</strong> What tax rules are retailers applying inside the reservation, and what written authority are they relying on?</p>
+          <p><strong>Records/data to track:</strong> receipts, retailer letters, exemption decisions, state guidance, tribal tax/license information.</p>
+          <a href="https://attorneygeneral.cherokee.org/legal-status-of-the-cherokee-nation-reservation/" target="_blank" rel="noopener">Reservation legal status</a>
+        </article>
+
+        <article class="issue-card" data-category="sovereignty governance">
+          <span class="tag">Sovereignty</span>
+          <h3>Municipal agreements & cross-deputization</h3>
+          <p><strong>Citizen question:</strong> Which city/county agreements affect Cherokee citizens, and are roles, training, fines, reporting, and authority transparent?</p>
+          <p><strong>Records/data to track:</strong> MOUs, cross-deputization terms, ticket procedures, data-sharing, court/fine handling, complaint process.</p>
+          <a href="https://www.cherokee.org/all-services/office-of-the-marshal/public-safety/" target="_blank" rel="noopener">Public safety source</a>
+        </article>
+
+        <article class="issue-card" data-category="services governance">
+          <span class="tag">At-large</span>
+          <h3>At-large citizen access</h3>
+          <p><strong>Citizen question:</strong> Do citizens outside the reservation receive clear voting, services, and communication access?</p>
+          <p><strong>Records/data to track:</strong> at-large town halls, ballot access, service eligibility, mailing lists, language/records access.</p>
+          <a href="https://cherokeesatlarge.org/" target="_blank" rel="noopener">At-large resource</a>
+        </article>
+
+        <article class="issue-card" data-category="services governance">
+          <span class="tag">Education</span>
+          <h3>Education & tribal consultation</h3>
+          <p><strong>Citizen question:</strong> Are schools and agencies consulting with Cherokee Nation and making compliance visible to citizens?</p>
+          <p><strong>Records/data to track:</strong> consultation notices, signed affirmations, affected districts, curriculum and language access, grant compliance.</p>
+          <a href="https://www.cherokee.org/all-services/education-services/" target="_blank" rel="noopener">Official source</a>
         </article>
       </div>
     </section>
 
-    <section class="section" id="issues">
+    <section class="section" id="tracker">
       <div class="section-header">
-        <p class="eyebrow">Step 3</p>
-        <h2>Issue tracker</h2>
-        <p>Use this public tracker to keep issues organized. Replace these sample rows with real updates as citizens send letters, ask questions, and receive responses.</p>
+        <p class="eyebrow">Public tracker</p>
+        <h2>Use this table format</h2>
+        <p>Replace the sample rows with real updates. The goal is to show what was asked, who was contacted, and what came back.</p>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
               <th>Issue</th>
-              <th>Citizen Ask</th>
-              <th>Who Was Contacted</th>
+              <th>Question asked</th>
+              <th>Office/contacted</th>
               <th>Status</th>
-              <th>Next Step</th>
+              <th>Next action</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>EMS</td>
-              <td>Stronger Cherokee-controlled emergency coverage</td>
+              <td>What is the long-term plan for rural response coverage?</td>
               <td>Council / Administration</td>
-              <td>Open</td>
-              <td>Request written positions and records</td>
+              <td><span class="status open">Open</span></td>
+              <td>Request response-time records and agreements</td>
             </tr>
             <tr>
               <td>Voting</td>
-              <td>Help citizens verify voter registration</td>
-              <td>Election Commission / Citizens</td>
-              <td>Ongoing</td>
-              <td>Register 10 citizens each</td>
+              <td>How can citizens verify registration and district status?</td>
+              <td>Election Commission / citizens</td>
+              <td><span class="status active">Ongoing</span></td>
+              <td>Register/verify 10 citizens each</td>
             </tr>
             <tr>
-              <td>Public Records</td>
-              <td>More transparency on agreements, funding, and MOUs</td>
-              <td>Relevant CN offices</td>
-              <td>Open</td>
-              <td>Send FOIA/GRA requests when needed</td>
+              <td>Records</td>
+              <td>Where are public MOUs, spending records, and opinions posted?</td>
+              <td>OAG / relevant offices</td>
+              <td><span class="status draft">Draft</span></td>
+              <td>Prepare FOIA/GRA request log</td>
+            </tr>
+            <tr>
+              <td>Tax</td>
+              <td>What authority are retailers relying on for reservation sales tax?</td>
+              <td>Retailers / tax offices</td>
+              <td><span class="status research">Research</span></td>
+              <td>Collect receipts and written policy responses</td>
+            </tr>
+            <tr>
+              <td>Language</td>
+              <td>What would increase access to Cherokee classes and tools?</td>
+              <td>Language Department / Council</td>
+              <td><span class="status research">Research</span></td>
+              <td>Track classes, waitlists, teacher pipeline</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section class="section" id="records">
-      <div class="section-header">
-        <p class="eyebrow">Step 4</p>
-        <h2>Public records log</h2>
-        <p>Keep a public memory bank so citizens can see what was asked, when it was asked, and what answer came back.</p>
+    <section class="section split" id="records">
+      <div class="section-header sticky-note">
+        <p class="eyebrow">Records</p>
+        <h2>Build a public memory bank</h2>
+        <p>A public records log prevents the same questions from being asked over and over with no shared answer.</p>
       </div>
-      <div class="card-grid two">
-        <article class="card">
-          <h3>FOIA/GRA resources</h3>
-          <p>Use the official Cherokee Nation Office of the Attorney General FOIA/GRA page for forms and reports.</p>
-          <p><a href="https://attorneygeneral.cherokee.org/foia-gra-requests/" target="_blank" rel="noopener">Open official FOIA/GRA page</a></p>
-        </article>
-        <article class="card">
+      <div class="records-list">
+        <article class="record-card">
           <h3>Suggested log columns</h3>
-          <p>Date sent • Office • Topic • Response received? • Documents received? • Follow-up needed?</p>
+          <p>Date sent • Office • Topic • Request text • Response due • Response received • Documents received • Follow-up needed</p>
+        </article>
+        <article class="record-card">
+          <h3>Privacy rule</h3>
+          <p>Redact private addresses, phone numbers, medical facts, minors’ names, signatures, IDs, and citizenship numbers before posting anything public.</p>
+        </article>
+        <article class="record-card">
+          <h3>Document rule</h3>
+          <p>Post the original document, a short neutral summary, and a link to the next action. Do not change quoted answers.</p>
         </article>
       </div>
     </section>
 
-    <section class="section highlight" id="take-action">
+    <section class="section section-soft" id="templates">
       <div class="section-header">
-        <p class="eyebrow">Copy-paste action</p>
-        <h2>Ask one clear question at a time</h2>
+        <p class="eyebrow">Copy-paste templates</p>
+        <h2>Make citizen action easy</h2>
       </div>
-      <div class="copy-box">
-        <button class="copy-button" data-copy-target="ems-email">Copy</button>
-        <pre id="ems-email">Subject: Request for Public Answer on EMS Coverage
+
+      <div class="template-grid">
+        <article class="template-card">
+          <div class="template-title">
+            <h3>Register 10 message</h3>
+            <button class="copy-button" data-copy-target="register-template">Copy</button>
+          </div>
+          <pre id="register-template">Osiyo — I’m helping with a simple Cherokee Citizen 10 effort.
+
+Do you know if you are registered to vote in Cherokee Nation elections and what district you are in?
+
+A Cherokee citizenship card is not the same thing as voter registration. Please verify directly with the Cherokee Nation Election Commission:
+
+918-458-5899
+election-commission@cherokee.org
+https://election.cherokee.org/
+
+No party. No candidate. Just Cherokee citizens helping Cherokee citizens.</pre>
+        </article>
+
+        <article class="template-card">
+          <div class="template-title">
+            <h3>Ask your councilor</h3>
+            <button class="copy-button" data-copy-target="council-template">Copy</button>
+          </div>
+          <pre id="council-template">Subject: Request for Written Public Answer on [Issue]
 
 Councilor [Name],
 
 I am a Cherokee Nation citizen asking for a written public response.
 
-What specific action do you support to improve EMS response, ambulance coverage, and emergency medical care inside the Cherokee Nation Reservation without simply relying on county governments?
+Question: [Ask one clear question here.]
 
-Please explain whether you support Cherokee Nation building its own stronger EMS system, funding counties, or another model.
+Please identify any existing law, policy, funding source, agreement, report, or public record that explains the current position of the Cherokee Nation on this issue.
 
 Wado,
 [Name]
 Cherokee Nation citizen</pre>
+        </article>
+
+        <article class="template-card">
+          <div class="template-title">
+            <h3>FOIA/GRA request</h3>
+            <button class="copy-button" data-copy-target="records-template">Copy</button>
+          </div>
+          <pre id="records-template">Subject: FOIA/GRA Request — [Topic]
+
+To the appropriate records officer:
+
+I request copies of public records from January 1, 2020 to present concerning:
+
+[Describe the records narrowly: agreements, funding, reports, maps, audits, policies, emails, meeting minutes, or contracts.]
+
+Please provide records electronically if available. If any portion is withheld, please identify the legal basis for withholding and release all reasonably segregable non-exempt portions.
+
+Wado,
+[Name]</pre>
+        </article>
+
+        <article class="template-card">
+          <div class="template-title">
+            <h3>Submit an issue</h3>
+            <button class="copy-button" data-copy-target="issue-template">Copy</button>
+          </div>
+          <pre id="issue-template">Issue title:
+
+What happened?
+
+What community/district is affected?
+
+What public record would prove it?
+
+Who has already been contacted?
+
+What response was received?
+
+What is the next clear question?</pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="submit">
+      <div class="cta-card">
+        <p class="eyebrow">Next build step</p>
+        <h2>Add a real submission form later</h2>
+        <p>For now, use a simple email address or Google Form. Do not collect CDIB numbers, citizenship numbers, dates of birth, signatures, IDs, voter applications, or private legal/medical documents.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="mailto:contact@tsitsalagi.com?subject=Tsitsalagi%20Issue%20Submission">Email an issue</a>
+          <a class="button secondary" href="#templates">Use template</a>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p><strong>Tsitsalagi</strong> — Independent Cherokee citizen action hub.</p>
-    <p>This site does not collect citizenship numbers, CDIB numbers, dates of birth, signatures, IDs, voter applications, or private legal/medical documents.</p>
+    <div>
+      <strong>Tsitsalagi</strong>
+      <p>Independent Cherokee citizen action hub. Built for public information, nonpartisan accountability, and citizen-to-citizen organizing.</p>
+    </div>
+    <div>
+      <strong>Privacy promise</strong>
+      <p>This site should not collect citizenship numbers, CDIB numbers, birth dates, signatures, IDs, voter applications, or private legal/medical documents.</p>
+    </div>
   </footer>
 
   <script src="script.js"></script>
