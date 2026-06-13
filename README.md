@@ -1,19 +1,93 @@
-# Tsitsalagi upgraded site
+# Tsitsalagi Community Board
 
-Static files for the upgraded Tsitsalagi.com citizen action hub.
+A free static website for **Tsitsalagi.com** that works as a Cherokee community listings board and citizen issue hub.
 
-## Upload/update steps
-1. Unzip this folder.
-2. Replace the files in your GitHub `tsitsalagi` repository with these files:
-   - `index.html`
-   - `styles.css`
-   - `script.js`
-   - `README.md`
-3. Commit the changes to the `main` branch.
-4. Cloudflare Workers/Pages should redeploy automatically.
-5. Test `https://tsitsalagi.com` after the deployment completes.
+It is designed to be hosted free on Cloudflare Pages / Workers and updated from Google Sheets.
 
-## Notes
-- This site is static. No database or private voter data is collected.
-- The issue cards are sample public accountability categories. Replace them with verified local records and official responses as you collect them.
-- Keep the disclaimer visible so visitors know this is independent and not official Cherokee Nation government.
+## Files
+
+- `index.html` — public website
+- `styles.css` — design
+- `script.js` — loads/filter listings, issues, resources
+- `config.js` — change Google Sheet CSV links, form links, and contact email
+- `admin-setup.html` — setup guide for Google Forms + Sheets
+- `data/listings.csv` — starter local listing data
+- `data/issues.csv` — starter local issue data
+- `data/resources.csv` — starter local resources
+
+## How updates work
+
+The site reads CSV data. Right now it reads local CSV files in the `data/` folder. Later you can replace those with published Google Sheets CSV links in `config.js`.
+
+Example:
+
+```js
+window.TSITSALAGI_CONFIG = {
+  listingsCsvUrl: "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv",
+  issuesCsvUrl: "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv",
+  resourcesCsvUrl: "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv",
+  listingFormUrl: "https://forms.gle/...",
+  issueFormUrl: "https://forms.gle/...",
+  contactEmail: "contact@tsitsalagi.com",
+  showUnapproved: false
+};
+```
+
+## Google Sheet column formats
+
+### Listings
+
+```csv
+Approved,Title,Category,Area,Price,Description,Contact,Posted,Expires,Tags
+```
+
+Contact examples:
+
+- `email: name@example.com`
+- `text: 555-555-0101`
+- `phone: 555-555-0101`
+- `link: https://example.com`
+
+### Issues
+
+```csv
+Approved,Title,Category,Status,Area,Question,Ask,Source,LastUpdated
+```
+
+Good status examples:
+
+- `Open`
+- `Researching`
+- `Waiting on response`
+- `Resolved`
+
+### Resources
+
+```csv
+Approved,Title,Category,Description,Link
+```
+
+## Moderation rule
+
+Do not publish raw Google Form responses. Use a private response sheet, then copy approved rows to an approved public sheet or approved tab. Publish only approved data.
+
+## Prohibited items
+
+Do not allow: firearms, ammunition, weapons, explosives, alcohol, tobacco, nicotine, cannabis, THC, CBD, drugs, adult content, counterfeit goods, stolen items, hazardous materials, fake IDs, private documents, or anything illegal.
+
+## Updating on GitHub from a phone
+
+1. Open the GitHub repository.
+2. Use desktop site if the upload button is hidden.
+3. Upload these files and folders.
+4. Commit to `main`.
+5. Cloudflare should redeploy automatically.
+
+## Next step
+
+After uploading this version, create two Google Forms:
+
+1. Submit a Listing
+2. Submit a Public Issue
+
+Then create approved Google Sheets and paste the published CSV links into `config.js`.

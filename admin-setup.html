@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tsitsalagi Setup Guide</title>
+  <meta name="theme-color" content="#213f32" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="setup-page">
+  <header class="simple-header">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Ꮳ</span>
+      <span><strong>Tsitsalagi</strong><small>Setup guide</small></span>
+    </a>
+  </header>
+  <main class="section setup-main">
+    <div class="section-header">
+      <p class="eyebrow">Admin setup</p>
+      <h1>Make the site easy to update</h1>
+      <p>Use Google Forms for submissions, Google Sheets for moderation, and public CSV links for approved listings, issues, and resources.</p>
+    </div>
+
+    <article class="setup-card big">
+      <h2>1. Create three Google Sheets</h2>
+      <p>You can also use one spreadsheet with three approved tabs. The important part is that only approved rows are published.</p>
+      <div class="schema-grid">
+        <div>
+          <h3>Approved Listings columns</h3>
+          <code>Approved, Title, Category, Area, Price, Description, Contact, Posted, Expires, Tags</code>
+        </div>
+        <div>
+          <h3>Approved Issues columns</h3>
+          <code>Approved, Title, Category, Status, Area, Question, Ask, Source, LastUpdated</code>
+        </div>
+        <div>
+          <h3>Resources columns</h3>
+          <code>Approved, Title, Category, Description, Link</code>
+        </div>
+      </div>
+    </article>
+
+    <article class="setup-card big">
+      <h2>2. Publish the approved tabs as CSV</h2>
+      <ol>
+        <li>Open the Google Sheet.</li>
+        <li>File → Share → Publish to web.</li>
+        <li>Choose the approved tab only.</li>
+        <li>Choose CSV / comma-separated values.</li>
+        <li>Copy the published CSV link.</li>
+      </ol>
+      <p><strong>Do not publish the raw form response tab</strong> unless you are okay with unreviewed submissions being public.</p>
+    </article>
+
+    <article class="setup-card big">
+      <h2>3. Paste links into config.js</h2>
+      <pre><code>window.TSITSALAGI_CONFIG = {
+  listingsCsvUrl: "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv",
+  issuesCsvUrl: "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv",
+  resourcesCsvUrl: "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv",
+  listingFormUrl: "https://forms.gle/...",
+  issueFormUrl: "https://forms.gle/...",
+  contactEmail: "your-email@example.com"
+};</code></pre>
+      <p>After this, daily updates happen in Google Sheets. GitHub only needs changes when you redesign the site.</p>
+    </article>
+
+    <article class="setup-card big">
+      <h2>4. Moderation workflow</h2>
+      <ol>
+        <li>Citizen submits a form.</li>
+        <li>You review the private response.</li>
+        <li>Copy approved rows to the approved public tab.</li>
+        <li>Delete or ignore unsafe/incomplete submissions.</li>
+        <li>The public site updates automatically after Google refreshes the CSV.</li>
+      </ol>
+    </article>
+
+    <article class="setup-card big">
+      <h2>5. Start narrow</h2>
+      <p>Launch with a few categories first: Free/Giveaway, Buy/Sell/Trade, Services, Jobs/Side Work, Events, and Citizen Issues. Add more only after moderation is manageable.</p>
+    </article>
+  </main>
+</body>
+</html>

@@ -1,12 +1,23 @@
+const config = window.TSITSALAGI_CONFIG || {};
+const approvedValue = (value) => String(value || '').trim().toLowerCase();
+const isApproved = (row) => config.showUnapproved || ['yes', 'true', 'approved', '1', 'y'].includes(approvedValue(row.Approved));
+
+const state = {
+  listings: [],
+  issues: [],
+  resources: [],
+  listingFilters: { search: '', category: 'all', area: 'all' },
+  issueFilters: { search: '', category: 'all', status: 'all' },
+  resourceFilters: { search: '', category: 'all' }
+};
+
 const menuButton = document.querySelector('.menu-button');
 const navLinks = document.querySelector('#nav-links');
-
 if (menuButton && navLinks) {
   menuButton.addEventListener('click', () => {
     const isOpen = navLinks.classList.toggle('open');
     menuButton.setAttribute('aria-expanded', String(isOpen));
   });
-
   navLinks.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('open');
@@ -15,41 +26,329 @@ if (menuButton && navLinks) {
   });
 }
 
-const filterButtons = document.querySelectorAll('.filter-button');
-const issueCards = document.querySelectorAll('.issue-card');
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
 
-filterButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const filter = button.dataset.filter;
-    filterButtons.forEach((btn) => btn.classList.remove('active'));
-    button.classList.add('active');
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    const next = text[i + 1];
 
-    issueCards.forEach((card) => {
-      const categories = card.dataset.category || '';
-      const shouldShow = filter === 'all' || categories.includes(filter);
-      card.hidden = !shouldShow;
-    });
-  });
-});
-
-document.querySelectorAll('.copy-button').forEach((button) => {
-  button.addEventListener('click', async () => {
-    const targetId = button.getAttribute('data-copy-target');
-    const target = document.getElementById(targetId);
-    if (!target) return;
-
-    try {
-      await navigator.clipboard.writeText(target.innerText);
-      const original = button.textContent;
-      button.textContent = 'Copied';
-      setTimeout(() => { button.textContent = original; }, 1500);
-    } catch (error) {
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(target);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      button.textContent = 'Selected';
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        cell += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      row.push(cell);
+      cell = '';
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') i += 1;
+      row.push(cell);
+      if (row.some((value) => value.trim() !== '')) rows.push(row);
+      row = [];
+      cell = '';
+    } else {
+      cell += char;
     }
+  }
+
+  row.push(cell);
+  if (row.some((value) => value.trim() !== '')) rows.push(row);
+
+  if (!rows.length) return [];
+  const headers = rows.shift().map((header) => header.trim());
+  return rows.map((values) => {
+    const item = {};
+    headers.forEach((header, index) => {
+      item[header] = (values[index] || '').trim();
+    });
+    return item;
   });
-});
+}
+
+async function loadCsv(url) {
+  const response = await fetch(url, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Could not load ${url}`);
+  return parseCsv(await response.text());
+}
+
+function uniqueValues(items, key) {
+  return [...new Set(items.map((item) => item[key]).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+}
+
+function fillSelect(selectId, values, label) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = `<option value="all">All ${label}</option>`;
+  values.forEach((value) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  });
+  if ([...select.options].some((option) => option.value === current)) select.value = current;
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function normalize(value) {
+  return String(value || '').toLowerCase().trim();
+}
+
+function matchesSearch(item, query, keys) {
+  if (!query) return true;
+  const haystack = keys.map((key) => item[key] || '').join(' ').toLowerCase();
+  return haystack.includes(query.toLowerCase());
+}
+
+function contactLink(contact) {
+  const raw = String(contact || '').trim();
+  if (!raw) return '';
+  const lower = raw.toLowerCase();
+  let href = '';
+  let label = raw;
+
+  if (lower.startsWith('email:')) {
+    const email = raw.slice(raw.indexOf(':') + 1).trim();
+    href = `mailto:${email}`;
+    label = 'Email';
+  } else if (lower.startsWith('text:') || lower.startsWith('phone:')) {
+    const phone = raw.slice(raw.indexOf(':') + 1).trim();
+    href = `tel:${phone.replace(/[^+\d]/g, '')}`;
+    label = lower.startsWith('text:') ? 'Text / call' : 'Call';
+  } else if (lower.startsWith('link:')) {
+    href = raw.slice(raw.indexOf(':') + 1).trim();
+    label = 'Open link';
+  } else if (lower.includes('@') && !lower.includes(' ')) {
+    href = `mailto:${raw}`;
+    label = 'Email';
+  } else if (lower.startsWith('http')) {
+    href = raw;
+    label = 'Open link';
+  }
+
+  if (!href) return `<span>${escapeHtml(raw)}</span>`;
+  return `<a class="contact-link" href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+}
+
+function renderListings() {
+  const grid = document.getElementById('listing-grid');
+  const count = document.getElementById('listing-count');
+  if (!grid) return;
+
+  const filters = state.listingFilters;
+  const items = state.listings
+    .filter(isApproved)
+    .filter((item) => filters.category === 'all' || item.Category === filters.category)
+    .filter((item) => filters.area === 'all' || item.Area === filters.area)
+    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Area', 'Price', 'Description', 'Tags']));
+
+  count.textContent = `${items.length} listing${items.length === 1 ? '' : 's'} shown`;
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state">No listings match those filters. Clear filters or check back later.</div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map((item) => `
+    <article class="listing-card">
+      <div class="card-top">
+        <span class="tag">${escapeHtml(item.Category || 'Listing')}</span>
+        <span class="price">${escapeHtml(item.Price || 'See details')}</span>
+      </div>
+      <h3>${escapeHtml(item.Title)}</h3>
+      <div class="meta-list">
+        ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
+        ${item.Posted ? `<span class="pill">Posted ${escapeHtml(item.Posted)}</span>` : ''}
+        ${item.Expires ? `<span class="pill">Expires ${escapeHtml(item.Expires)}</span>` : ''}
+      </div>
+      <p class="card-description">${escapeHtml(item.Description)}</p>
+      <div class="card-contact">
+        <span>Contact seller/poster directly. Meet safely.</span>
+        ${contactLink(item.Contact)}
+      </div>
+    </article>
+  `).join('');
+}
+
+function statusClass(status) {
+  const s = normalize(status);
+  if (s.includes('wait')) return 'status-waiting';
+  if (s.includes('research')) return 'status-researching';
+  if (s.includes('resolved') || s.includes('closed')) return 'status-resolved';
+  return 'status-open';
+}
+
+function renderIssues() {
+  const grid = document.getElementById('issue-grid');
+  const count = document.getElementById('issue-count');
+  if (!grid) return;
+
+  const filters = state.issueFilters;
+  const items = state.issues
+    .filter(isApproved)
+    .filter((item) => filters.category === 'all' || item.Category === filters.category)
+    .filter((item) => filters.status === 'all' || item.Status === filters.status)
+    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Status', 'Area', 'Question', 'Ask']));
+
+  count.textContent = `${items.length} issue${items.length === 1 ? '' : 's'} shown`;
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state">No issues match those filters. Clear filters or add a new approved issue.</div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map((item) => `
+    <article class="issue-card">
+      <div class="card-top">
+        <span class="tag clay">${escapeHtml(item.Category || 'Issue')}</span>
+        <span class="pill ${statusClass(item.Status)}">${escapeHtml(item.Status || 'Open')}</span>
+      </div>
+      <h3>${escapeHtml(item.Title)}</h3>
+      <div class="meta-list">
+        ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
+        ${item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.LastUpdated)}</span>` : ''}
+      </div>
+      <p class="question"><strong>Citizen question:</strong> ${escapeHtml(item.Question)}</p>
+      <p class="ask"><strong>Public ask:</strong> ${escapeHtml(item.Ask)}</p>
+      <footer>
+        ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
+      </footer>
+    </article>
+  `).join('');
+}
+
+function renderResources() {
+  const grid = document.getElementById('resource-grid');
+  if (!grid) return;
+
+  const filters = state.resourceFilters;
+  const items = state.resources
+    .filter(isApproved)
+    .filter((item) => filters.category === 'all' || item.Category === filters.category)
+    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Description']));
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state">No resources match those filters.</div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map((item) => `
+    <article class="resource-card">
+      <span class="tag gold">${escapeHtml(item.Category || 'Resource')}</span>
+      <h3>${escapeHtml(item.Title)}</h3>
+      <p>${escapeHtml(item.Description)}</p>
+      ${item.Link ? `<a href="${escapeHtml(item.Link)}" target="_blank" rel="noopener">Open resource</a>` : ''}
+    </article>
+  `).join('');
+}
+
+function setupFilters() {
+  fillSelect('listing-category', uniqueValues(state.listings.filter(isApproved), 'Category'), 'categories');
+  fillSelect('listing-area', uniqueValues(state.listings.filter(isApproved), 'Area'), 'areas');
+  fillSelect('issue-category', uniqueValues(state.issues.filter(isApproved), 'Category'), 'categories');
+  fillSelect('issue-status', uniqueValues(state.issues.filter(isApproved), 'Status'), 'statuses');
+  fillSelect('resource-category', uniqueValues(state.resources.filter(isApproved), 'Category'), 'categories');
+
+  const listingSearch = document.getElementById('listing-search');
+  const listingCategory = document.getElementById('listing-category');
+  const listingArea = document.getElementById('listing-area');
+  const issueSearch = document.getElementById('issue-search');
+  const issueCategory = document.getElementById('issue-category');
+  const issueStatus = document.getElementById('issue-status');
+  const resourceSearch = document.getElementById('resource-search');
+  const resourceCategory = document.getElementById('resource-category');
+
+  listingSearch?.addEventListener('input', (event) => { state.listingFilters.search = event.target.value; renderListings(); });
+  listingCategory?.addEventListener('change', (event) => { state.listingFilters.category = event.target.value; renderListings(); });
+  listingArea?.addEventListener('change', (event) => { state.listingFilters.area = event.target.value; renderListings(); });
+  document.getElementById('clear-listing-filters')?.addEventListener('click', () => {
+    state.listingFilters = { search: '', category: 'all', area: 'all' };
+    if (listingSearch) listingSearch.value = '';
+    if (listingCategory) listingCategory.value = 'all';
+    if (listingArea) listingArea.value = 'all';
+    renderListings();
+  });
+
+  issueSearch?.addEventListener('input', (event) => { state.issueFilters.search = event.target.value; renderIssues(); });
+  issueCategory?.addEventListener('change', (event) => { state.issueFilters.category = event.target.value; renderIssues(); });
+  issueStatus?.addEventListener('change', (event) => { state.issueFilters.status = event.target.value; renderIssues(); });
+  document.getElementById('clear-issue-filters')?.addEventListener('click', () => {
+    state.issueFilters = { search: '', category: 'all', status: 'all' };
+    if (issueSearch) issueSearch.value = '';
+    if (issueCategory) issueCategory.value = 'all';
+    if (issueStatus) issueStatus.value = 'all';
+    renderIssues();
+  });
+
+  resourceSearch?.addEventListener('input', (event) => { state.resourceFilters.search = event.target.value; renderResources(); });
+  resourceCategory?.addEventListener('change', (event) => { state.resourceFilters.category = event.target.value; renderResources(); });
+}
+
+function setupLinks() {
+  const listingLink = document.getElementById('listing-form-link');
+  const issueLink = document.getElementById('issue-form-link');
+  const contactLinkEl = document.getElementById('contact-link');
+  const listingNote = document.getElementById('listing-form-note');
+  const issueNote = document.getElementById('issue-form-note');
+
+  if (config.listingFormUrl) {
+    listingLink.href = config.listingFormUrl;
+    if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
+  } else {
+    listingLink.href = 'admin-setup.html';
+  }
+
+  if (config.issueFormUrl) {
+    issueLink.href = config.issueFormUrl;
+    if (issueNote) issueNote.textContent = 'Submissions are reviewed before appearing publicly.';
+  } else {
+    issueLink.href = 'admin-setup.html';
+  }
+
+  if (config.contactEmail) {
+    contactLinkEl.href = `mailto:${config.contactEmail}`;
+  }
+}
+
+async function init() {
+  setupLinks();
+  const listingGrid = document.getElementById('listing-grid');
+  const issueGrid = document.getElementById('issue-grid');
+  const resourceGrid = document.getElementById('resource-grid');
+
+  try {
+    const [listings, issues, resources] = await Promise.all([
+      loadCsv(config.listingsCsvUrl || 'data/listings.csv'),
+      loadCsv(config.issuesCsvUrl || 'data/issues.csv'),
+      loadCsv(config.resourcesCsvUrl || 'data/resources.csv')
+    ]);
+    state.listings = listings;
+    state.issues = issues;
+    state.resources = resources;
+    setupFilters();
+    renderListings();
+    renderIssues();
+    renderResources();
+  } catch (error) {
+    console.error(error);
+    if (listingGrid) listingGrid.innerHTML = `<div class="empty-state">Could not load listings. Check the CSV link in config.js.</div>`;
+    if (issueGrid) issueGrid.innerHTML = `<div class="empty-state">Could not load issues. Check the CSV link in config.js.</div>`;
+    if (resourceGrid) resourceGrid.innerHTML = `<div class="empty-state">Could not load resources. Check the CSV link in config.js.</div>`;
+  }
+}
+
+init();
