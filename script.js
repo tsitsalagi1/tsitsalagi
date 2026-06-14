@@ -137,7 +137,7 @@ function contactReportUrl(options = {}) {
   const params = new URLSearchParams();
   const email = options.email || adminContactEmail();
   params.set('to', email);
-  params.set('subject', options.subject || 'Tsitsalagi.com Contact / Report');
+  params.set('subject', options.subject || 'Tsitsalagi.com Community Board Contact / Report');
   if (options.body) params.set('body', options.body);
   if (options.type) params.set('type', options.type);
   if (options.title) params.set('title', options.title);
@@ -948,7 +948,7 @@ function setupLinks() {
   if (contactLinkEl) {
     contactLinkEl.href = contactReportUrl({
       subject: 'Tsitsalagi.com Contact / Report',
-      body: 'Message for Tsitsalagi:\n\n'
+      body: 'Message for Tsitsalagi.com Community Board:\n\n'
     });
     contactLinkEl.target = '_self';
     contactLinkEl.removeAttribute('rel');

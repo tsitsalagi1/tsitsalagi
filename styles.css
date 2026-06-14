@@ -1127,3 +1127,186 @@ button.button {
   .toolbar label, .toolbar .checkbox-filter { width: 100%; }
   .checkbox-filter { justify-content: flex-start; }
 }
+
+
+/* Accessibility + rivercane basket pattern refinement.
+   Motifs are CSS-generated, inspired by Cherokee rivercane basket pattern families
+   such as diamond, arrow point/arrowhead, diagonal design, and flowing water. */
+:root {
+  --basket-tan: #c8954e;
+  --basket-gold: #d7a63a;
+  --basket-brown: #6a3c22;
+  --basket-dark: #082d25;
+  --basket-green: #114737;
+  --basket-teal: #28766e;
+  --text-on-dark: #fff8ea;
+  --text-soft-on-dark: #f3e8cf;
+}
+
+html { font-size: 18px; }
+body {
+  background:
+    repeating-linear-gradient(45deg, rgba(106,60,34,.075) 0 10px, transparent 10px 24px),
+    repeating-linear-gradient(-45deg, rgba(17,71,55,.055) 0 10px, transparent 10px 24px),
+    radial-gradient(circle at 8% 0%, rgba(215,166,58,.34), transparent 31rem),
+    radial-gradient(circle at 92% 8%, rgba(40,118,110,.22), transparent 29rem),
+    linear-gradient(180deg, #f5ebd9, #fff8eb 42%, #f3e7d0);
+  color: #18130d;
+}
+
+p, li, .hero-text, .detail-section p, .section-header p:last-child {
+  line-height: 1.72;
+}
+
+/* Make small section labels readable on every background. */
+.eyebrow, .kicker {
+  color: #8b3328;
+  text-shadow: none;
+  letter-spacing: .16em;
+}
+
+/* Dark hero areas now use a clearer basket diamond pattern with high-contrast text. */
+.page-hero.mini-hero,
+.hero-panel,
+.section-dark .section-header,
+.dark-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero.mini-hero {
+  color: var(--text-on-dark);
+  border-color: rgba(215,166,58,.45);
+  background:
+    linear-gradient(135deg, rgba(8,45,37,.96), rgba(17,71,55,.96)),
+    repeating-linear-gradient(45deg, rgba(255,248,234,.055) 0 12px, transparent 12px 28px),
+    repeating-linear-gradient(-45deg, rgba(215,166,58,.065) 0 12px, transparent 12px 28px);
+}
+
+.page-hero.mini-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .24;
+  background:
+    conic-gradient(from 45deg, transparent 0 22%, rgba(215,166,58,.58) 22% 28%, transparent 28% 72%, rgba(200,149,78,.50) 72% 78%, transparent 78% 100%) 0 0 / 68px 68px,
+    radial-gradient(circle at 50% 50%, rgba(255,248,234,.16) 0 2px, transparent 3px) 0 0 / 34px 34px;
+}
+
+.page-hero.mini-hero::after,
+.hero-panel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 22px;
+  opacity: .96;
+  background:
+    linear-gradient(135deg, transparent 0 24%, var(--basket-gold) 24% 38%, transparent 38% 62%, var(--basket-teal) 62% 76%, transparent 76%) 0 0 / 56px 22px,
+    linear-gradient(45deg, var(--basket-brown), var(--basket-gold), var(--basket-green), var(--basket-teal));
+}
+
+.page-hero.mini-hero > * { position: relative; z-index: 1; }
+.page-hero.mini-hero .eyebrow {
+  color: #ffd875;
+  text-shadow: 0 2px 8px rgba(0,0,0,.55);
+}
+.page-hero.mini-hero h1 {
+  color: var(--text-on-dark);
+  text-shadow: 0 2px 14px rgba(0,0,0,.35);
+}
+.page-hero.mini-hero .hero-text,
+.section-dark .section-header p:last-child,
+.dark-meta {
+  color: var(--text-soft-on-dark);
+}
+.page-hero.mini-hero .button.ghost {
+  border-color: rgba(255,248,234,.8);
+  color: var(--text-on-dark);
+  background: rgba(255,248,234,.12);
+}
+
+/* Light cards get a subtle double-weave/diamond texture, visible but not behind dense text. */
+.hero-copy,
+.quick-card,
+.listing-card,
+.issue-card,
+.resource-card,
+.submit-card,
+.rule-card,
+.setup-card,
+.detail-card,
+.stat-card,
+.card,
+.page-card {
+  position: relative;
+  overflow: hidden;
+  background-image:
+    linear-gradient(135deg, rgba(255,250,241,.96), rgba(255,246,229,.91)),
+    repeating-linear-gradient(45deg, rgba(106,60,34,.045) 0 8px, transparent 8px 22px),
+    repeating-linear-gradient(-45deg, rgba(17,71,55,.035) 0 8px, transparent 8px 22px);
+}
+
+.quick-card::before,
+.listing-card::before,
+.issue-card::before,
+.resource-card::before,
+.submit-card::before,
+.rule-card::before,
+.setup-card::before,
+.detail-card::before,
+.stat-card::before,
+.card::before,
+.page-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 9px;
+  background:
+    linear-gradient(45deg, transparent 0 25%, var(--basket-brown) 25% 37%, transparent 37% 63%, var(--basket-gold) 63% 75%, transparent 75%) 0 0 / 46px 9px,
+    linear-gradient(90deg, var(--basket-brown), var(--basket-gold), var(--basket-teal), var(--basket-green));
+  opacity: .92;
+}
+
+/* Preserve content readability above decorative lines. */
+.quick-card > *,
+.listing-card > *,
+.issue-card > *,
+.resource-card > *,
+.submit-card > *,
+.rule-card > *,
+.setup-card > *,
+.detail-card > *,
+.stat-card > *,
+.card > *,
+.page-card > * { position: relative; z-index: 1; }
+
+/* Better contrast for toolbar labels and small UI text. */
+.toolbar label span,
+.checkbox-filter span,
+.board-meta,
+.meta-list,
+.card p,
+.resource-card p,
+.issue-card p,
+.listing-card p {
+  color: #4f4335;
+}
+.dark-toolbar label span,
+.dark-toolbar .checkbox-filter span,
+.dark-meta {
+  color: #fff8ea;
+}
+
+/* Larger touch targets for all ages. */
+.button, .small-button, .nav-links a, input, select, textarea {
+  min-height: 48px;
+}
+
+@media (max-width: 760px) {
+  html { font-size: 17px; }
+  .page-hero.mini-hero h1 { max-width: 10ch; }
+  .page-hero.mini-hero { padding-top: 3.2rem; }
+}
