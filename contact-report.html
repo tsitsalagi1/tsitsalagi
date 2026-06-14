@@ -317,7 +317,7 @@
       <div class="eyebrow">CONTACT / REPORT</div>
       <h1>Contact Tsitsalagi.</h1>
       <div class="hero-line" aria-hidden="true"></div>
-      <p class="lead">Use this page for corrections, takedown requests, unsafe listings, broken links, public issue corrections, or general messages. This works on phones and computers because it offers more than one way to send the message.</p>
+      <p class="lead">Use this page for corrections, takedown requests, unsafe listings, broken links, public issue corrections, or general messages. It works on phones and computers because it gives you more than one way to contact Tsitsalagi.</p>
     </section>
 
     <section class="grid">
@@ -355,7 +355,7 @@
 
       <aside class="panel">
         <h2>What to include</h2>
-        <p class="tip">For a correction or report, include the listing or issue title, link, what is wrong, and what should be changed or removed.</p>
+        <p class="tip">For a correction or report, include the listing or issue title, what is wrong, and what should be changed or removed. You do not need to include a website link.</p>
         <p>Do not send private documents, CDIB cards, driver licenses, passwords, payment details, or sensitive personal information.</p>
         <p>Tsitsalagi is an independent, nonpartisan, citizen-led community board.</p>
       </aside>
@@ -383,20 +383,41 @@
       const title = params.get('title') || '';
       const itemUrl = params.get('url') || '';
 
-      const generatedBodyParts = [
-        'Message for Tsitsalagi:',
-        '',
-        type ? 'Type: ' + type : '',
-        title ? 'Title: ' + title : '',
-        itemUrl ? 'Link: ' + itemUrl : '',
-        '',
-        'Reason / message:',
-        ''
-      ].filter(Boolean);
+      function defaultMessage() {
+        if (type || title) {
+          return [
+            'Hello Tsitsalagi,',
+            '',
+            'I would like to report or request a correction for a public ' + (type || 'post') + '.',
+            title ? 'Title: ' + title : '',
+            '',
+            'What needs to be changed, corrected, or reviewed:',
+            '',
+            '',
+            'My preferred contact method, if a reply is needed:',
+            '',
+            '',
+            'Thank you.'
+          ].filter(Boolean).join('\n');
+        }
+        return [
+          'Hello Tsitsalagi,',
+          '',
+          'I would like to contact the Tsitsalagi Community Board.',
+          '',
+          'Message:',
+          '',
+          '',
+          'My preferred contact method, if a reply is needed:',
+          '',
+          '',
+          'Thank you.'
+        ].join('\n');
+      }
 
       emailInput.value = email;
       subjectInput.value = subject;
-      messageInput.value = passedBody || generatedBodyParts.join('\n');
+      messageInput.value = passedBody || defaultMessage();
 
       function setStatus(message, isError) {
         status.textContent = message;

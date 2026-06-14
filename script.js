@@ -195,10 +195,28 @@ function shareButton(label, title, text, url) {
     data-share-url="${escapeHtml(url)}">${escapeHtml(label)}</button>`;
 }
 
+function reportMessage(type, title) {
+  return [
+    'Hello Tsitsalagi,',
+    '',
+    `I would like to report or request a correction for a public ${type || 'post'}.`,
+    title ? `Title: ${title}` : '',
+    '',
+    'What needs to be changed, corrected, or reviewed:',
+    '',
+    '',
+    'My preferred contact method, if a reply is needed:',
+    '',
+    '',
+    'Thank you.'
+  ].filter(Boolean).join('
+');
+}
+
 function reportLink(type, title, url) {
-  const subject = `Correction request: ${title || type}`;
-  const body = `Please review this ${type}:\n\n${title || ''}\n${url || window.location.href}\n\nReason / correction needed:\n`;
-  const href = contactReportUrl({ type, title, url: url || window.location.href, subject, body });
+  const subject = `Report or correction request: ${title || type || 'Tsitsalagi'}`;
+  const body = reportMessage(type, title);
+  const href = contactReportUrl({ type, title, subject, body });
   return `<a class="report-link" href="${escapeHtml(href)}">Report / correct</a>`;
 }
 
