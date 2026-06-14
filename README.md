@@ -91,3 +91,11 @@ After uploading this version, create two Google Forms:
 2. Submit a Public Issue
 
 Then create approved Google Sheets and paste the published CSV links into `config.js`.
+
+
+## Branding updates included
+
+This build applies both logo options:
+
+1. The new logo is used on the public site itself (header and footer branding).
+2. The new logo is also used for browser/app/share branding (favicon, Apple touch icon, web manifest, and social preview metadata).

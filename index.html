@@ -8,7 +8,18 @@
   <meta property="og:title" content="Tsitsalagi — Cherokee Community Board" />
   <meta property="og:description" content="Browse local listings, submit community information, find useful links, and follow public issues." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tsitsalagi.com/" />
+  <meta property="og:image" content="https://tsitsalagi.com/logo.png" />
+  <meta property="og:image:alt" content="Tsitsalagi Community Board logo" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tsitsalagi — Cherokee Community Board" />
+  <meta name="twitter:description" content="Browse local listings, useful resources, and public issues on Tsitsalagi." />
+  <meta name="twitter:image" content="https://tsitsalagi.com/logo.png" />
   <meta name="theme-color" content="#213f32" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="shortcut icon" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -17,11 +28,7 @@
   <header class="site-header" id="top">
     <nav class="nav" aria-label="Main navigation">
       <a class="brand" href="#top" aria-label="Tsitsalagi home">
-        <span class="brand-mark">Ꮳ</span>
-        <span>
-          <strong>Tsitsalagi</strong>
-          <small>Community Board</small>
-        </span>
+        <img class="brand-logo" src="logo.png" alt="Tsitsalagi Community Board" />
       </a>
       <button class="menu-button" aria-expanded="false" aria-controls="nav-links">Menu</button>
       <div class="nav-links" id="nav-links">
@@ -249,8 +256,14 @@
 </main>
 
   <footer class="site-footer">
-    <p><strong>Tsitsalagi</strong> is an independent, nonpartisan, citizen-led community board.</p>
-    <p>Use official sources for voter registration, benefits, services, laws, and public records. Listings are user-submitted and not endorsements.</p>
+    <div class="footer-brand">
+      <img src="logo.png" alt="Tsitsalagi Community Board" class="footer-logo" />
+      <div>
+        <p><strong>Tsitsalagi</strong> is an independent, nonpartisan, citizen-led community board.</p>
+        <p>Browse local listings, useful resources, and documented public issues in one place. Use official sources for voter registration, benefits, services, laws, and deadlines.</p>
+      </div>
+    </div>
+    <p class="footer-note">Listings are community posts, not endorsements. Always verify information for yourself and meet safely.</p>
     <a href="#top">Back to top</a>
   </footer>
 

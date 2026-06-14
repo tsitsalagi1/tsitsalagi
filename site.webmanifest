@@ -1,0 +1,15 @@
+{
+  "name": "Tsitsalagi — Cherokee Community Board",
+  "short_name": "Tsitsalagi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f2e6",
+  "theme_color": "#213f32",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

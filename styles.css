@@ -61,7 +61,7 @@ button, input, select, textarea { font: inherit; }
   position: sticky;
   top: .75rem;
   z-index: 20;
-  padding: .65rem;
+  padding: .7rem .8rem;
   border: 1px solid rgba(255,255,255,.48);
   border-radius: 999px;
   background: rgba(255, 250, 241, .82);
@@ -71,23 +71,17 @@ button, input, select, textarea { font: inherit; }
 .brand {
   display: flex;
   align-items: center;
-  gap: .75rem;
   padding-left: .25rem;
   color: var(--ink);
   text-decoration: none;
   min-width: 0;
+  flex: 0 1 auto;
 }
-.brand-mark {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--forest);
-  color: var(--cream);
-  font-weight: 950;
-  font-size: 1.25rem;
+.brand-logo {
+  display: block;
+  width: min(46vw, 430px);
+  min-width: 210px;
+  height: auto;
 }
 .brand strong { display: block; line-height: 1; }
 .brand small { display: block; color: var(--muted); font-size: .78rem; margin-top: .15rem; font-weight: 800; }
@@ -375,7 +369,7 @@ pre code { background: transparent !important; color: inherit; padding: 0 !impor
   .board-meta { align-items: stretch; flex-direction: column; }
   .small-button { width: 100%; }
   .card-top { align-items: start; }
-  .brand small { font-size: .72rem; }
+  .brand-logo { width: min(58vw, 300px); min-width: 170px; }
 }
 
 
@@ -399,12 +393,8 @@ body::before {
   background: rgba(255, 248, 235, .88);
 }
 
-.brand-mark {
-  background:
-    radial-gradient(circle at 35% 28%, rgba(255,246,229,.32), transparent 32%),
-    conic-gradient(from 45deg, var(--cedar), var(--gold), var(--turquoise), var(--forest), var(--cedar));
-  border: 2px solid rgba(255,246,229,.75);
-  box-shadow: 0 8px 22px rgba(126,47,35,.22);
+.brand-logo {
+  filter: drop-shadow(0 8px 18px rgba(18, 53, 44, .12));
 }
 
 .nav-links a:hover {
@@ -699,5 +689,32 @@ button.button {
   .share-button,
   .contact-link {
     width: 100%;
+  }
+}
+
+
+.footer-brand {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+.footer-logo {
+  width: 92px;
+  height: 92px;
+  border-radius: 22px;
+  box-shadow: 0 10px 26px rgba(18,53,44,.12);
+}
+.footer-note {
+  margin-top: .4rem;
+}
+@media (max-width: 720px) {
+  .footer-brand {
+    grid-template-columns: 1fr;
+  }
+  .footer-logo {
+    width: 78px;
+    height: 78px;
   }
 }
