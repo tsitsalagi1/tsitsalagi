@@ -209,8 +209,7 @@ function reportMessage(type, title) {
     '',
     '',
     'Thank you.'
-  ].filter(Boolean).join('
-');
+  ].filter(Boolean).join('\n');
 }
 
 function reportLink(type, title, url) {
