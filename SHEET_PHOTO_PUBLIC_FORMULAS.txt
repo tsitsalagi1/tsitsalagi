@@ -1,0 +1,56 @@
+PHOTO DISPLAY FIX FOR TSITSALAGI PUBLIC DATA
+
+Problem:
+The photo upload is working, and the new photo URL is going into the form response tabs.
+But the public website reads the Approved Listings and Approved Issues tabs/CSV links.
+If those approved/public tabs do not include the Photo URL column, the website has nothing to display.
+
+IMPORTANT:
+On your current form response tabs, the photo link appears in column I and Approved is in column J.
+So the formulas below pull the photo URL from column I.
+
+============================================================
+APPROVED LISTINGS TAB
+============================================================
+
+1. Go to the Approved Listings tab.
+2. Set row 1 headers exactly like this:
+
+Approved | Title | Category | Area | Price | Description | Contact | Posted | Expires | Tags | Photo URL
+
+3. Delete old rows from row 2 down.
+4. Click cell A2 and paste this formula:
+
+=IFERROR(FILTER({'Submit a Listings'!J2:J,'Submit a Listings'!B2:B,'Submit a Listings'!C2:C,'Submit a Listings'!D2:D,'Submit a Listings'!E2:E,'Submit a Listings'!F2:F,'Submit a Listings'!G2:G,IF('Submit a Listings'!A2:A="",,TO_DATE('Submit a Listings'!A2:A)),IF('Submit a Listings'!A2:A="",,TO_DATE('Submit a Listings'!A2:A+30)),'Submit a Listings'!H2:H,'Submit a Listings'!I2:I},REGEXMATCH(LOWER(TRIM('Submit a Listings'!J2:J)),"^(yes|approved|true|y|1)$")),"")
+
+============================================================
+APPROVED ISSUES TAB
+============================================================
+
+1. Go to the Approved Issues tab.
+2. Set row 1 headers exactly like this:
+
+Approved | Title | Category | Status | Area | Question | Ask | Source | LastUpdated | Photo URL
+
+3. Delete old rows from row 2 down.
+4. Click cell A2 and paste this formula:
+
+=IFERROR(FILTER({'Submit a Issue'!J2:J,'Submit a Issue'!B2:B,'Submit a Issue'!C2:C,'Submit a Issue'!E2:E,'Submit a Issue'!D2:D,'Submit a Issue'!F2:F,IF('Submit a Issue'!B2:B="",,"Review and help identify the correct office, department, or community contact. Public contact: "&'Submit a Issue'!G2:G),IF('Submit a Issue'!B2:B="",,""),IF('Submit a Issue'!A2:A="",,TO_DATE('Submit a Issue'!A2:A)),'Submit a Issue'!I2:I},REGEXMATCH(LOWER(TRIM('Submit a Issue'!J2:J)),"^(yes|approved|true|y|1)$")),"")
+
+============================================================
+IF YOUR TAB NAMES ARE DIFFERENT
+============================================================
+
+If your form response tab has a different name, replace:
+'Submit a Listings'
+with your actual listing response tab name.
+
+Replace:
+'Submit a Issue'
+with your actual issue response tab name.
+
+The important part is:
+- Photo URL comes from column I
+- Approved status comes from column J
+- Approved public tabs need a Photo URL header
+

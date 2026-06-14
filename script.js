@@ -360,7 +360,34 @@ function renderListings() {
 
 
 function itemPhotoUrl(item) {
-  return item.Photo || item.PhotoURL || item['Photo URL'] || item.Image || item.ImageURL || item['Image URL'] || '';
+  const preferredKeys = [
+    'Photo URL', 'PhotoURL', 'Photo Url', 'Photo',
+    'Image URL', 'ImageURL', 'Image Url', 'Image',
+    'Picture URL', 'PictureURL', 'Attachment URL', 'Upload URL'
+  ];
+
+  for (const key of preferredKeys) {
+    const value = String(item[key] || '').trim();
+    if (isLikelyPhotoUrl(value)) return value;
+  }
+
+  // Safety fallback: if the Google Sheet header is still named something like
+  // "Agreement to rules" but the cell contains an uploaded photo URL, detect it anyway.
+  for (const value of Object.values(item)) {
+    const raw = String(value || '').trim();
+    if (isLikelyPhotoUrl(raw)) return raw;
+  }
+
+  return '';
+}
+
+function isLikelyPhotoUrl(value) {
+  if (!value) return false;
+  const lower = String(value).trim().toLowerCase();
+  if (!lower.startsWith('http')) return false;
+  return lower.includes('/photos/')
+    || lower.includes('r2.dev')
+    || lower.match(/\.(jpg|jpeg|png|gif|webp|avif)(\?|#|$)/);
 }
 
 function photoHtml(item, type) {
