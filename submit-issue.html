@@ -324,6 +324,35 @@
       background: rgba(227, 242, 226, .75);
     }
 
+
+
+    .photo-upload-box {
+      display: grid;
+      gap: 8px;
+      padding: 16px;
+      border: 1.8px dashed rgba(42, 138, 127, .72);
+      border-radius: 18px;
+      background: rgba(255, 252, 243, .72);
+    }
+
+    .photo-upload-box input[type="file"] {
+      border: 0;
+      min-height: auto;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .photo-upload-box strong {
+      color: var(--green);
+    }
+
+    .photo-upload-note {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: 0;
+    }
+
     .checkbox-row {
       display: flex;
       gap: 12px;
@@ -498,7 +527,7 @@
     <main class="form-shell">
       <section class="card" aria-label="Submit an issue form">
         <div class="card-top" aria-hidden="true"></div>
-        <form id="issueForm" autocomplete="on">
+        <form id="issueForm" autocomplete="on" enctype="multipart/form-data">
           <div class="field">
             <label for="issueTitle">Issue title <span aria-hidden="true">*</span></label>
             <input id="issueTitle" name="issueTitle" type="text" required maxlength="120" placeholder="Example: Pothole on Main Street, downed tree blocking road" />
@@ -566,6 +595,15 @@
             <input id="tags" name="tags" type="text" maxlength="180" placeholder="Example: pothole, flooding, stray animals, power outage, elder assistance" />
           </div>
 
+          <div class="field">
+            <label for="photo">Photo / image evidence</label>
+            <div class="photo-upload-box">
+              <strong>Optional photo upload</strong>
+              <input id="photo" name="photo" type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
+              <p class="photo-upload-note">Images only. Maximum 7 MB. Do not upload IDs, private documents, children’s private information, or anything you do not want reviewed by Tsitsalagi.</p>
+            </div>
+          </div>
+
           <div class="checkbox-row">
             <input id="agreement" name="agreement" type="checkbox" required />
             <label for="agreement">I understand this report may be publicly posted if approved, and I will not submit false information, private documents, personal attacks, threats, illegal content, or sensitive personal information about others.</label>
@@ -601,26 +639,10 @@
     </footer>
   </div>
 
-  <iframe class="hidden-frame" name="hidden-google-form-target" title="Hidden Google Form submission target"></iframe>
-
   <script>
-    const GOOGLE_FORM_VIEW = 'https://docs.google.com/forms/d/e/1FAIpQLScwWnvZpnYbh8mB_4wduYEjcbMXQnIX2jWunjZQEOENxBJ8iA/viewform?usp=sharing';
-    const GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScwWnvZpnYbh8mB_4wduYEjcbMXQnIX2jWunjZQEOENxBJ8iA/formResponse';
     const RETURN_TO_WEBSITE = 'https://tsitsalagi.com/#issues';
-
-    const AGREEMENT_TEXT = 'I understand this report may be publicly posted if approved, and I will not submit false information, private documents, personal attacks, threats, illegal content, or sensitive personal information about others.';
-
-    // These entry IDs came from your Google Form pre-filled link.
-    const GOOGLE_FORM_FIELDS = {
-      issueTitle: 'entry.1264954800',
-      category: 'entry.448298041',
-      area: 'entry.1391773237',
-      severity: 'entry.40337481',
-      description: 'entry.819802142',
-      contact: 'entry.1471154427',
-      tags: 'entry.1930413836',
-      agreement: 'entry.531598003'
-    };
+    const API_ENDPOINT = '/api/submit-issue';
+    const MAX_PHOTO_BYTES = 7 * 1024 * 1024;
 
     const form = document.getElementById('issueForm');
     const statusBox = document.getElementById('statusBox');
@@ -632,15 +654,7 @@
       statusBox.style.display = 'block';
     }
 
-    function appendHiddenInput(postForm, name, value) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = value ?? '';
-      postForm.appendChild(input);
-    }
-
-    form.addEventListener('submit', event => {
+    form.addEventListener('submit', async event => {
       event.preventDefault();
 
       if (!form.checkValidity()) {
@@ -648,36 +662,38 @@
         return;
       }
 
+      const formData = new FormData(form);
+      const photo = formData.get('photo');
+      if (photo && photo.size && photo.size > MAX_PHOTO_BYTES) {
+        showStatus('Photo is too large. Please upload an image under 7 MB.', true);
+        return;
+      }
+
       submitButton.disabled = true;
       submitButton.textContent = 'Submitting...';
-      showStatus('Submitting your issue for review...');
+      showStatus('Submitting your issue and uploading photo if included...');
 
-      const formData = new FormData(form);
-      const postForm = document.createElement('form');
-      postForm.method = 'POST';
-      postForm.action = GOOGLE_FORM_ACTION;
-      postForm.target = 'hidden-google-form-target';
-      postForm.style.display = 'none';
+      try {
+        const response = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          body: formData
+        });
 
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.issueTitle, formData.get('issueTitle'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.category, formData.get('category'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.area, formData.get('area'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.severity, formData.get('severity'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.description, formData.get('description'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.contact, formData.get('contact'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.tags, formData.get('tags'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.agreement, formData.get('agreement') ? AGREEMENT_TEXT : '');
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok === false) {
+          throw new Error(result.error || 'Submission failed.');
+        }
 
-      document.body.appendChild(postForm);
-      postForm.submit();
-
-      setTimeout(() => {
         showStatus('Issue submitted. Redirecting back to Tsitsalagi...');
-      }, 550);
-
-      setTimeout(() => {
-        window.location.href = RETURN_TO_WEBSITE;
-      }, 1700);
+        setTimeout(() => {
+          window.location.href = RETURN_TO_WEBSITE;
+        }, 1300);
+      } catch (error) {
+        console.error(error);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit issue';
+        showStatus('Submission failed. Please try again or email tsitsalagi.com@gmail.com.', true);
+      }
     });
   </script>
 </body>

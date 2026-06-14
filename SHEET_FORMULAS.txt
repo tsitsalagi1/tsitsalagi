@@ -1,0 +1,49 @@
+TSITSALAGI PHOTO APPROVAL FORMULAS
+
+After you install the Apps Script and Worker, update your public approved tabs so photos can flow to the website.
+
+1) Submit a Listings tab columns should be:
+A Timestamp
+B Listing title
+C Listing category
+D Area / town / county
+E Price / cost
+F Listing description
+G Public contact method
+H Tags / keywords
+I Photo URL
+J Approved
+
+2) Submit a Issue tab columns should be:
+A Timestamp
+B Issue title
+C Issue category
+D Area / town / county
+E Severity / urgency
+F Issue description
+G Public contact method
+H Tags / keywords
+I Photo URL
+J Approved
+
+3) Approved Listings row 1 headers should be:
+Approved | Title | Category | Area | Price | Description | Contact | Posted | Expires | Tags | Photo
+
+Paste this into Approved Listings cell A2:
+
+=IFERROR(FILTER({'Submit a Listings'!J2:J,'Submit a Listings'!B2:B,'Submit a Listings'!C2:C,'Submit a Listings'!D2:D,'Submit a Listings'!E2:E,'Submit a Listings'!F2:F,'Submit a Listings'!G2:G,IF('Submit a Listings'!A2:A="",,TO_DATE('Submit a Listings'!A2:A)),IF('Submit a Listings'!A2:A="",,TO_DATE('Submit a Listings'!A2:A+30)),'Submit a Listings'!H2:H,'Submit a Listings'!I2:I},REGEXMATCH(LOWER(TRIM('Submit a Listings'!J2:J)),"^(yes|approved|true|y|1)$")),"")
+
+4) Approved Issues row 1 headers should be:
+Approved | Title | Category | Status | Area | Question | Ask | Source | LastUpdated | Photo
+
+Paste this into Approved Issues cell A2:
+
+=IFERROR(FILTER({'Submit a Issue'!J2:J,'Submit a Issue'!B2:B,'Submit a Issue'!C2:C,'Submit a Issue'!E2:E,'Submit a Issue'!D2:D,'Submit a Issue'!F2:F,IF('Submit a Issue'!B2:B="",,"Review and help identify the correct office, department, or community contact. Public contact: "&'Submit a Issue'!G2:G),IF('Submit a Issue'!B2:B="",,""),IF('Submit a Issue'!A2:A="",,TO_DATE('Submit a Issue'!A2:A)),'Submit a Issue'!I2:I},REGEXMATCH(LOWER(TRIM('Submit a Issue'!J2:J)),"^(yes|approved|true|y|1)$")),"")
+
+Workflow after setup:
+- User submits listing or issue with optional photo.
+- Cloudflare Worker uploads photo to R2.
+- Worker posts the form fields and photo URL into Submit a Listings or Submit a Issue.
+- You review the row.
+- Change Approved to yes.
+- It automatically appears on Tsitsalagi with the photo.

@@ -338,6 +338,7 @@ function renderListings() {
         <span class="price">${escapeHtml(item.Price || 'See details')}</span>
       </div>
       <h3>${escapeHtml(item.Title)}</h3>
+      ${photoHtml(item, 'listing')}
       <div class="meta-list">
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
         ${item.Posted ? `<span class="pill">Posted ${escapeHtml(item.Posted)}</span>` : ''}
@@ -355,6 +356,20 @@ function renderListings() {
     </article>
   `;
   }).join('');
+}
+
+
+function itemPhotoUrl(item) {
+  return item.Photo || item.PhotoURL || item['Photo URL'] || item.Image || item.ImageURL || item['Image URL'] || '';
+}
+
+function photoHtml(item, type) {
+  const url = itemPhotoUrl(item);
+  if (!url) return '';
+  const title = item.Title || type || 'Tsitsalagi photo';
+  return `<a class="card-photo" href="${escapeHtml(url)}" target="_blank" rel="noopener" aria-label="Open ${escapeHtml(title)} photo">
+    <img src="${escapeHtml(url)}" alt="${escapeHtml(title)} photo" loading="lazy" />
+  </a>`;
 }
 
 function statusClass(status) {
@@ -394,6 +409,7 @@ function renderIssues() {
         <span class="pill ${statusClass(item.Status)}">${escapeHtml(item.Status || 'Open')}</span>
       </div>
       <h3>${escapeHtml(item.Title)}</h3>
+      ${photoHtml(item, 'issue')}
       <div class="meta-list">
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
         ${item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.LastUpdated)}</span>` : ''}
@@ -492,32 +508,18 @@ function setupLinks() {
   const listingNote = document.getElementById('listing-form-note');
   const issueNote = document.getElementById('issue-form-note');
 
-  function applyFormLink(linkEl, url) {
-    if (!linkEl || !url) return;
-    linkEl.href = url;
-
-    const isLocal = url.startsWith('/') || url.startsWith('#') || url.startsWith(window.location.origin);
-    if (isLocal) {
-      linkEl.removeAttribute('target');
-      linkEl.removeAttribute('rel');
-    } else {
-      linkEl.setAttribute('target', '_blank');
-      linkEl.setAttribute('rel', 'noopener');
-    }
-  }
-
   if (config.listingFormUrl) {
-    applyFormLink(listingLink, config.listingFormUrl);
-    if (listingNote) listingNote.textContent = 'Custom listing form opens here and returns visitors to Tsitsalagi after setup.';
+    listingLink.href = config.listingFormUrl;
+    if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
   } else {
-    applyFormLink(listingLink, 'admin-setup.html');
+    listingLink.href = 'admin-setup.html';
   }
 
   if (config.issueFormUrl) {
-    applyFormLink(issueLink, config.issueFormUrl);
-    if (issueNote) issueNote.textContent = 'Custom issue form opens here and returns visitors to Tsitsalagi after setup.';
+    issueLink.href = config.issueFormUrl;
+    if (issueNote) issueNote.textContent = 'Submissions are reviewed before appearing publicly.';
   } else {
-    applyFormLink(issueLink, 'admin-setup.html');
+    issueLink.href = 'admin-setup.html';
   }
 
   if (config.contactEmail) {
