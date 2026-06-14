@@ -1,8 +1,5 @@
 // Tsitsalagi photo upload + sheet submission Worker for Cloudflare Pages/Workers.
-// Required Cloudflare settings:
-// 1. R2 binding named PHOTOS_BUCKET
-// 2. Environment variable SHEETS_WEBHOOK_URL = your Google Apps Script Web App URL
-// 3. Secret/environment variable SHEETS_TOKEN = same token used in Apps Script
+// Diagnostic version: returns detailed but safe error messages so setup can be fixed faster.
 
 const MAX_UPLOAD_BYTES = 7 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
@@ -11,33 +8,48 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (request.method === 'GET' && url.pathname === '/api/health') {
+      return json({
+        ok: true,
+        worker: 'tsitsalagi',
+        hasPhotosBucket: !!env.PHOTOS_BUCKET,
+        hasSheetsWebhookUrl: !!env.SHEETS_WEBHOOK_URL,
+        hasSheetsToken: !!env.SHEETS_TOKEN,
+        time: new Date().toISOString()
+      });
+    }
+
     if (request.method === 'POST' && url.pathname === '/api/submit-issue') {
-      return handleSubmit(request, env, 'issue');
+      return safeHandleSubmit(request, env, 'issue');
     }
 
     if (request.method === 'POST' && url.pathname === '/api/submit-listing') {
-      return handleSubmit(request, env, 'listing');
+      return safeHandleSubmit(request, env, 'listing');
     }
 
     if (request.method === 'GET' && url.pathname.startsWith('/photos/')) {
       return handlePhoto(request, env, url);
     }
 
-    if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
-    }
-
+    if (env.ASSETS) return env.ASSETS.fetch(request);
     return new Response('Tsitsalagi Worker is running, but static assets are not configured.', { status: 404 });
   }
 };
 
+async function safeHandleSubmit(request, env, type) {
+  try {
+    return await handleSubmit(request, env, type);
+  } catch (err) {
+    const message = readableError(err);
+    console.log('Tsitsalagi submit error:', message, err && err.stack ? err.stack : '');
+    return json({ ok: false, error: message }, 500);
+  }
+}
+
 async function handleSubmit(request, env, type) {
-  if (!env.PHOTOS_BUCKET) {
-    return json({ ok: false, error: 'R2 bucket binding PHOTOS_BUCKET is not configured.' }, 500);
-  }
-  if (!env.SHEETS_WEBHOOK_URL || !env.SHEETS_TOKEN) {
-    return json({ ok: false, error: 'Google Sheets webhook settings are not configured.' }, 500);
-  }
+  if (!env.PHOTOS_BUCKET) return json({ ok: false, error: 'Cloudflare R2 binding missing: PHOTOS_BUCKET.' }, 500);
+  if (!env.SHEETS_WEBHOOK_URL) return json({ ok: false, error: 'Runtime variable missing: SHEETS_WEBHOOK_URL.' }, 500);
+  if (!env.SHEETS_TOKEN) return json({ ok: false, error: 'Runtime secret missing: SHEETS_TOKEN.' }, 500);
 
   const formData = await request.formData();
   const fields = type === 'issue' ? readIssueFields(formData) : readListingFields(formData);
@@ -59,16 +71,25 @@ async function handleSubmit(request, env, type) {
     fields
   };
 
-  const sheetResponse = await fetch(env.SHEETS_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload)
-  });
+  let sheetResponse;
+  let sheetText = '';
+  try {
+    sheetResponse = await fetch(env.SHEETS_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    sheetText = await sheetResponse.text();
+  } catch (err) {
+    return json({ ok: false, error: 'Could not reach Google Apps Script webhook: ' + readableError(err) }, 502);
+  }
 
-  const sheetText = await sheetResponse.text();
-  if (!sheetResponse.ok || !sheetText.includes('"ok":true')) {
-    console.log('Sheets webhook response:', sheetResponse.status, sheetText);
-    return json({ ok: false, error: 'Photo saved, but the sheet submission failed. Check Apps Script deployment and token.' }, 502);
+  if (!sheetResponse.ok) {
+    return json({ ok: false, error: `Google Apps Script returned HTTP ${sheetResponse.status}: ${trimForDisplay(sheetText)}` }, 502);
+  }
+
+  if (!sheetText.includes('"ok":true')) {
+    return json({ ok: false, error: `Google Apps Script did not confirm success. Response: ${trimForDisplay(sheetText)}` }, 502);
   }
 
   return json({ ok: true, type, photoUrl });
@@ -113,13 +134,8 @@ function validateFields(type, fields, formData) {
 }
 
 async function savePhoto(request, env, type, photo) {
-  if (!ALLOWED_IMAGE_TYPES.has(photo.type)) {
-    throwResponse('Only JPG, PNG, WebP, or GIF images are allowed.', 400);
-  }
-
-  if (photo.size > MAX_UPLOAD_BYTES) {
-    throwResponse('Image is too large. Maximum size is 7 MB.', 400);
-  }
+  if (!ALLOWED_IMAGE_TYPES.has(photo.type)) throw new Error('Only JPG, PNG, WebP, or GIF images are allowed. Detected type: ' + (photo.type || 'unknown'));
+  if (photo.size > MAX_UPLOAD_BYTES) throw new Error('Image is too large. Maximum size is 7 MB.');
 
   const extension = extensionFor(photo.type, photo.name || 'photo');
   const now = new Date();
@@ -144,13 +160,10 @@ async function savePhoto(request, env, type, photo) {
 
 async function handlePhoto(request, env, url) {
   if (!env.PHOTOS_BUCKET) return new Response('Photo bucket not configured.', { status: 500 });
-
   const key = decodeURIComponent(url.pathname.replace(/^\/photos\//, ''));
   if (!key || key.includes('..')) return new Response('Not found', { status: 404 });
-
   const object = await env.PHOTOS_BUCKET.get(key);
   if (!object) return new Response('Not found', { status: 404 });
-
   const headers = new Headers();
   object.writeHttpMetadata(headers);
   headers.set('etag', object.httpEtag);
@@ -158,13 +171,10 @@ async function handlePhoto(request, env, url) {
   return new Response(object.body, { headers });
 }
 
-function clean(value) {
-  return String(value || '').trim().slice(0, 4000);
-}
-
-function safeMetadata(value) {
-  return String(value || '').replace(/[\r\n]/g, ' ').slice(0, 120);
-}
+function clean(value) { return String(value || '').trim().slice(0, 4000); }
+function safeMetadata(value) { return String(value || '').replace(/[\r\n]/g, ' ').slice(0, 120); }
+function trimForDisplay(text) { return String(text || '').replace(/\s+/g, ' ').trim().slice(0, 700); }
+function readableError(err) { return String(err && err.message ? err.message : err || 'Unknown error'); }
 
 function extensionFor(type, filename) {
   if (type === 'image/jpeg') return 'jpg';
@@ -177,13 +187,6 @@ function extensionFor(type, filename) {
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json;charset=utf-8' }
-  });
-}
-
-function throwResponse(message, status) {
-  throw new Response(JSON.stringify({ ok: false, error: message }), {
     status,
     headers: { 'Content-Type': 'application/json;charset=utf-8' }
   });

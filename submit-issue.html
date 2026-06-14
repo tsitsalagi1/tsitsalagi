@@ -692,7 +692,7 @@
         console.error(error);
         submitButton.disabled = false;
         submitButton.textContent = 'Submit issue';
-        showStatus('Submission failed. Please try again or email tsitsalagi.com@gmail.com.', true);
+        showStatus(error.message || 'Submission failed. Please try again or email tsitsalagi.com@gmail.com.', true);
       }
     });
   </script>
