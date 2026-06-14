@@ -40,6 +40,7 @@
         <a href="/listings.html">Listing Board</a>
         <a href="/issues.html">Issue Board</a>
         <a href="/resources.html">Resources</a>
+        <a href="/about.html">About</a>
         <a href="#submit">Submit</a>
         <a href="/contact-report.html">Contact</a>
       </div>
@@ -96,6 +97,12 @@
         <strong>Send something in</strong>
         <small>Submit a listing, public issue, correction, or resource suggestion.</small>
       </a>
+    </section>
+
+    <section class="section stats-section" aria-label="Site stats">
+      <div class="stats-strip" id="site-stats" aria-live="polite">
+        <div class="stat-card"><strong>Loading…</strong><span>Public updates</span></div>
+      </div>
     </section>
 
     <section class="section guidance-section" id="how-to-use">
@@ -171,6 +178,19 @@
             <option value="all">All areas</option>
           </select>
         </label>
+        <label>
+          <span>Sort</span>
+          <select id="listing-sort">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="az">Title A–Z</option>
+            <option value="area">Area A–Z</option>
+          </select>
+        </label>
+        <label class="checkbox-filter">
+          <input id="listing-photo-only" type="checkbox" />
+          <span>Photos only</span>
+        </label>
       </div>
 
       <div class="board-meta">
@@ -205,6 +225,19 @@
             <option value="all">All statuses</option>
           </select>
         </label>
+        <label>
+          <span>Sort</span>
+          <select id="issue-sort">
+            <option value="newest">Newest update</option>
+            <option value="oldest">Oldest update</option>
+            <option value="az">Title A–Z</option>
+            <option value="category">Category A–Z</option>
+          </select>
+        </label>
+        <label class="checkbox-filter">
+          <input id="issue-photo-only" type="checkbox" />
+          <span>Photos only</span>
+        </label>
       </div>
 
       <div class="board-meta dark-meta">
@@ -234,6 +267,14 @@
           <span>Category</span>
           <select id="resource-category">
             <option value="all">All categories</option>
+          </select>
+        </label>
+        <label>
+          <span>Sort</span>
+          <select id="resource-sort">
+            <option value="az">Title A–Z</option>
+            <option value="za">Title Z–A</option>
+            <option value="category">Category A–Z</option>
           </select>
         </label>
       </div>

@@ -2,13 +2,17 @@ const config = window.TSITSALAGI_CONFIG || {};
 const approvedValue = (value) => String(value || '').trim().toLowerCase();
 const isApproved = (row) => config.showUnapproved || ['yes', 'true', 'approved', '1', 'y'].includes(approvedValue(row.Approved));
 
+const DEFAULT_LIMIT = 12;
+const HOME_LIMIT = 6;
+
 const state = {
   listings: [],
   issues: [],
   resources: [],
-  listingFilters: { search: '', category: 'all', area: 'all' },
-  issueFilters: { search: '', category: 'all', status: 'all' },
-  resourceFilters: { search: '', category: 'all' }
+  listingFilters: { search: '', category: 'all', area: 'all', photoOnly: false, sort: 'newest' },
+  issueFilters: { search: '', category: 'all', status: 'all', photoOnly: false, sort: 'newest' },
+  resourceFilters: { search: '', category: 'all', sort: 'az' },
+  visibleLimits: { listings: DEFAULT_LIMIT, issues: DEFAULT_LIMIT, resources: DEFAULT_LIMIT }
 };
 
 const menuButton = document.querySelector('.menu-button');
@@ -225,6 +229,69 @@ function sortNewest(items, keys) {
     .map((entry) => entry.item);
 }
 
+function sortItems(items, type, sortValue) {
+  const list = [...items];
+  if (sortValue === 'oldest') {
+    const keys = type === 'issue' ? ['LastUpdated', 'Updated', 'Posted'] : ['Posted', 'Updated', 'LastUpdated'];
+    return list.map((item, index) => ({ item, index, date: itemDate(item, keys) }))
+      .sort((a, b) => (a.date - b.date) || (a.index - b.index))
+      .map((entry) => entry.item);
+  }
+  if (sortValue === 'az') return list.sort((a, b) => String(a.Title || '').localeCompare(String(b.Title || '')));
+  if (sortValue === 'za') return list.sort((a, b) => String(b.Title || '').localeCompare(String(a.Title || '')));
+  if (sortValue === 'category') return list.sort((a, b) => `${a.Category || ''} ${a.Title || ''}`.localeCompare(`${b.Category || ''} ${b.Title || ''}`));
+  if (sortValue === 'area') return list.sort((a, b) => `${a.Area || ''} ${a.Title || ''}`.localeCompare(`${b.Area || ''} ${b.Title || ''}`));
+  const keys = type === 'issue' ? ['LastUpdated', 'Updated', 'Posted'] : ['Posted', 'Updated', 'LastUpdated'];
+  return sortNewest(list, keys);
+}
+
+function resetVisibleLimit(type) {
+  if (state.visibleLimits[type] !== undefined) state.visibleLimits[type] = DEFAULT_LIMIT;
+}
+
+function renderLoadMore(containerId, total, shown, type, renderFn) {
+  const box = document.getElementById(containerId);
+  if (!box) return;
+  if (shown >= total) {
+    box.innerHTML = total ? `<p class="load-note">Showing all ${total} result${total === 1 ? '' : 's'}.</p>` : '';
+    return;
+  }
+  box.innerHTML = `<button class="button secondary load-more-button" type="button">Load more</button><p class="load-note">Showing ${shown} of ${total} result${total === 1 ? '' : 's'}.</p>`;
+  box.querySelector('button')?.addEventListener('click', () => {
+    state.visibleLimits[type] += DEFAULT_LIMIT;
+    renderFn();
+  });
+}
+
+function countPhotos(items) {
+  return items.filter((item) => itemPhotoUrl(item)).length;
+}
+
+function latestDateText(items, keys) {
+  const dates = items.map((item) => itemDate(item, keys)).filter(Boolean).sort((a, b) => b - a);
+  if (!dates.length) return 'No public updates yet';
+  return new Date(dates[0]).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function renderSiteStats() {
+  const box = document.getElementById('site-stats');
+  if (!box) return;
+  const approvedListings = state.listings.filter(isApproved);
+  const approvedIssues = state.issues.filter(isApproved);
+  const approvedResources = state.resources.filter(isApproved);
+  const latestValues = [
+    latestDateText(approvedListings, ['Posted', 'Updated', 'LastUpdated']),
+    latestDateText(approvedIssues, ['LastUpdated', 'Updated', 'Posted'])
+  ].filter((value) => value !== 'No public updates yet');
+  box.innerHTML = `
+    <div class="stat-card"><strong>${approvedListings.length}</strong><span>Public listings</span></div>
+    <div class="stat-card"><strong>${approvedIssues.length}</strong><span>Public issues</span></div>
+    <div class="stat-card"><strong>${approvedResources.length}</strong><span>Resources</span></div>
+    <div class="stat-card"><strong>${countPhotos([...approvedListings, ...approvedIssues])}</strong><span>Posts with photos</span></div>
+    <div class="stat-card wide"><strong>${escapeHtml(latestValues[0] || 'Today')}</strong><span>Latest public update</span></div>
+  `;
+}
+
 function previewText(value, max = 240) {
   const text = String(value || '').replace(/\s+/g, ' ').trim();
   if (text.length <= max) return text;
@@ -421,12 +488,14 @@ function renderListings() {
     .filter(isApproved)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => filters.area === 'all' || item.Area === filters.area)
+    .filter((item) => !filters.photoOnly || itemPhotoUrl(item))
     .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Area', 'Price', 'Description', 'Tags']));
 
-  items = sortNewest(items, ['Posted', 'Updated', 'LastUpdated']);
+  items = sortItems(items, 'listing', filters.sort || 'newest');
   const total = items.length;
   const homePreview = isHomePage();
-  const visibleItems = homePreview ? items.slice(0, 6) : items;
+  const limit = homePreview ? HOME_LIMIT : state.visibleLimits.listings;
+  const visibleItems = items.slice(0, limit);
 
   if (count) {
     count.textContent = homePreview
@@ -436,10 +505,12 @@ function renderListings() {
 
   if (!items.length) {
     grid.innerHTML = `<div class="empty-state">No listings match those filters. Clear filters or check back later.</div>`;
+    const loadBox = document.getElementById('listing-load-more');
+    if (loadBox) loadBox.innerHTML = '';
     return;
   }
 
-  grid.innerHTML = visibleItems.map((item) => {
+  const renderedCards = visibleItems.map((item) => {
     const id = itemId('listing', item.Title, item.Area);
     const detailUrl = detailPageUrl('listing', item);
     return `
@@ -454,6 +525,7 @@ function renderListings() {
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
         ${item.Posted ? `<span class="pill">Posted ${escapeHtml(item.Posted)}</span>` : ''}
         ${item.Expires ? `<span class="pill">Expires ${escapeHtml(item.Expires)}</span>` : ''}
+        ${itemPhotoUrl(item) ? `<span class="pill photo-pill">Photo</span>` : ''}
       </div>
       <p class="card-description">${escapeHtml(previewText(item.Description, 210))}</p>
       <div class="card-contact">
@@ -468,6 +540,8 @@ function renderListings() {
     </article>
   `;
   }).join('') + (homePreview && total > visibleItems.length ? `<div class="view-all-card"><a class="button primary" href="/listings.html">View all ${total} listings</a></div>` : '');
+  grid.innerHTML = renderedCards;
+  if (!homePreview) renderLoadMore('listing-load-more', total, visibleItems.length, 'listings', renderListings);
 }
 
 function itemPhotoUrl(item) {
@@ -528,12 +602,14 @@ function renderIssues() {
     .filter(isApproved)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => filters.status === 'all' || item.Status === filters.status)
-    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Status', 'Area', 'Question', 'Ask']));
+    .filter((item) => !filters.photoOnly || itemPhotoUrl(item))
+    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Status', 'Area', 'Question', 'Ask', 'Description', 'Tags']));
 
-  items = sortNewest(items, ['LastUpdated', 'Updated', 'Posted']);
+  items = sortItems(items, 'issue', filters.sort || 'newest');
   const total = items.length;
   const homePreview = isHomePage();
-  const visibleItems = homePreview ? items.slice(0, 6) : items;
+  const limit = homePreview ? HOME_LIMIT : state.visibleLimits.issues;
+  const visibleItems = items.slice(0, limit);
 
   if (count) {
     count.textContent = homePreview
@@ -543,10 +619,12 @@ function renderIssues() {
 
   if (!items.length) {
     grid.innerHTML = `<div class="empty-state">No issues match those filters. Clear filters or check back later.</div>`;
+    const loadBox = document.getElementById('issue-load-more');
+    if (loadBox) loadBox.innerHTML = '';
     return;
   }
 
-  grid.innerHTML = visibleItems.map((item) => {
+  const renderedCards = visibleItems.map((item) => {
     const id = itemId('issue', item.Title, item.Area);
     const detailUrl = detailPageUrl('issue', item);
     const question = item.Question || item.Description || '';
@@ -562,6 +640,7 @@ function renderIssues() {
       <div class="meta-list">
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
         ${item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.LastUpdated)}</span>` : ''}
+        ${itemPhotoUrl(item) ? `<span class="pill photo-pill">Photo</span>` : ''}
       </div>
       ${question ? `<p class="question"><strong>Citizen question:</strong> ${escapeHtml(previewText(question, 220))}</p>` : ''}
       ${ask ? `<p class="ask"><strong>Public ask:</strong> ${escapeHtml(previewText(ask, 180))}</p>` : ''}
@@ -574,6 +653,8 @@ function renderIssues() {
     </article>
   `;
   }).join('') + (homePreview && total > visibleItems.length ? `<div class="view-all-card"><a class="button primary" href="/issues.html">View all ${total} issues</a></div>` : '');
+  grid.innerHTML = renderedCards;
+  if (!homePreview) renderLoadMore('issue-load-more', total, visibleItems.length, 'issues', renderIssues);
 }
 
 function renderDetailPages() {
@@ -726,10 +807,11 @@ function renderResources() {
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Description', 'Area', 'Tags']));
 
-  items = items.sort((a, b) => `${a.Category || ''} ${a.Title || ''}`.localeCompare(`${b.Category || ''} ${b.Title || ''}`));
+  items = sortItems(items, 'resource', filters.sort || 'az');
   const total = items.length;
   const homePreview = isHomePage();
-  const visibleItems = homePreview ? items.slice(0, 6) : items;
+  const limit = homePreview ? HOME_LIMIT : state.visibleLimits.resources;
+  const visibleItems = items.slice(0, limit);
 
   if (count) {
     count.textContent = homePreview
@@ -739,10 +821,12 @@ function renderResources() {
 
   if (!items.length) {
     grid.innerHTML = `<div class="empty-state">No resources match those filters.</div>`;
+    const loadBox = document.getElementById('resource-load-more');
+    if (loadBox) loadBox.innerHTML = '';
     return;
   }
 
-  grid.innerHTML = visibleItems.map((item) => {
+  const renderedCards = visibleItems.map((item) => {
     const id = itemId('resource', ...itemIdParts('resource', item));
     const detailUrl = detailPageUrl('resource', item);
     const external = resourceUrl(item);
@@ -764,6 +848,8 @@ function renderResources() {
     </article>
   `;
   }).join('') + (homePreview && total > visibleItems.length ? `<div class="view-all-card"><a class="button primary" href="/resources.html">View all ${total} resources</a></div>` : '');
+  grid.innerHTML = renderedCards;
+  if (!homePreview) renderLoadMore('resource-load-more', total, visibleItems.length, 'resources', renderResources);
 }
 
 function setupFilters() {
@@ -776,40 +862,58 @@ function setupFilters() {
   const listingSearch = document.getElementById('listing-search');
   const listingCategory = document.getElementById('listing-category');
   const listingArea = document.getElementById('listing-area');
+  const listingSort = document.getElementById('listing-sort');
+  const listingPhotoOnly = document.getElementById('listing-photo-only');
   const issueSearch = document.getElementById('issue-search');
   const issueCategory = document.getElementById('issue-category');
   const issueStatus = document.getElementById('issue-status');
+  const issueSort = document.getElementById('issue-sort');
+  const issuePhotoOnly = document.getElementById('issue-photo-only');
   const resourceSearch = document.getElementById('resource-search');
   const resourceCategory = document.getElementById('resource-category');
+  const resourceSort = document.getElementById('resource-sort');
 
-  listingSearch?.addEventListener('input', (event) => { state.listingFilters.search = event.target.value; renderListings(); });
-  listingCategory?.addEventListener('change', (event) => { state.listingFilters.category = event.target.value; renderListings(); });
-  listingArea?.addEventListener('change', (event) => { state.listingFilters.area = event.target.value; renderListings(); });
+  listingSearch?.addEventListener('input', (event) => { state.listingFilters.search = event.target.value; resetVisibleLimit('listings'); renderListings(); });
+  listingCategory?.addEventListener('change', (event) => { state.listingFilters.category = event.target.value; resetVisibleLimit('listings'); renderListings(); });
+  listingArea?.addEventListener('change', (event) => { state.listingFilters.area = event.target.value; resetVisibleLimit('listings'); renderListings(); });
+  listingSort?.addEventListener('change', (event) => { state.listingFilters.sort = event.target.value; resetVisibleLimit('listings'); renderListings(); });
+  listingPhotoOnly?.addEventListener('change', (event) => { state.listingFilters.photoOnly = event.target.checked; resetVisibleLimit('listings'); renderListings(); });
   document.getElementById('clear-listing-filters')?.addEventListener('click', () => {
-    state.listingFilters = { search: '', category: 'all', area: 'all' };
+    state.listingFilters = { search: '', category: 'all', area: 'all', photoOnly: false, sort: 'newest' };
+    resetVisibleLimit('listings');
     if (listingSearch) listingSearch.value = '';
     if (listingCategory) listingCategory.value = 'all';
     if (listingArea) listingArea.value = 'all';
+    if (listingSort) listingSort.value = 'newest';
+    if (listingPhotoOnly) listingPhotoOnly.checked = false;
     renderListings();
   });
 
-  issueSearch?.addEventListener('input', (event) => { state.issueFilters.search = event.target.value; renderIssues(); });
-  issueCategory?.addEventListener('change', (event) => { state.issueFilters.category = event.target.value; renderIssues(); });
-  issueStatus?.addEventListener('change', (event) => { state.issueFilters.status = event.target.value; renderIssues(); });
+  issueSearch?.addEventListener('input', (event) => { state.issueFilters.search = event.target.value; resetVisibleLimit('issues'); renderIssues(); });
+  issueCategory?.addEventListener('change', (event) => { state.issueFilters.category = event.target.value; resetVisibleLimit('issues'); renderIssues(); });
+  issueStatus?.addEventListener('change', (event) => { state.issueFilters.status = event.target.value; resetVisibleLimit('issues'); renderIssues(); });
+  issueSort?.addEventListener('change', (event) => { state.issueFilters.sort = event.target.value; resetVisibleLimit('issues'); renderIssues(); });
+  issuePhotoOnly?.addEventListener('change', (event) => { state.issueFilters.photoOnly = event.target.checked; resetVisibleLimit('issues'); renderIssues(); });
   document.getElementById('clear-issue-filters')?.addEventListener('click', () => {
-    state.issueFilters = { search: '', category: 'all', status: 'all' };
+    state.issueFilters = { search: '', category: 'all', status: 'all', photoOnly: false, sort: 'newest' };
+    resetVisibleLimit('issues');
     if (issueSearch) issueSearch.value = '';
     if (issueCategory) issueCategory.value = 'all';
     if (issueStatus) issueStatus.value = 'all';
+    if (issueSort) issueSort.value = 'newest';
+    if (issuePhotoOnly) issuePhotoOnly.checked = false;
     renderIssues();
   });
 
-  resourceSearch?.addEventListener('input', (event) => { state.resourceFilters.search = event.target.value; renderResources(); });
-  resourceCategory?.addEventListener('change', (event) => { state.resourceFilters.category = event.target.value; renderResources(); });
+  resourceSearch?.addEventListener('input', (event) => { state.resourceFilters.search = event.target.value; resetVisibleLimit('resources'); renderResources(); });
+  resourceCategory?.addEventListener('change', (event) => { state.resourceFilters.category = event.target.value; resetVisibleLimit('resources'); renderResources(); });
+  resourceSort?.addEventListener('change', (event) => { state.resourceFilters.sort = event.target.value; resetVisibleLimit('resources'); renderResources(); });
   document.getElementById('clear-resource-filters')?.addEventListener('click', () => {
-    state.resourceFilters = { search: '', category: 'all' };
+    state.resourceFilters = { search: '', category: 'all', sort: 'az' };
+    resetVisibleLimit('resources');
     if (resourceSearch) resourceSearch.value = '';
     if (resourceCategory) resourceCategory.value = 'all';
+    if (resourceSort) resourceSort.value = 'az';
     renderResources();
   });
 }
@@ -882,6 +986,7 @@ async function init() {
   }
 
   setupFilters();
+  renderSiteStats();
 
   if (state.listings.length) renderListings();
   if (state.issues.length) renderIssues();

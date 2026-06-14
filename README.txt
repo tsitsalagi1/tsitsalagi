@@ -1,6 +1,6 @@
-Tsitsalagi resource pages upgrade
+Tsitsalagi UX Upgrade Package
 
-Upload/replace these files in the root of your GitHub repo:
+Upload/replace these files in the ROOT of your GitHub repo:
 
 index.html
 listings.html
@@ -9,19 +9,31 @@ listing.html
 issue.html
 resources.html
 resource.html
+about.html
 script.js
 styles.css
 
+Do NOT replace these working backend/submission files unless you are intentionally changing them:
+config.js
+submit-issue.html
+submit-listing.html
+contact-report.html
+_worker.js
+wrangler.jsonc
+.assetsignore
+
 What this adds:
-- /resources.html = all approved resources with search/filter
-- /resource.html?id=... = one full resource page
-- Homepage shows resource preview cards and links to full resource pages
-- Navigation points to the full Resources page instead of only the homepage section
+- About / How it works page
+- Site stats strip on homepage
+- Sort controls for listings, issues, resources
+- Photos-only filters for listings and issues
+- Load more on all-listings, all-issues, and all-resources pages
+- Stronger visible focus styles for keyboard accessibility
+- Cleaner public guidance and safety context
 
-Do not replace your working submit forms, worker, config, wrangler.jsonc, .assetsignore, or Cloudflare settings.
-
-After Cloudflare deploys, test:
-https://tsitsalagi.com/?fresh=resources1
-https://tsitsalagi.com/resources.html?fresh=resources1
-
-Then click a resource title or Read full resource.
+After upload, test:
+https://tsitsalagi.com/?fresh=ux1
+https://tsitsalagi.com/listings.html?fresh=ux1
+https://tsitsalagi.com/issues.html?fresh=ux1
+https://tsitsalagi.com/resources.html?fresh=ux1
+https://tsitsalagi.com/about.html?fresh=ux1

@@ -26,6 +26,7 @@
         <a href="/listings.html">Listing Board</a>
         <a href="/issues.html">Issue Board</a>
         <a href="/resources.html">Resources</a>
+        <a href="/about.html">About</a>
         <a href="/#submit">Submit</a>
         <a href="/contact-report.html">Contact</a>
       </div>
@@ -42,9 +43,11 @@
       <div class="toolbar" aria-label="Resource filters">
         <label><span>Search</span><input id="resource-search" type="search" placeholder="Search voting, health, housing…" autocomplete="off" /></label>
         <label><span>Category</span><select id="resource-category"><option value="all">All categories</option></select></label>
+        <label><span>Sort</span><select id="resource-sort"><option value="az">Title A–Z</option><option value="za">Title Z–A</option><option value="category">Category A–Z</option></select></label>
       </div>
       <div class="board-meta"><span id="resource-count">Loading resources…</span><button class="small-button" id="clear-resource-filters" type="button">Clear filters</button></div>
       <div class="card-grid resource-grid" id="resource-grid" aria-live="polite"></div>
+      <div class="load-more-area" id="resource-load-more"></div>
     </section>
   </main>
 
