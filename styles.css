@@ -1310,3 +1310,204 @@ p, li, .hero-text, .detail-section p, .section-header p:last-child {
   .page-hero.mini-hero h1 { max-width: 10ch; }
   .page-hero.mini-hero { padding-top: 3.2rem; }
 }
+
+
+/* =========================================================
+   Tsitsalagi.com Community Board — calmer Cherokee.org-inspired theme
+   This section intentionally overrides the busier basket-weave version.
+   Goal: clean, official-feeling, readable for all ages, with subtle woven accents.
+   ========================================================= */
+:root {
+  --bg: #f7f3ec;
+  --bg-2: #eadfcf;
+  --panel: #ffffff;
+  --panel-2: #fbf7ef;
+  --ink: #17201d;
+  --muted: #5b625e;
+  --line: #d7c8b2;
+  --forest: #004b3a;
+  --forest-2: #003629;
+  --forest-soft: #e4efe9;
+  --cedar: #a33125;
+  --clay: #b84835;
+  --gold: #c9952c;
+  --turquoise: #1f6d68;
+  --river: #245b69;
+  --plum: #56345c;
+  --danger: #9a2f24;
+  --cream: #fffaf2;
+  --shadow: 0 16px 44px rgba(20, 28, 24, .10);
+  --radius: 16px;
+  --focus: #c9952c;
+}
+
+html { font-size: 18px; }
+body {
+  color: var(--ink);
+  background:
+    linear-gradient(180deg, #ffffff 0, #f7f3ec 280px, #f7f3ec 100%);
+  line-height: 1.72;
+}
+
+/* subtle woven accent used as a thin band, not a page-wide pattern */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 10px;
+  pointer-events: none;
+  z-index: 100;
+  background:
+    linear-gradient(45deg, transparent 0 10px, rgba(201,149,44,.9) 10px 20px, transparent 20px 30px),
+    linear-gradient(135deg, transparent 0 10px, rgba(0,75,58,.86) 10px 20px, transparent 20px 30px),
+    #fff7e8;
+  background-size: 40px 10px;
+}
+
+a { color: var(--forest); text-underline-offset: .18em; }
+a:hover { color: var(--cedar); }
+
+.site-header { max-width: 1280px; padding: 1.15rem 1rem .65rem; }
+.nav {
+  top: .7rem;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 4px solid var(--gold);
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+  padding: .8rem 1rem;
+}
+.brand strong { font-size: 1.18rem; color: var(--forest-2); }
+.brand small { color: var(--cedar); letter-spacing: .03em; }
+.nav-links a {
+  border-radius: 0;
+  color: var(--forest-2);
+  border-bottom: 3px solid transparent;
+}
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+  background: transparent;
+  color: var(--cedar);
+  border-bottom-color: var(--cedar);
+}
+.menu-button { background: var(--forest); color: #fff; border-radius: 8px; }
+
+.hero { padding-top: 3rem; }
+.hero-copy, .hero-panel, .quick-card, .listing-card, .issue-card, .resource-card, .submit-card, .rule-card, .setup-card,
+.detail-card, .detail-panel, .filter-bar, .stats-strip, .notice, .toolbar, .card, .info-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.hero-copy {
+  background: #fff;
+  border-top: 8px solid var(--forest);
+}
+.hero-panel {
+  background: linear-gradient(180deg, var(--forest) 0%, var(--forest-2) 100%);
+  color: #fffaf2;
+  border-top: 8px solid var(--gold);
+}
+.hero-panel::before {
+  border-radius: 0;
+  inset: 0;
+  width: auto;
+  height: auto;
+  top: 0;
+  right: 0;
+  opacity: .10;
+  background:
+    linear-gradient(45deg, transparent 0 12px, #fff 12px 14px, transparent 14px 28px),
+    linear-gradient(135deg, transparent 0 12px, #fff 12px 14px, transparent 14px 28px);
+  background-size: 34px 34px;
+}
+.eyebrow {
+  color: var(--cedar);
+  text-shadow: none;
+  letter-spacing: .13em;
+  font-size: .82rem;
+  background: transparent;
+}
+/* Fix dark hero labels like CITIZEN ISSUE BOARD */
+.hero-panel .eyebrow,
+.dark-hero .eyebrow,
+.page-hero .eyebrow,
+.detail-hero .eyebrow,
+.eyebrow.on-dark {
+  color: #ffe2a6 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+h1 { max-width: 16ch; color: inherit; letter-spacing: -.045em; }
+h2, h3 { color: var(--forest-2); }
+.hero-panel h2, .hero-panel h3, .hero-panel p { color: #fffaf2; }
+.hero-text, .section-header p:last-child, p, li { color: var(--muted); }
+
+.button.primary { background: var(--forest); color: #fff; }
+.button.primary:hover { background: var(--forest-2); }
+.button.secondary { border-color: var(--cedar); color: var(--cedar); background: #fff; }
+.button.ghost { border-color: var(--forest); color: var(--forest); background: #fff; }
+.small-button { background: #fff; border-color: var(--line); color: var(--forest); }
+
+.notice {
+  background: #fffaf2;
+  border-left: 6px solid var(--gold);
+  box-shadow: none;
+}
+
+.quick-card, .listing-card, .issue-card, .resource-card {
+  background: #fff;
+  border-top: 5px solid var(--forest);
+}
+.quick-card:nth-child(2n), .listing-card:nth-child(2n), .issue-card:nth-child(2n), .resource-card:nth-child(2n) { border-top-color: var(--cedar); }
+.quick-card:nth-child(3n), .listing-card:nth-child(3n), .issue-card:nth-child(3n), .resource-card:nth-child(3n) { border-top-color: var(--gold); }
+.quick-card span, .badge, .tag, .meta-pill {
+  color: var(--forest-2);
+  background: var(--forest-soft);
+  border: 1px solid rgba(0,75,58,.14);
+}
+
+/* calm woven trim on sections/cards */
+.woven-band, .pattern-band, .card-accent, .section-accent {
+  background:
+    linear-gradient(90deg, var(--forest) 0 18%, var(--gold) 18% 33%, var(--cedar) 33% 48%, var(--forest) 48% 66%, var(--gold) 66% 81%, var(--cedar) 81% 100%);
+  height: 8px;
+  border-radius: 999px;
+}
+.hero-copy::after, .submit-card::before, .detail-card::before, .listing-card::before, .issue-card::before, .resource-card::before {
+  content: "";
+  display: block;
+  height: 6px;
+  margin: -1px -1px 1rem;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: linear-gradient(90deg, var(--forest), var(--gold), var(--cedar), var(--forest));
+}
+.hero-copy::after { margin: 1.5rem 0 0; border-radius: 999px; max-width: 360px; }
+
+input, select, textarea {
+  background: #fff;
+  color: var(--ink);
+  border: 2px solid #d8cab6;
+  border-radius: 10px;
+}
+input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible {
+  outline: 4px solid rgba(201,149,44,.45);
+  outline-offset: 3px;
+  box-shadow: none;
+}
+
+.table-wrap, .filter-bar, .stats-strip { background: #fff; }
+footer, .footer { background: var(--forest-2); color: #fffaf2; }
+footer a, .footer a { color: #ffe2a6; }
+
+/* tone down any previous dense pattern utilities */
+.basket-bg, .weave-bg, .pattern-bg, .page-pattern, .decorative-pattern {
+  background: #fff !important;
+}
+
+@media (max-width: 760px) {
+  html { font-size: 17px; }
+  .nav { border-radius: 0; }
+  .nav-links { background: #fff; border: 1px solid var(--line); }
+  h1 { font-size: clamp(2.25rem, 12vw, 3.5rem); }
+}
