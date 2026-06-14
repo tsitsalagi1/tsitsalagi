@@ -1,11 +1,5 @@
-Approved,Title,Category,Description,Link
-yes,Cherokee Nation Election Commission,Voting,"Official voter registration, election information, forms, and deadlines.",https://election.cherokee.org/
-yes,Cherokee Nation Legislative Branch,Council,"Official Tribal Council information and elected representative resources.",https://www.cherokee.org/our-government/legislative-branch/
-yes,Cherokee Nation FOIA/GRA Requests,Records,"Official public records request process through the Office of the Attorney General.",https://attorneygeneral.cherokee.org/foia-gra-requests/
-yes,Cherokee Nation Health Services,Health,"Official Cherokee Nation health system information.",https://health.cherokee.org/
-yes,Housing Authority of the Cherokee Nation,Housing,"Official housing programs, applications, and program information.",https://www.hacn.org/
-yes,Cherokee Nation Language Department,Language,"Official Cherokee language programs, learning resources, and language information.",https://language.cherokee.org/
-yes,Cherokee Nation Education Services,Education,"Official education programs and services.",https://www.cherokee.org/all-services/education-services/
-yes,Cherokee Nation Marshal Service / Public Safety,Public Safety,"Official public safety and Marshal Service information.",https://www.cherokee.org/all-services/office-of-the-marshal/public-safety/
-yes,Cherokees At-Large,At-large,"At-large citizen information and resources.",https://cherokeesatlarge.org/
-yes,Cherokee Nation Reservation Legal Status,Sovereignty,"Official Cherokee Nation OAG information on the reservation's legal status.",https://attorneygeneral.cherokee.org/legal-status-of-the-cherokee-nation-reservation/
+Approved,Title,Category,Area,Description,URL,Tags
+yes,Cherokee Nation official website,Official,Cherokee Nation,Official Cherokee Nation government website,https://www.cherokee.org,official government
+yes,Cherokee Nation Election Commission,Elections,Cherokee Nation,Official election information and voter resources,https://election.cherokee.org,elections voting
+yes,Cherokee Nation Gadugi Portal,Services,Cherokee Nation,Online access point for Cherokee Nation citizen services,https://gadugiportal.cherokee.org,services citizenship
+yes,Cherokee Phoenix,News,Cherokee Nation,Cherokee Nation news and public information,https://www.cherokeephoenix.org,news
