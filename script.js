@@ -168,6 +168,88 @@ function shareButton(label, title, text, url) {
     data-share-url="${escapeHtml(url)}">${escapeHtml(label)}</button>`;
 }
 
+function reportLink(type, title, url) {
+  const email = config.contactEmail || 'tsitsalagi.com@gmail.com';
+  const subject = encodeURIComponent(`Correction request: ${title || type}`);
+  const body = encodeURIComponent(`Please review this ${type}:\n\n${title || ''}\n${url || window.location.href}\n\nReason / correction needed:\n`);
+  return `<a class="report-link" href="mailto:${escapeHtml(email)}?subject=${subject}&body=${body}">Report / correct</a>`;
+}
+
+function parseDateValue(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return 0;
+  const parsed = Date.parse(raw);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function itemDate(item, keys) {
+  for (const key of keys) {
+    const value = parseDateValue(item[key]);
+    if (value) return value;
+  }
+  return 0;
+}
+
+function recentItems(items, keys, count = 3) {
+  return items
+    .filter(isApproved)
+    .map((item, index) => ({ item, index, date: itemDate(item, keys) }))
+    .sort((a, b) => (b.date - a.date) || (b.index - a.index))
+    .slice(0, count)
+    .map((entry) => entry.item);
+}
+
+function renderLatest() {
+  const listingBox = document.getElementById('latest-listings');
+  const issueBox = document.getElementById('latest-issues');
+
+  if (listingBox) {
+    const listings = recentItems(state.listings, ['Posted', 'Updated', 'LastUpdated'], 3);
+    listingBox.innerHTML = listings.length ? listings.map((item) => {
+      const id = itemId('listing', item.Title, item.Area);
+      return `<a class="latest-item" href="#${escapeHtml(id)}">
+        <span>${escapeHtml(item.Category || 'Listing')}</span>
+        <strong>${escapeHtml(item.Title)}</strong>
+        <small>${escapeHtml([item.Area, item.Price].filter(Boolean).join(' • ') || 'View listing')}</small>
+      </a>`;
+    }).join('') : '<div class="empty-state small-empty">No approved listings yet.</div>';
+  }
+
+  if (issueBox) {
+    const issues = recentItems(state.issues, ['LastUpdated', 'Updated', 'Posted'], 3);
+    issueBox.innerHTML = issues.length ? issues.map((item) => {
+      const id = itemId('issue', item.Title, item.Area);
+      return `<a class="latest-item" href="#${escapeHtml(id)}">
+        <span>${escapeHtml(item.Status || 'Issue')}</span>
+        <strong>${escapeHtml(item.Title)}</strong>
+        <small>${escapeHtml([item.Area, item.Category].filter(Boolean).join(' • ') || 'View issue')}</small>
+      </a>`;
+    }).join('') : '<div class="empty-state small-empty">No approved issues yet.</div>';
+  }
+}
+
+function renderFeaturedResources() {
+  const box = document.getElementById('featured-resources');
+  if (!box) return;
+  const items = state.resources.filter(isApproved).slice(0, 4);
+  if (!items.length) {
+    box.innerHTML = '';
+    return;
+  }
+  box.innerHTML = `
+    <div class="featured-head">
+      <strong>Featured resources</strong>
+      <span>Start with official links and high-use services.</span>
+    </div>
+    <div class="featured-grid">
+      ${items.map((item) => `<a class="featured-link" href="${escapeHtml(item.Link || item.URL || '#resources')}" target="_blank" rel="noopener">
+        <span>${escapeHtml(item.Category || 'Resource')}</span>
+        <strong>${escapeHtml(item.Title)}</strong>
+      </a>`).join('')}
+    </div>
+  `;
+}
+
 async function copyShareText(text) {
   if (navigator.clipboard && window.isSecureContext) {
     await navigator.clipboard.writeText(text);
@@ -267,6 +349,7 @@ function renderListings() {
         <div class="card-actions">
           ${contactLink(item.Contact)}
           ${shareButton('Share listing', item.Title || 'Tsitsalagi listing', `Listing on Tsitsalagi${item.Area ? ` in ${item.Area}` : ''}.`, url)}
+          ${reportLink('listing', item.Title, url)}
         </div>
       </div>
     </article>
@@ -320,6 +403,7 @@ function renderIssues() {
       <footer>
         ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
         ${shareButton('Share issue', item.Title || 'Tsitsalagi public issue', `Public issue on Tsitsalagi${item.Area ? ` about ${item.Area}` : ''}.`, url)}
+        ${reportLink('issue', item.Title, url)}
       </footer>
     </article>
   `;
@@ -352,6 +436,7 @@ function renderResources() {
       <div class="card-actions resource-actions">
         ${(item.Link || item.URL) ? `<a href="${escapeHtml(item.Link || item.URL)}" target="_blank" rel="noopener">Open resource</a>` : ''}
         ${shareButton('Share resource', item.Title || 'Tsitsalagi resource', 'Useful resource listed on Tsitsalagi.', url)}
+        ${reportLink('resource', item.Title, url)}
       </div>
     </article>
   `;
@@ -461,6 +546,8 @@ async function init() {
   if (state.listings.length) renderListings();
   if (state.issues.length) renderIssues();
   if (state.resources.length) renderResources();
+  renderLatest();
+  renderFeaturedResources();
 }
 
 init();

@@ -36,6 +36,7 @@
       </a>
       <button class="menu-button" aria-expanded="false" aria-controls="nav-links">Menu</button>
       <div class="nav-links" id="nav-links">
+        <a href="#latest">Latest</a>
         <a href="#listings">Listings</a>
         <a href="#issues">Issues</a>
         <a href="#resources">Resources</a>
@@ -97,11 +98,60 @@
       </a>
     </section>
 
+    <section class="section guidance-section" id="how-to-use">
+      <div class="guidance-grid">
+        <article class="guidance-card">
+          <p class="eyebrow">How to use Tsitsalagi</p>
+          <h2>Browse, submit, verify</h2>
+          <ol>
+            <li>Browse listings, issues, and resources without creating an account.</li>
+            <li>Use the forms to submit a listing, public issue, correction, or helpful link.</li>
+            <li>Submissions are reviewed before they appear publicly.</li>
+            <li>Contact posters directly and verify everything yourself.</li>
+          </ol>
+        </article>
+        <article class="guidance-card privacy-card">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Do not send private documents</h2>
+          <p>Tsitsalagi does not need CDIB cards, citizenship cards, birthdates, Social Security numbers, passwords, payment information, or private records. Do not submit anything you do not want public.</p>
+          <a class="button ghost" href="#rules">Read safety rules</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section latest-section" id="latest">
+      <div class="section-header">
+        <p class="eyebrow">Latest updates</p>
+        <h2>Newest posts and public issues</h2>
+        <p>Quickly see what has been added recently. New submissions may take time to appear because posts are reviewed first.</p>
+      </div>
+      <div class="latest-grid">
+        <article class="latest-panel">
+          <div class="latest-panel-head">
+            <h3>Newest listings</h3>
+            <a href="#listings">View all listings</a>
+          </div>
+          <div id="latest-listings" class="latest-list" aria-live="polite">Loading listings…</div>
+        </article>
+        <article class="latest-panel">
+          <div class="latest-panel-head">
+            <h3>Newest issues</h3>
+            <a href="#issues">View all issues</a>
+          </div>
+          <div id="latest-issues" class="latest-list" aria-live="polite">Loading issues…</div>
+        </article>
+      </div>
+    </section>
+
     <section class="section board-section" id="listings">
       <div class="section-header">
         <p class="eyebrow">Community board</p>
         <h2>Local listings</h2>
         <p>Browse local items, services, jobs, events, rides, free items, lost-and-found posts, and community help. Contact the poster directly, meet safely, and verify details yourself.</p>
+      </div>
+
+      <div class="safety-box" role="note">
+        <strong>Listing safety:</strong> Meet in public, verify before paying, and never send gift cards, deposits, passwords, ID documents, citizenship cards, CDIB cards, or bank information to a stranger.
       </div>
 
       <div class="toolbar" aria-label="Listing filters">
@@ -172,6 +222,8 @@
         <p>Find official links and useful resources in one place. Always use official websites for registration, benefits, deadlines, legal requirements, and final answers.</p>
       </div>
 
+      <div class="featured-resources" id="featured-resources" aria-live="polite"></div>
+
       <div class="toolbar" aria-label="Resource filters">
         <label>
           <span>Search</span>
@@ -213,7 +265,7 @@
         <article class="submit-card">
           <span class="tag gold">Contact</span>
           <h3>Contact the project</h3>
-          <p>Report a correction, request a takedown, send a helpful link, or ask a question about the project.</p>
+          <p>Report a correction, request a takedown, send a helpful link, suggest a resource, or ask a question about the project.</p>
           <a class="button ghost form-link" id="contact-link" href="mailto:contact@example.com">Email project</a>
           <small></small>
         </article>

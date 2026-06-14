@@ -104,3 +104,15 @@ This build applies both logo options:
 ## Favicon-only header update
 
 This build stops using the full logo in the mobile header. It uses a small favicon-style icon beside plain text for a cleaner mobile layout. The favicon files are included in the root folder.
+
+
+## Next usefulness upgrade
+
+This build adds user-focused improvements:
+
+- How to use Tsitsalagi section
+- Latest listings and latest issues section
+- Featured resources strip
+- Listing safety warning
+- Report / correction links on listing, issue, and resource cards
+- Privacy-first public warning not to send private documents
