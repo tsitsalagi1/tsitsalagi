@@ -4,5 +4,5 @@ window.TSITSALAGI_CONFIG = {
   resourcesCsvUrl: "data/resources.csv",
   listingFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeOazBvPNLRTc0NumD5oV3TnajeoD4rdMq0UO--4HQTtMmcaA/viewform?usp=sharing&ouid=101078332389551426862",
   issueFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScwWnvZpnYbh8mB_4wduYEjcbMXQnIX2jWunjZQEOENxBJ8iA/viewform?usp=sharing&ouid=101078332389551426862",
-  contactEmail: "dynamictech.nwa@gmail.com"
+  contactEmail: "tsitsalagi.com@gmail.com"
 };
