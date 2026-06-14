@@ -137,7 +137,7 @@ function contactReportUrl(options = {}) {
   const params = new URLSearchParams();
   const email = options.email || adminContactEmail();
   params.set('to', email);
-  params.set('subject', options.subject || 'Tsitsalagi Contact / Report');
+  params.set('subject', options.subject || 'Tsitsalagi.com Contact / Report');
   if (options.body) params.set('body', options.body);
   if (options.type) params.set('type', options.type);
   if (options.title) params.set('title', options.title);
@@ -154,7 +154,7 @@ function contactLink(contact) {
 
   if (lower.startsWith('email:')) {
     const email = raw.slice(raw.indexOf(':') + 1).trim();
-    href = gmailComposeUrl(email, 'Tsitsalagi listing contact');
+    href = gmailComposeUrl(email, 'Tsitsalagi.com listing contact');
     label = 'Email';
   } else if (lower.startsWith('text:') || lower.startsWith('phone:')) {
     const phone = raw.slice(raw.indexOf(':') + 1).trim();
@@ -164,7 +164,7 @@ function contactLink(contact) {
     href = raw.slice(raw.indexOf(':') + 1).trim();
     label = 'Open link';
   } else if (lower.includes('@') && !lower.includes(' ')) {
-    href = gmailComposeUrl(raw, 'Tsitsalagi listing contact');
+    href = gmailComposeUrl(raw, 'Tsitsalagi.com listing contact');
     label = 'Email';
   } else if (lower.startsWith('http')) {
     href = raw;
@@ -319,7 +319,7 @@ function shareButton(label, title, text, url) {
 
 function reportMessage(type, title) {
   return [
-    'Hello Tsitsalagi,',
+    'Hello Tsitsalagi.com Community Board,',
     '',
     `I would like to report or request a correction for a public ${type || 'post'}.`,
     title ? `Title: ${title}` : '',
@@ -335,7 +335,7 @@ function reportMessage(type, title) {
 }
 
 function reportLink(type, title, url) {
-  const subject = `Report or correction request: ${title || type || 'Tsitsalagi'}`;
+  const subject = `Report or correction request: ${title || type || 'Tsitsalagi.com Community Board'}`;
   const body = reportMessage(type, title);
   const href = contactReportUrl({ type, title, subject, body });
   return `<a class="report-link" href="${escapeHtml(href)}">Report / correct</a>`;
@@ -533,7 +533,7 @@ function renderListings() {
         <div class="card-actions">
           <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full listing</a>
           ${contactLink(item.Contact)}
-          ${shareButton('Share listing', item.Title || 'Tsitsalagi listing', `Listing on Tsitsalagi${item.Area ? ` in ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
+          ${shareButton('Share listing', item.Title || 'Tsitsalagi.com listing', `Listing on Tsitsalagi.com Community Board${item.Area ? ` in ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
           ${reportLink('listing', item.Title, detailUrl)}
         </div>
       </div>
@@ -578,7 +578,7 @@ function isLikelyPhotoUrl(value) {
 function photoHtml(item, type) {
   const url = itemPhotoUrl(item);
   if (!url) return '';
-  const title = item.Title || type || 'Tsitsalagi photo';
+  const title = item.Title || type || 'Tsitsalagi.com photo';
   return `<a class="card-photo" href="${escapeHtml(url)}" target="_blank" rel="noopener" aria-label="Open ${escapeHtml(title)} photo">
     <img src="${escapeHtml(url)}" alt="${escapeHtml(title)} photo" loading="lazy" />
   </a>`;
@@ -647,7 +647,7 @@ function renderIssues() {
       <footer>
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full issue</a>
         ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
-        ${shareButton('Share issue', item.Title || 'Tsitsalagi public issue', `Public issue on Tsitsalagi${item.Area ? ` about ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
+        ${shareButton('Share issue', item.Title || 'Tsitsalagi.com public issue', `Public issue on Tsitsalagi.com Community Board${item.Area ? ` about ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
         ${reportLink('issue', item.Title, detailUrl)}
       </footer>
     </article>
@@ -672,7 +672,7 @@ function renderListingDetail() {
     return;
   }
 
-  document.title = `${item.Title || 'Listing'} | Tsitsalagi`;
+  document.title = `${item.Title || 'Listing'} | Tsitsalagi.com Community Board`;
   const detailUrl = `${window.location.origin}${detailPageUrl('listing', item)}`;
   box.innerHTML = `
     <article class="detail-card listing-detail-card">
@@ -697,7 +697,7 @@ function renderListingDetail() {
         <p>Use the public contact method provided by the poster. Meet safely and verify details before paying or sharing information.</p>
         <div class="card-actions detail-actions">
           ${contactLink(item.Contact) || `<span>${escapeHtml(item.Contact || 'No contact method listed')}</span>`}
-          ${shareButton('Share listing', item.Title || 'Tsitsalagi listing', `Listing on Tsitsalagi${item.Area ? ` in ${item.Area}` : ''}.`, detailUrl)}
+          ${shareButton('Share listing', item.Title || 'Tsitsalagi.com listing', `Listing on Tsitsalagi.com Community Board${item.Area ? ` in ${item.Area}` : ''}.`, detailUrl)}
           ${reportLink('listing', item.Title, detailUrl)}
         </div>
       </section>
@@ -717,7 +717,7 @@ function renderIssueDetail() {
     return;
   }
 
-  document.title = `${item.Title || 'Issue'} | Tsitsalagi`;
+  document.title = `${item.Title || 'Issue'} | Tsitsalagi.com Community Board`;
   const detailUrl = `${window.location.origin}${detailPageUrl('issue', item)}`;
   const question = item.Question || item.Description || '';
   const ask = item.Ask || '';
@@ -743,7 +743,7 @@ function renderIssueDetail() {
       <section class="detail-section">
         <h2>Share or report</h2>
         <div class="card-actions detail-actions">
-          ${shareButton('Share issue', item.Title || 'Tsitsalagi public issue', `Public issue on Tsitsalagi${item.Area ? ` about ${item.Area}` : ''}.`, detailUrl)}
+          ${shareButton('Share issue', item.Title || 'Tsitsalagi.com public issue', `Public issue on Tsitsalagi.com Community Board${item.Area ? ` about ${item.Area}` : ''}.`, detailUrl)}
           ${reportLink('issue', item.Title, detailUrl)}
         </div>
       </section>
@@ -763,7 +763,7 @@ function renderResourceDetail() {
     return;
   }
 
-  document.title = `${item.Title || 'Resource'} | Tsitsalagi`;
+  document.title = `${item.Title || 'Resource'} | Tsitsalagi.com Community Board`;
   const detailUrl = `${window.location.origin}${detailPageUrl('resource', item)}`;
   const external = resourceUrl(item);
   box.innerHTML = `
@@ -785,13 +785,13 @@ function renderResourceDetail() {
       <section class="detail-section">
         <h2>Share or report</h2>
         <div class="card-actions detail-actions">
-          ${shareButton('Share resource', item.Title || 'Tsitsalagi resource', 'Useful resource listed on Tsitsalagi.', detailUrl)}
+          ${shareButton('Share resource', item.Title || 'Tsitsalagi.com resource', 'Useful resource listed on Tsitsalagi.com Community Board.', detailUrl)}
           ${reportLink('resource', item.Title, detailUrl)}
         </div>
       </section>
       <div class="detail-nav">
         <a class="button ghost" href="/resources.html">Back to all resources</a>
-        <a class="button secondary" href="/contact-report.html?subject=Resource%20suggestion&body=Hello%20Tsitsalagi%2C%0A%0AI%20would%20like%20to%20suggest%20a%20resource%3A%0A%0AResource%20name%3A%0AOfficial%20link%3A%0AWhy%20it%20is%20useful%3A%0A%0AThank%20you.">Suggest a resource</a>
+        <a class="button secondary" href="/contact-report.html?subject=Resource%20suggestion&body=Hello%20Tsitsalagi.com%20Community%20Board%2C%0A%0AI%20would%20like%20to%20suggest%20a%20resource%3A%0A%0AResource%20name%3A%0AOfficial%20link%3A%0AWhy%20it%20is%20useful%3A%0A%0AThank%20you.">Suggest a resource</a>
       </div>
     </article>`;
 }
@@ -842,7 +842,7 @@ function renderResources() {
       <div class="card-actions resource-actions">
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full resource</a>
         ${external ? `<a href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a>` : ''}
-        ${shareButton('Share resource', item.Title || 'Tsitsalagi resource', 'Useful resource listed on Tsitsalagi.', `${window.location.origin}${detailUrl}`)}
+        ${shareButton('Share resource', item.Title || 'Tsitsalagi.com resource', 'Useful resource listed on Tsitsalagi.com Community Board.', `${window.location.origin}${detailUrl}`)}
         ${reportLink('resource', item.Title, detailUrl)}
       </div>
     </article>
@@ -947,7 +947,7 @@ function setupLinks() {
 
   if (contactLinkEl) {
     contactLinkEl.href = contactReportUrl({
-      subject: 'Tsitsalagi Contact / Report',
+      subject: 'Tsitsalagi.com Contact / Report',
       body: 'Message for Tsitsalagi:\n\n'
     });
     contactLinkEl.target = '_self';
