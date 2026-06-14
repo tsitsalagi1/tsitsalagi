@@ -144,6 +144,89 @@ function contactLink(contact) {
   return `<a class="contact-link" href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
 }
 
+
+function slugify(value) {
+  return normalize(value)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 70) || 'item';
+}
+
+function itemId(prefix, ...parts) {
+  return `${prefix}-${slugify(parts.filter(Boolean).join('-'))}`;
+}
+
+function pageUrl(anchor = '') {
+  return `${window.location.origin}${window.location.pathname}${anchor}`;
+}
+
+function shareButton(label, title, text, url) {
+  return `<button class="share-button small-share" type="button"
+    data-share-button
+    data-share-title="${escapeHtml(title)}"
+    data-share-text="${escapeHtml(text)}"
+    data-share-url="${escapeHtml(url)}">${escapeHtml(label)}</button>`;
+}
+
+async function copyShareText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return true;
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } finally {
+    document.body.removeChild(textarea);
+  }
+  return copied;
+}
+
+async function handleShare(button) {
+  const title = button.dataset.shareTitle || document.title;
+  const text = button.dataset.shareText || '';
+  const url = button.dataset.shareUrl || window.location.href;
+  const originalText = button.textContent;
+  const copyText = [title, text, url].filter(Boolean).join('\n');
+
+  try {
+    if (navigator.share) {
+      await navigator.share({ title, text, url });
+    } else {
+      await copyShareText(copyText);
+      button.textContent = 'Link copied';
+      setTimeout(() => { button.textContent = originalText; }, 1800);
+    }
+  } catch (error) {
+    if (error && error.name === 'AbortError') return;
+    try {
+      await copyShareText(copyText);
+      button.textContent = 'Link copied';
+      setTimeout(() => { button.textContent = originalText; }, 1800);
+    } catch (copyError) {
+      button.textContent = 'Copy failed';
+      setTimeout(() => { button.textContent = originalText; }, 1800);
+    }
+  }
+}
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-share-button]');
+  if (!button) return;
+  event.preventDefault();
+  handleShare(button);
+});
+
+
 function renderListings() {
   const grid = document.getElementById('listing-grid');
   const count = document.getElementById('listing-count');
@@ -163,8 +246,11 @@ function renderListings() {
     return;
   }
 
-  grid.innerHTML = items.map((item) => `
-    <article class="listing-card">
+  grid.innerHTML = items.map((item) => {
+    const id = itemId('listing', item.Title, item.Area);
+    const url = pageUrl(`#${id}`);
+    return `
+    <article class="listing-card" id="${escapeHtml(id)}">
       <div class="card-top">
         <span class="tag">${escapeHtml(item.Category || 'Listing')}</span>
         <span class="price">${escapeHtml(item.Price || 'See details')}</span>
@@ -178,10 +264,14 @@ function renderListings() {
       <p class="card-description">${escapeHtml(item.Description)}</p>
       <div class="card-contact">
         <span>Contact the poster directly. Meet safely.</span>
-        ${contactLink(item.Contact)}
+        <div class="card-actions">
+          ${contactLink(item.Contact)}
+          ${shareButton('Share listing', item.Title || 'Tsitsalagi listing', `Listing on Tsitsalagi${item.Area ? ` in ${item.Area}` : ''}.`, url)}
+        </div>
       </div>
     </article>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function statusClass(status) {
@@ -211,8 +301,11 @@ function renderIssues() {
     return;
   }
 
-  grid.innerHTML = items.map((item) => `
-    <article class="issue-card">
+  grid.innerHTML = items.map((item) => {
+    const id = itemId('issue', item.Title, item.Area);
+    const url = pageUrl(`#${id}`);
+    return `
+    <article class="issue-card" id="${escapeHtml(id)}">
       <div class="card-top">
         <span class="tag clay">${escapeHtml(item.Category || 'Issue')}</span>
         <span class="pill ${statusClass(item.Status)}">${escapeHtml(item.Status || 'Open')}</span>
@@ -226,9 +319,11 @@ function renderIssues() {
       <p class="ask"><strong>Public ask:</strong> ${escapeHtml(item.Ask)}</p>
       <footer>
         ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
+        ${shareButton('Share issue', item.Title || 'Tsitsalagi public issue', `Public issue on Tsitsalagi${item.Area ? ` about ${item.Area}` : ''}.`, url)}
       </footer>
     </article>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function renderResources() {
@@ -246,14 +341,21 @@ function renderResources() {
     return;
   }
 
-  grid.innerHTML = items.map((item) => `
-    <article class="resource-card">
+  grid.innerHTML = items.map((item) => {
+    const id = itemId('resource', item.Title, item.Category);
+    const url = pageUrl(`#${id}`);
+    return `
+    <article class="resource-card" id="${escapeHtml(id)}">
       <span class="tag gold">${escapeHtml(item.Category || 'Resource')}</span>
       <h3>${escapeHtml(item.Title)}</h3>
       <p>${escapeHtml(item.Description)}</p>
-      ${(item.Link || item.URL) ? `<a href="${escapeHtml(item.Link || item.URL)}" target="_blank" rel="noopener">Open resource</a>` : ''}
+      <div class="card-actions resource-actions">
+        ${(item.Link || item.URL) ? `<a href="${escapeHtml(item.Link || item.URL)}" target="_blank" rel="noopener">Open resource</a>` : ''}
+        ${shareButton('Share resource', item.Title || 'Tsitsalagi resource', 'Useful resource listed on Tsitsalagi.', url)}
+      </div>
     </article>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function setupFilters() {
