@@ -99,3 +99,8 @@ This build applies both logo options:
 
 1. The new logo is used on the public site itself (header and footer branding).
 2. The new logo is also used for browser/app/share branding (favicon, Apple touch icon, web manifest, and social preview metadata).
+
+
+## Favicon-only header update
+
+This build stops using the full logo in the mobile header. It uses a small favicon-style icon beside plain text for a cleaner mobile layout. The favicon files are included in the root folder.

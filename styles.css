@@ -71,19 +71,25 @@ button, input, select, textarea { font: inherit; }
 .brand {
   display: flex;
   align-items: center;
+  gap: .75rem;
   padding-left: .25rem;
   color: var(--ink);
   text-decoration: none;
   min-width: 0;
   flex: 0 1 auto;
 }
-.brand-logo {
-  display: block;
-  width: min(46vw, 430px);
-  min-width: 210px;
-  height: auto;
+.brand-favicon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,246,229,.85);
+  box-shadow: 0 8px 20px rgba(18,53,44,.16);
 }
-.brand strong { display: block; line-height: 1; }
+.brand strong { display: block; line-height: 1; font-size: 1.05rem; }
 .brand small { display: block; color: var(--muted); font-size: .78rem; margin-top: .15rem; font-weight: 800; }
 .nav-links { display: flex; align-items: center; gap: .25rem; }
 .nav-links a {
@@ -369,7 +375,9 @@ pre code { background: transparent !important; color: inherit; padding: 0 !impor
   .board-meta { align-items: stretch; flex-direction: column; }
   .small-button { width: 100%; }
   .card-top { align-items: start; }
-  .brand-logo { width: min(58vw, 300px); min-width: 170px; }
+  .brand-favicon { width: 46px; height: 46px; }
+  .brand strong { font-size: 1rem; }
+  .brand small { font-size: .72rem; }
 }
 
 
@@ -393,9 +401,7 @@ body::before {
   background: rgba(255, 248, 235, .88);
 }
 
-.brand-logo {
-  filter: drop-shadow(0 8px 18px rgba(18, 53, 44, .12));
-}
+
 
 .nav-links a:hover {
   background: linear-gradient(135deg, rgba(217,155,43,.22), rgba(31,109,104,.12));
@@ -694,17 +700,8 @@ button.button {
 
 
 .footer-brand {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  align-items: center;
+  display: block;
   margin-bottom: .75rem;
-}
-.footer-logo {
-  width: 92px;
-  height: 92px;
-  border-radius: 22px;
-  box-shadow: 0 10px 26px rgba(18,53,44,.12);
 }
 .footer-note {
   margin-top: .4rem;
@@ -713,8 +710,4 @@ button.button {
   .footer-brand {
     grid-template-columns: 1fr;
   }
-  .footer-logo {
-    width: 78px;
-    height: 78px;
   }
-}
