@@ -61,7 +61,7 @@ function parseCsv(text) {
   if (row.some((value) => value.trim() !== '')) rows.push(row);
 
   if (!rows.length) return [];
-  const headers = rows.shift().map((header) => header.trim());
+  const headers = rows.shift().map((header) => header.trim().replace(/^\uFEFF/, ''));
   return rows.map((values) => {
     const item = {};
     headers.forEach((header, index) => {
@@ -331,24 +331,34 @@ async function init() {
   const resourceGrid = document.getElementById('resource-grid');
 
   try {
-    const [listings, issues, resources] = await Promise.all([
-      loadCsv(config.listingsCsvUrl || 'data/listings.csv'),
-      loadCsv(config.issuesCsvUrl || 'data/issues.csv'),
-      loadCsv(config.resourcesCsvUrl || 'data/resources.csv')
-    ]);
-    state.listings = listings;
-    state.issues = issues;
-    state.resources = resources;
-    setupFilters();
-    renderListings();
-    renderIssues();
-    renderResources();
+    state.listings = await loadCsv(config.listingsCsvUrl || 'data/listings.csv');
   } catch (error) {
-    console.error(error);
-    if (listingGrid) listingGrid.innerHTML = `<div class="empty-state">Could not load listings. Check the CSV link in config.js.</div>`;
-    if (issueGrid) issueGrid.innerHTML = `<div class="empty-state">Could not load issues. Check the CSV link in config.js.</div>`;
-    if (resourceGrid) resourceGrid.innerHTML = `<div class="empty-state">Could not load resources. Check the CSV link in config.js.</div>`;
+    console.error('Listings CSV failed:', error);
+    state.listings = [];
+    if (listingGrid) listingGrid.innerHTML = `<div class="empty-state">Could not load listings. Open the Approved Listings CSV link from config.js and confirm it shows public CSV text.</div>`;
   }
+
+  try {
+    state.issues = await loadCsv(config.issuesCsvUrl || 'data/issues.csv');
+  } catch (error) {
+    console.error('Issues CSV failed:', error);
+    state.issues = [];
+    if (issueGrid) issueGrid.innerHTML = `<div class="empty-state">Could not load issues. Open the Approved Issues CSV link from config.js and confirm it shows public CSV text.</div>`;
+  }
+
+  try {
+    state.resources = await loadCsv(config.resourcesCsvUrl || 'data/resources.csv');
+  } catch (error) {
+    console.error('Resources CSV failed:', error);
+    state.resources = [];
+    if (resourceGrid) resourceGrid.innerHTML = `<div class="empty-state">Could not load resources. Upload data/resources.csv or publish a Resources CSV link.</div>`;
+  }
+
+  setupFilters();
+
+  if (state.listings.length) renderListings();
+  if (state.issues.length) renderIssues();
+  if (state.resources.length) renderResources();
 }
 
 init();
