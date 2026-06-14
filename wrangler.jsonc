@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tsitsalagi",
+  "main": "_worker.js",
+  "compatibility_date": "2026-06-14",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "r2_buckets": [
+    {
+      "binding": "PHOTOS_BUCKET",
+      "bucket_name": "tsitsalagi-uploads"
+    }
+  ],
+  "vars": {
+    "SHEETS_WEBHOOK_URL": "https://script.google.com/macros/s/AKfycbzwdCEocNKN4lF3cEjxVwk5iXWkPfp42k6LU_tX2iYbozS6-hJlPNMQOb2vm-ceZvHC9A/exec"
+  }
+}

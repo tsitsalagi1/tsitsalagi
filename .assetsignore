@@ -1,0 +1,11 @@
+_worker.js
+wrangler.jsonc
+wrangler.toml
+GOOGLE_APPS_SCRIPT.gs
+SHEET_FORMULAS.txt
+README_UPLOAD.txt
+README_PHOTO_VISIBLE_FIX.txt
+*.zip
+*.gs
+*.pdf
+*.xlsx
