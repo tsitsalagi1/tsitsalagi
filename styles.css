@@ -20,21 +20,26 @@
   --cream: #fff6e5;
   --shadow: 0 26px 80px rgba(35, 24, 12, .18);
   --radius: 24px;
+  --focus: #0a5b4d;
 }
 
+
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; font-size: 17px; }
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background:
+    linear-gradient(90deg, rgba(19,63,49,.035) 0 2px, transparent 2px 28px),
+    linear-gradient(0deg, rgba(126,47,35,.035) 0 2px, transparent 2px 28px),
+    repeating-linear-gradient(45deg, rgba(217,155,43,.09) 0 12px, rgba(255,246,229,.24) 12px 24px),
     radial-gradient(circle at 10% 0%, rgba(217,155,43,.34), transparent 30rem),
     radial-gradient(circle at 86% 10%, rgba(31,109,104,.20), transparent 27rem),
     radial-gradient(circle at 20% 90%, rgba(126,47,35,.10), transparent 30rem),
-    repeating-linear-gradient(45deg, rgba(126,47,35,.030) 0 10px, transparent 10px 20px),
     linear-gradient(180deg, var(--bg), #fff8ea 44%, var(--bg));
-  line-height: 1.55;
+  line-height: 1.65;
+  font-size: 1rem;
 }
 
 a { color: var(--cedar); font-weight: 780; }
@@ -89,8 +94,8 @@ button, input, select, textarea { font: inherit; }
   background: transparent;
   box-shadow: none;
 }
-.brand strong { display: block; line-height: 1; font-size: 1.05rem; }
-.brand small { display: block; color: var(--muted); font-size: .78rem; margin-top: .15rem; font-weight: 800; }
+.brand strong { display: block; line-height: 1.05; font-size: 1.1rem; }
+.brand small { display: block; color: var(--muted); font-size: .84rem; margin-top: .18rem; font-weight: 900; }
 .nav-links { display: flex; align-items: center; gap: .25rem; }
 .nav-links a {
   color: var(--ink);
@@ -140,13 +145,13 @@ button, input, select, textarea { font: inherit; }
   font-size: .76rem;
 }
 h1, h2, h3 { line-height: 1.06; margin: 0; }
-h1 { font-size: clamp(3rem, 9.5vw, 7.2rem); letter-spacing: -.072em; max-width: 12ch; }
-h2 { font-size: clamp(2rem, 5vw, 4.4rem); letter-spacing: -.05em; }
-h3 { font-size: 1.28rem; letter-spacing: -.025em; }
+h1 { font-size: clamp(2.55rem, 7.4vw, 5.8rem); letter-spacing: -.055em; max-width: 13ch; }
+h2 { font-size: clamp(1.85rem, 4.2vw, 3.6rem); letter-spacing: -.04em; }
+h3 { font-size: 1.34rem; letter-spacing: -.02em; }
 .hero-text {
   max-width: 780px;
   color: var(--muted);
-  font-size: clamp(1.14rem, 2.3vw, 1.65rem);
+  font-size: clamp(1.16rem, 2vw, 1.45rem);
   margin: 1.25rem 0 0;
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.6rem; }

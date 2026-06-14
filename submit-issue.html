@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Tsitsalagi form page updated to use the root logo/favicon assets. -->
-  <title>Submit an Issue | Tsitsalagi</title>
-  <meta name="description" content="Submit a documented public issue to Tsitsalagi." />
+  <title>Submit an Issue | Tsitsalagi.com Community Board</title>
+  <meta name="description" content="Submit a documented public issue to Tsitsalagi.com Community Board for review." />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
@@ -38,12 +38,15 @@
       color: var(--ink);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background:
-        repeating-linear-gradient(45deg, rgba(255,255,255,.28) 0 12px, rgba(217, 163, 38, .05) 12px 24px),
+        linear-gradient(90deg, rgba(7,63,53,.04) 0 2px, transparent 2px 28px),
+        linear-gradient(0deg, rgba(152,59,47,.04) 0 2px, transparent 2px 28px),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.28) 0 12px, rgba(217, 163, 38, .08) 12px 24px),
         radial-gradient(circle at 20% 0%, rgba(217, 163, 38, .24), transparent 30%),
         radial-gradient(circle at 90% 10%, rgba(42, 138, 127, .18), transparent 36%),
         var(--bg);
       min-height: 100vh;
-      line-height: 1.55;
+      line-height: 1.65;
+      font-size: 17px;
     }
 
     a { color: inherit; }
@@ -482,6 +485,25 @@
       border: 0;
     }
 
+
+
+    /* basket-weave readability accents */
+    .topbar::after, .hero-card::before, .card::before, .side::before, .panel::before {
+      content: "";
+      display: block;
+      height: 7px;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(90deg, var(--gold) 0 10%, var(--teal) 10% 20%, var(--green) 20% 30%, var(--clay) 30% 40%, rgba(255,248,234,.9) 40% 50%, var(--gold) 50% 60%, var(--teal) 60% 70%, var(--green) 70% 80%, var(--clay) 80% 90%, rgba(255,248,234,.9) 90% 100%);
+      opacity: .88;
+      margin-bottom: 14px;
+    }
+    .topbar { position: sticky; }
+    .topbar::after { position: absolute; left: 22px; right: 22px; bottom: -7px; height: 6px; margin: 0; opacity: .58; }
+    .hero-card, .card, .side, .panel { overflow: hidden; }
+    input, select, textarea { font-size: 1rem; line-height: 1.55; }
+    label { font-size: 1rem; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 4px solid rgba(7,63,53,.32); outline-offset: 3px; }
+
     @media (max-width: 900px) {
       .form-shell { grid-template-columns: 1fr; }
       .side { order: -1; }
@@ -499,11 +521,11 @@
 </head>
 <body>
 <div class="page">
-    <header class="topbar" aria-label="Tsitsalagi header">
-      <a class="brand" href="/" aria-label="Back to Tsitsalagi homepage">
+    <header class="topbar" aria-label="Tsitsalagi.com Community Board header">
+      <a class="brand" href="/" aria-label="Back to Tsitsalagi.com Community Board homepage">
         <img class="brand-mark" src="/favicon.png" alt="" aria-hidden="true" />
         <span class="brand-text">
-          <strong>Tsitsalagi</strong>
+          <strong>Tsitsalagi.com</strong>
           <span>Community Board</span>
         </span>
       </a>
@@ -518,9 +540,9 @@
       <div class="stripe" aria-hidden="true"></div>
       <div class="hero-content">
         <p class="kicker">Citizen issue board</p>
-        <h1 id="issue-title">Submit a community issue for review.</h1>
+        <h1 id="issue-title">Submit a community issue to Tsitsalagi.com Community Board.</h1>
         <div class="rule" aria-hidden="true"></div>
-        <p class="lead">Use this form to report a local issue, concern, hazard, or community problem. Approved submissions may appear publicly on Tsitsalagi to help inform the community.</p>
+        <p class="lead">Use this form to report a local issue, concern, hazard, or community problem. Approved submissions may appear publicly on Tsitsalagi.com Community Board after review.</p>
       </div>
     </section>
 
@@ -600,7 +622,7 @@
             <div class="photo-upload-box">
               <strong>Optional photo upload</strong>
               <input id="photo" name="photo" type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
-              <p class="photo-upload-note">Images only. Maximum 7 MB. Do not upload IDs, private documents, children’s private information, or anything you do not want reviewed by Tsitsalagi.</p>
+              <p class="photo-upload-note">Images only. Maximum 7 MB. Do not upload IDs, private documents, children’s private information, or anything you do not want reviewed by Tsitsalagi.com Community Board.</p>
             </div>
           </div>
 
@@ -615,7 +637,7 @@
           </div>
 
           <div id="statusBox" class="status-box" role="status" aria-live="polite"></div>
-          <p class="fine-print">After submission, you will be redirected back to Tsitsalagi.</p>
+          <p class="fine-print">After submission, you will be redirected back to Tsitsalagi.com Community Board.</p>
         </form>
       </section>
 
@@ -629,13 +651,13 @@
           <li>Avoid private personal information.</li>
           <li>Submissions may be edited for clarity before publication.</li>
         </ul>
-        <p class="fine-print">Need a correction or takedown instead? Email <a href="/contact-report.html?subject=Tsitsalagi%20Correction%20or%20Takedown%20Request">tsitsalagi.com@gmail.com</a>.</p>
+        <p class="fine-print">Need a correction or takedown instead? Email <a href="mailto:tsitsalagi.com@gmail.com">tsitsalagi.com@gmail.com</a>.</p>
         
       </aside>
     </main>
 
     <footer class="footer">
-      <p><strong>Tsitsalagi</strong> is an independent, nonpartisan, citizen-led community board.</p>
+      <p><strong>Tsitsalagi.com Community Board</strong> is an independent, nonpartisan, citizen-led community board.</p>
     </footer>
   </div>
 
@@ -684,7 +706,7 @@
           throw new Error(result.error || 'Submission failed.');
         }
 
-        showStatus('Issue submitted. Redirecting back to Tsitsalagi...');
+        showStatus('Issue submitted. Redirecting back to Tsitsalagi.com Community Board...');
         setTimeout(() => {
           window.location.href = RETURN_TO_WEBSITE;
         }, 1300);
