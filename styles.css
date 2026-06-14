@@ -79,15 +79,15 @@ button, input, select, textarea { font: inherit; }
   flex: 0 1 auto;
 }
 .brand-favicon {
-  display: grid;
-  place-items: center;
+  display: block;
   flex: 0 0 auto;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(255,246,229,.85);
-  box-shadow: 0 8px 20px rgba(18,53,44,.16);
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  object-position: center;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .brand strong { display: block; line-height: 1; font-size: 1.05rem; }
 .brand small { display: block; color: var(--muted); font-size: .78rem; margin-top: .15rem; font-weight: 800; }
@@ -375,7 +375,7 @@ pre code { background: transparent !important; color: inherit; padding: 0 !impor
   .board-meta { align-items: stretch; flex-direction: column; }
   .small-button { width: 100%; }
   .card-top { align-items: start; }
-  .brand-favicon { width: 46px; height: 46px; }
+  .brand-favicon { width: 48px; height: 48px; }
   .brand strong { font-size: 1rem; }
   .brand small { font-size: .72rem; }
 }
