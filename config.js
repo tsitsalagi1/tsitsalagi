@@ -5,7 +5,7 @@ window.TSITSALAGI_CONFIG = {
 
   resourcesCsvUrl: "resources.csv",
 
-  listingFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeOazBvPNLRTc0NumD5oV3TnajeoD4rdMq0UO--4HQTtMmcaA/viewform?usp=sharing&ouid=101078332389551426862",
+  listingFormUrl: "/submit-listing.html",
 
   issueFormUrl: "/submit-issue.html",
 

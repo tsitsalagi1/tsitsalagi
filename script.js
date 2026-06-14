@@ -508,7 +508,7 @@ function setupLinks() {
 
   if (config.listingFormUrl) {
     applyFormLink(listingLink, config.listingFormUrl);
-    if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
+    if (listingNote) listingNote.textContent = 'Custom listing form opens here and returns visitors to Tsitsalagi after setup.';
   } else {
     applyFormLink(listingLink, 'admin-setup.html');
   }
