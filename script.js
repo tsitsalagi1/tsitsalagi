@@ -177,7 +177,7 @@ function renderListings() {
       </div>
       <p class="card-description">${escapeHtml(item.Description)}</p>
       <div class="card-contact">
-        <span>Contact seller/poster directly. Meet safely.</span>
+        <span>Contact the poster directly. Meet safely.</span>
         ${contactLink(item.Contact)}
       </div>
     </article>
@@ -207,7 +207,7 @@ function renderIssues() {
   count.textContent = `${items.length} issue${items.length === 1 ? '' : 's'} shown`;
 
   if (!items.length) {
-    grid.innerHTML = `<div class="empty-state">No issues match those filters. Clear filters or add a new approved issue.</div>`;
+    grid.innerHTML = `<div class="empty-state">No issues match those filters. Clear filters or check back later.</div>`;
     return;
   }
 
@@ -251,7 +251,7 @@ function renderResources() {
       <span class="tag gold">${escapeHtml(item.Category || 'Resource')}</span>
       <h3>${escapeHtml(item.Title)}</h3>
       <p>${escapeHtml(item.Description)}</p>
-      ${item.Link ? `<a href="${escapeHtml(item.Link)}" target="_blank" rel="noopener">Open resource</a>` : ''}
+      ${(item.Link || item.URL) ? `<a href="${escapeHtml(item.Link || item.URL)}" target="_blank" rel="noopener">Open resource</a>` : ''}
     </article>
   `).join('');
 }
