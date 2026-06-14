@@ -1,32 +1,29 @@
-TSITSALAGI — Submit Listing custom form update
+TSITSALAGI FORM LOGO / ICON FIX
 
-Upload these files to the ROOT of your GitHub repo:
+Upload the files in this ZIP to the ROOT of your GitHub repository.
 
-1. submit-listing.html
-2. config.js
-3. script.js
+Important files to replace:
+- submit-issue.html
+- submit-listing.html
 
-This update changes the homepage "Open listing form" button to:
+Included asset files are also provided in case GitHub/Cloudflare still has an older icon:
+- favicon.png
+- favicon.ico
+- favicon-192.png
+- favicon-512.png
+- apple-touch-icon.png
+- site.webmanifest
+- logo.png
 
-/submit-listing.html
+What changed:
+- The submit issue page now uses /favicon.png in the header brand mark.
+- The submit listing page now uses /favicon.png in the header brand mark.
+- Both pages include the root favicon/apple-touch-icon/manifest links.
+- Google Form submission mappings were preserved.
 
-The custom listing form submits into your Google Form using these mapped entry IDs:
-
-Listing title: entry.1230016632
-Listing category: entry.1110620413
-Area / town / county: entry.571113392
-Price / cost: entry.1127442236
-Listing description: entry.1751129888
-Public contact method: entry.1678035951
-Tags / keywords: entry.408853371
-Agreement: entry.1735219399
-
-After submission, the visitor redirects back to:
-
-https://tsitsalagi.com/#listings
-
-Test after Cloudflare deploys:
-
-https://tsitsalagi.com/submit-listing.html?fresh=1
-
-Submit a test listing, then check your Google Form response sheet.
+After upload:
+1. Wait for Cloudflare to deploy.
+2. Open these with a fresh cache-busting URL:
+   https://tsitsalagi.com/submit-issue.html?fresh=logo1
+   https://tsitsalagi.com/submit-listing.html?fresh=logo1
+3. Use Ctrl+F5 or an incognito window if the old icon still appears.
