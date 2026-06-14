@@ -114,6 +114,33 @@ function matchesSearch(item, query, keys) {
   return haystack.includes(query.toLowerCase());
 }
 
+function adminContactEmail() {
+  return config.contactEmail || 'tsitsalagi.com@gmail.com';
+}
+
+function gmailComposeUrl(email, subject = '', body = '') {
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    to: email || adminContactEmail()
+  });
+  if (subject) params.set('su', subject);
+  if (body) params.set('body', body);
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}
+
+function contactReportUrl(options = {}) {
+  const params = new URLSearchParams();
+  const email = options.email || adminContactEmail();
+  params.set('to', email);
+  params.set('subject', options.subject || 'Tsitsalagi Contact / Report');
+  if (options.body) params.set('body', options.body);
+  if (options.type) params.set('type', options.type);
+  if (options.title) params.set('title', options.title);
+  if (options.url) params.set('url', options.url);
+  return `/contact-report.html?${params.toString()}`;
+}
+
 function contactLink(contact) {
   const raw = String(contact || '').trim();
   if (!raw) return '';
@@ -123,7 +150,7 @@ function contactLink(contact) {
 
   if (lower.startsWith('email:')) {
     const email = raw.slice(raw.indexOf(':') + 1).trim();
-    href = `mailto:${email}`;
+    href = gmailComposeUrl(email, 'Tsitsalagi listing contact');
     label = 'Email';
   } else if (lower.startsWith('text:') || lower.startsWith('phone:')) {
     const phone = raw.slice(raw.indexOf(':') + 1).trim();
@@ -133,7 +160,7 @@ function contactLink(contact) {
     href = raw.slice(raw.indexOf(':') + 1).trim();
     label = 'Open link';
   } else if (lower.includes('@') && !lower.includes(' ')) {
-    href = `mailto:${raw}`;
+    href = gmailComposeUrl(raw, 'Tsitsalagi listing contact');
     label = 'Email';
   } else if (lower.startsWith('http')) {
     href = raw;
@@ -169,10 +196,10 @@ function shareButton(label, title, text, url) {
 }
 
 function reportLink(type, title, url) {
-  const email = config.contactEmail || 'tsitsalagi.com@gmail.com';
-  const subject = encodeURIComponent(`Correction request: ${title || type}`);
-  const body = encodeURIComponent(`Please review this ${type}:\n\n${title || ''}\n${url || window.location.href}\n\nReason / correction needed:\n`);
-  return `<a class="report-link" href="mailto:${escapeHtml(email)}?subject=${subject}&body=${body}">Report / correct</a>`;
+  const subject = `Correction request: ${title || type}`;
+  const body = `Please review this ${type}:\n\n${title || ''}\n${url || window.location.href}\n\nReason / correction needed:\n`;
+  const href = contactReportUrl({ type, title, url: url || window.location.href, subject, body });
+  return `<a class="report-link" href="${escapeHtml(href)}">Report / correct</a>`;
 }
 
 function parseDateValue(value) {
@@ -535,22 +562,31 @@ function setupLinks() {
   const listingNote = document.getElementById('listing-form-note');
   const issueNote = document.getElementById('issue-form-note');
 
-  if (config.listingFormUrl) {
-    listingLink.href = config.listingFormUrl;
-    if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
-  } else {
-    listingLink.href = 'admin-setup.html';
+  if (listingLink) {
+    if (config.listingFormUrl) {
+      listingLink.href = config.listingFormUrl;
+      if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
+    } else {
+      listingLink.href = 'admin-setup.html';
+    }
   }
 
-  if (config.issueFormUrl) {
-    issueLink.href = config.issueFormUrl;
-    if (issueNote) issueNote.textContent = 'Submissions are reviewed before appearing publicly.';
-  } else {
-    issueLink.href = 'admin-setup.html';
+  if (issueLink) {
+    if (config.issueFormUrl) {
+      issueLink.href = config.issueFormUrl;
+      if (issueNote) issueNote.textContent = 'Submissions are reviewed before appearing publicly.';
+    } else {
+      issueLink.href = 'admin-setup.html';
+    }
   }
 
-  if (config.contactEmail) {
-    contactLinkEl.href = `mailto:${config.contactEmail}`;
+  if (contactLinkEl) {
+    contactLinkEl.href = contactReportUrl({
+      subject: 'Tsitsalagi Contact / Report',
+      body: 'Message for Tsitsalagi:\n\n'
+    });
+    contactLinkEl.target = '_self';
+    contactLinkEl.removeAttribute('rel');
   }
 }
 
