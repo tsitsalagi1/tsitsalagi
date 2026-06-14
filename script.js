@@ -492,18 +492,32 @@ function setupLinks() {
   const listingNote = document.getElementById('listing-form-note');
   const issueNote = document.getElementById('issue-form-note');
 
+  function applyFormLink(linkEl, url) {
+    if (!linkEl || !url) return;
+    linkEl.href = url;
+
+    const isLocal = url.startsWith('/') || url.startsWith('#') || url.startsWith(window.location.origin);
+    if (isLocal) {
+      linkEl.removeAttribute('target');
+      linkEl.removeAttribute('rel');
+    } else {
+      linkEl.setAttribute('target', '_blank');
+      linkEl.setAttribute('rel', 'noopener');
+    }
+  }
+
   if (config.listingFormUrl) {
-    listingLink.href = config.listingFormUrl;
+    applyFormLink(listingLink, config.listingFormUrl);
     if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
   } else {
-    listingLink.href = 'admin-setup.html';
+    applyFormLink(listingLink, 'admin-setup.html');
   }
 
   if (config.issueFormUrl) {
-    issueLink.href = config.issueFormUrl;
-    if (issueNote) issueNote.textContent = 'Submissions are reviewed before appearing publicly.';
+    applyFormLink(issueLink, config.issueFormUrl);
+    if (issueNote) issueNote.textContent = 'Custom issue form opens here and returns visitors to Tsitsalagi after setup.';
   } else {
-    issueLink.href = 'admin-setup.html';
+    applyFormLink(issueLink, 'admin-setup.html');
   }
 
   if (config.contactEmail) {
