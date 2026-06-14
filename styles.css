@@ -1,20 +1,24 @@
 :root {
-  --bg: #f3ecdc;
-  --bg-2: #e7d6bd;
-  --panel: #fffaf1;
-  --panel-2: #fbf0df;
-  --ink: #141512;
-  --muted: #62675f;
-  --line: #d8c7ab;
-  --forest: #254b3b;
-  --forest-2: #173329;
-  --forest-soft: #dfeae0;
-  --cedar: #7b3926;
-  --clay: #b86745;
-  --gold: #d3a64c;
+  /* Cherokee / Southeastern-inspired earth palette: river, cedar, clay, copper, sun, cream. */
+  --bg: #f4ead8;
+  --bg-2: #e7c99f;
+  --panel: #fff8eb;
+  --panel-2: #f5dfbf;
+  --ink: #1b160f;
+  --muted: #645747;
+  --line: #c99f64;
+  --forest: #133f31;
+  --forest-2: #09251d;
+  --forest-soft: #dfead8;
+  --cedar: #7e2f23;
+  --clay: #b85032;
+  --gold: #d99b2b;
+  --turquoise: #1f6d68;
+  --river: #295f73;
+  --plum: #4a2a54;
   --danger: #9a2f24;
-  --cream: #fff6e7;
-  --shadow: 0 24px 70px rgba(30, 24, 17, .13);
+  --cream: #fff6e5;
+  --shadow: 0 26px 80px rgba(35, 24, 12, .18);
   --radius: 24px;
 }
 
@@ -25,9 +29,11 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at top left, rgba(211,166,76,.28), transparent 32rem),
-    radial-gradient(circle at 80% 10%, rgba(37,75,59,.13), transparent 28rem),
-    linear-gradient(180deg, var(--bg), #fbf7ed 44%, var(--bg));
+    radial-gradient(circle at 10% 0%, rgba(217,155,43,.34), transparent 30rem),
+    radial-gradient(circle at 86% 10%, rgba(31,109,104,.20), transparent 27rem),
+    radial-gradient(circle at 20% 90%, rgba(126,47,35,.10), transparent 30rem),
+    repeating-linear-gradient(45deg, rgba(126,47,35,.030) 0 10px, transparent 10px 20px),
+    linear-gradient(180deg, var(--bg), #fff8ea 44%, var(--bg));
   line-height: 1.55;
 }
 
@@ -370,4 +376,256 @@ pre code { background: transparent !important; color: inherit; padding: 0 !impor
   .small-button { width: 100%; }
   .card-top { align-items: start; }
   .brand small { font-size: .72rem; }
+}
+
+
+/* Tsitsalagi visual upgrade: stronger color, warm contrast, and subtle Southeastern-style geometric accents. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: .32;
+  background:
+    linear-gradient(90deg, transparent 0 48%, rgba(217,155,43,.20) 48% 52%, transparent 52% 100%),
+    repeating-linear-gradient(90deg, transparent 0 38px, rgba(19,63,49,.045) 38px 40px),
+    repeating-linear-gradient(0deg, transparent 0 38px, rgba(126,47,35,.038) 38px 40px);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.08));
+}
+
+.nav {
+  border-color: rgba(201,159,100,.55);
+  background: rgba(255, 248, 235, .88);
+}
+
+.brand-mark {
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255,246,229,.32), transparent 32%),
+    conic-gradient(from 45deg, var(--cedar), var(--gold), var(--turquoise), var(--forest), var(--cedar));
+  border: 2px solid rgba(255,246,229,.75);
+  box-shadow: 0 8px 22px rgba(126,47,35,.22);
+}
+
+.nav-links a:hover {
+  background: linear-gradient(135deg, rgba(217,155,43,.22), rgba(31,109,104,.12));
+}
+
+.hero-copy {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(201,159,100,.45);
+  background:
+    linear-gradient(135deg, rgba(255,248,235,.96), rgba(246,224,191,.90)),
+    radial-gradient(circle at 88% 12%, rgba(31,109,104,.16), transparent 18rem);
+}
+
+.hero-copy::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 14px;
+  background: repeating-linear-gradient(90deg,
+    var(--cedar) 0 18px,
+    var(--gold) 18px 36px,
+    var(--turquoise) 36px 54px,
+    var(--forest) 54px 72px);
+}
+
+.hero-copy::after {
+  content: "";
+  position: absolute;
+  right: -90px;
+  bottom: -110px;
+  width: 310px;
+  height: 310px;
+  border-radius: 50%;
+  border: 34px solid rgba(217,155,43,.16);
+  box-shadow: inset 0 0 0 16px rgba(31,109,104,.10);
+  pointer-events: none;
+}
+
+.eyebrow {
+  color: var(--cedar);
+  text-shadow: 0 1px 0 rgba(255,255,255,.55);
+}
+
+h1 {
+  color: var(--forest-2);
+  text-shadow: 0 2px 0 rgba(255,246,229,.65);
+}
+
+.hero-panel {
+  border-color: rgba(217,155,43,.36);
+  background:
+    radial-gradient(circle at 80% 10%, rgba(217,155,43,.28), transparent 16rem),
+    radial-gradient(circle at 5% 95%, rgba(31,109,104,.28), transparent 18rem),
+    linear-gradient(145deg, var(--forest-2), #123f31 58%, #0b1c17);
+}
+
+.hero-panel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18px;
+  background: repeating-linear-gradient(90deg,
+    var(--gold) 0 20px,
+    var(--clay) 20px 40px,
+    var(--turquoise) 40px 60px,
+    rgba(255,246,229,.82) 60px 80px);
+  opacity: .92;
+}
+
+.button.primary {
+  background: linear-gradient(135deg, var(--cedar), var(--clay));
+  color: var(--cream);
+  box-shadow: 0 10px 24px rgba(126,47,35,.28);
+}
+
+.button.primary:hover,
+.small-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(35,24,12,.17);
+}
+
+.button.secondary {
+  border-color: var(--turquoise);
+  color: var(--turquoise);
+  background: rgba(255,248,235,.64);
+}
+
+.button.ghost {
+  border-color: var(--forest);
+  color: var(--forest);
+  background: rgba(255,248,235,.45);
+}
+
+.notice {
+  border-left-color: var(--gold);
+  border-top: 1px solid rgba(201,159,100,.35);
+  border-right: 1px solid rgba(201,159,100,.25);
+  border-bottom: 1px solid rgba(201,159,100,.25);
+  border-radius: 0 18px 18px 0;
+}
+
+.section-header h2 {
+  position: relative;
+  display: inline-block;
+  padding-bottom: .45rem;
+}
+
+.section-header h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 15%;
+  bottom: 0;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--cedar), var(--gold), var(--turquoise));
+}
+
+.quick-card,
+.listing-card,
+.issue-card,
+.resource-card,
+.submit-card,
+.rule-card,
+.setup-card {
+  border-color: rgba(201,159,100,.44);
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-card::before,
+.listing-card::before,
+.issue-card::before,
+.resource-card::before,
+.submit-card::before,
+.rule-card::before,
+.setup-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 7px;
+  background: linear-gradient(90deg, var(--cedar), var(--gold), var(--turquoise), var(--forest));
+  opacity: .88;
+}
+
+.quick-card:hover,
+.listing-card:hover,
+.issue-card:hover,
+.resource-card:hover,
+.submit-card:hover,
+.rule-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px rgba(35,24,12,.13);
+  border-color: rgba(126,47,35,.38);
+}
+
+.tag {
+  background: rgba(31,109,104,.13);
+  color: #15534f;
+}
+
+.tag.clay {
+  background: #f3d4c8;
+  color: var(--cedar);
+}
+
+.tag.gold,
+.price,
+.pill.status-waiting {
+  background: #f6dfaa;
+  color: #654506;
+}
+
+.pill.status-open {
+  background: #dcebd9;
+  color: var(--forest);
+}
+
+.pill.status-researching {
+  background: #eadcf0;
+  color: var(--plum);
+}
+
+.toolbar {
+  border-color: rgba(201,159,100,.50);
+  background: rgba(255,248,235,.82);
+  box-shadow: 0 10px 28px rgba(35,24,12,.08);
+}
+
+.toolbar input,
+.toolbar select {
+  border-color: rgba(201,159,100,.55);
+  background: #fffaf1;
+}
+
+.section-dark {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(217,155,43,.18), transparent 28rem),
+    radial-gradient(circle at 5% 90%, rgba(31,109,104,.24), transparent 24rem),
+    repeating-linear-gradient(135deg, rgba(255,246,229,.035) 0 12px, transparent 12px 24px),
+    var(--forest-2);
+}
+
+.site-footer {
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, var(--cedar), var(--gold), var(--turquoise), var(--forest)) 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .small-button,
+  .quick-card,
+  .listing-card,
+  .issue-card,
+  .resource-card,
+  .submit-card,
+  .rule-card {
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+  }
 }
