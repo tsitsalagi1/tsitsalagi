@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#213f32" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="stylesheet" href="/styles.css" />
+  <title>All Issues | Tsitsalagi</title>
+  <meta name="description" content="Browse all approved public issues on Tsitsalagi." />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header compact-header" id="top">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/" aria-label="Tsitsalagi home">
+        <img class="brand-favicon" src="/favicon.png" alt="" aria-hidden="true" />
+        <span><strong>Tsitsalagi</strong><small>Community Board</small></span>
+      </a>
+      <button class="menu-button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+      <div class="nav-links" id="nav-links">
+        <a href="/">Home</a>
+        <a href="/listings.html">Listing Board</a>
+        <a href="/issues.html">Issue Board</a>
+        <a href="/#resources">Resources</a>
+        <a href="/#submit">Submit</a>
+        <a href="/contact-report.html">Contact</a>
+      </div>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="section page-hero mini-hero">
+      <p class="eyebrow">Citizen issue board</p>
+      <h1>All public issues.</h1>
+      <p class="hero-text">Browse approved public issues in one place. Click any issue to open its full page with complete details, photo evidence, status, and report/correction options.</p>
+      <div class="hero-actions"><a class="button primary" href="/submit-issue.html">Submit an issue</a><a class="button ghost" href="/">Back home</a></div>
+    </section>
+    <section class="section section-dark">
+      <div class="toolbar dark-toolbar" aria-label="Issue filters">
+        <label><span>Search</span><input id="issue-search" type="search" placeholder="Search EMS, housing, tax, records…" autocomplete="off" /></label>
+        <label><span>Category</span><select id="issue-category"><option value="all">All categories</option></select></label>
+        <label><span>Status</span><select id="issue-status"><option value="all">All statuses</option></select></label>
+      </div>
+      <div class="board-meta dark-meta"><span id="issue-count">Loading issues…</span><button class="small-button light" id="clear-issue-filters" type="button">Clear filters</button></div>
+      <div class="card-grid issue-grid" id="issue-grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Tsitsalagi</strong> is an independent, nonpartisan, citizen-led community board.</p>
+    <p class="footer-note">Listings and issues are public community posts, not endorsements. Always verify information for yourself and meet safely.</p>
+    <a href="/">Back home</a>
+  </footer>
+  <script src="/config.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>

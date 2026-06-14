@@ -187,6 +187,52 @@ function pageUrl(anchor = '') {
   return `${window.location.origin}${window.location.pathname}${anchor}`;
 }
 
+
+function isHomePage() {
+  const path = window.location.pathname.replace(/\/+$/, '');
+  return path === '' || path === '/index.html';
+}
+
+function boardPageUrl(type) {
+  return type === 'issue' ? '/issues.html' : '/listings.html';
+}
+
+function detailPageUrl(type, item) {
+  const id = itemId(type, item.Title, item.Area);
+  return `/${type}.html?id=${encodeURIComponent(id)}`;
+}
+
+function displayDate(item, keys) {
+  for (const key of keys) {
+    if (item[key]) return item[key];
+  }
+  return '';
+}
+
+function sortNewest(items, keys) {
+  return items
+    .map((item, index) => ({ item, index, date: itemDate(item, keys) }))
+    .sort((a, b) => (b.date - a.date) || (b.index - a.index))
+    .map((entry) => entry.item);
+}
+
+function previewText(value, max = 240) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  if (text.length <= max) return text;
+  return `${text.slice(0, max).replace(/\s+\S*$/, '')}…`;
+}
+
+function nl2br(value) {
+  return escapeHtml(value).replace(/\n/g, '<br>');
+}
+
+function findItemForDetail(type, items) {
+  const params = new URLSearchParams(window.location.search);
+  const wanted = params.get('id') || window.location.hash.replace(/^#/, '');
+  if (!wanted) return null;
+  return items.filter(isApproved).find((item) => itemId(type, item.Title, item.Area) === wanted) || null;
+}
+
 function shareButton(label, title, text, url) {
   return `<button class="share-button small-share" type="button"
     data-share-button
@@ -247,11 +293,14 @@ function renderLatest() {
   const listingBox = document.getElementById('latest-listings');
   const issueBox = document.getElementById('latest-issues');
 
+  document.querySelectorAll('[data-listings-link]').forEach((link) => { link.href = '/listings.html'; });
+  document.querySelectorAll('[data-issues-link]').forEach((link) => { link.href = '/issues.html'; });
+
   if (listingBox) {
     const listings = recentItems(state.listings, ['Posted', 'Updated', 'LastUpdated'], 3);
     listingBox.innerHTML = listings.length ? listings.map((item) => {
-      const id = itemId('listing', item.Title, item.Area);
-      return `<a class="latest-item" href="#${escapeHtml(id)}">
+      const detailUrl = detailPageUrl('listing', item);
+      return `<a class="latest-item" href="${escapeHtml(detailUrl)}">
         <span>${escapeHtml(item.Category || 'Listing')}</span>
         <strong>${escapeHtml(item.Title)}</strong>
         <small>${escapeHtml([item.Area, item.Price].filter(Boolean).join(' • ') || 'View listing')}</small>
@@ -262,8 +311,8 @@ function renderLatest() {
   if (issueBox) {
     const issues = recentItems(state.issues, ['LastUpdated', 'Updated', 'Posted'], 3);
     issueBox.innerHTML = issues.length ? issues.map((item) => {
-      const id = itemId('issue', item.Title, item.Area);
-      return `<a class="latest-item" href="#${escapeHtml(id)}">
+      const detailUrl = detailPageUrl('issue', item);
+      return `<a class="latest-item" href="${escapeHtml(detailUrl)}">
         <span>${escapeHtml(item.Status || 'Issue')}</span>
         <strong>${escapeHtml(item.Title)}</strong>
         <small>${escapeHtml([item.Area, item.Category].filter(Boolean).join(' • ') || 'View issue')}</small>
@@ -359,49 +408,58 @@ function renderListings() {
   if (!grid) return;
 
   const filters = state.listingFilters;
-  const items = state.listings
+  let items = state.listings
     .filter(isApproved)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => filters.area === 'all' || item.Area === filters.area)
     .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Area', 'Price', 'Description', 'Tags']));
 
-  count.textContent = `${items.length} listing${items.length === 1 ? '' : 's'} shown`;
+  items = sortNewest(items, ['Posted', 'Updated', 'LastUpdated']);
+  const total = items.length;
+  const homePreview = isHomePage();
+  const visibleItems = homePreview ? items.slice(0, 6) : items;
+
+  if (count) {
+    count.textContent = homePreview
+      ? `Showing ${visibleItems.length} newest of ${total} approved listing${total === 1 ? '' : 's'}`
+      : `${items.length} listing${items.length === 1 ? '' : 's'} shown`;
+  }
 
   if (!items.length) {
     grid.innerHTML = `<div class="empty-state">No listings match those filters. Clear filters or check back later.</div>`;
     return;
   }
 
-  grid.innerHTML = items.map((item) => {
+  grid.innerHTML = visibleItems.map((item) => {
     const id = itemId('listing', item.Title, item.Area);
-    const url = pageUrl(`#${id}`);
+    const detailUrl = detailPageUrl('listing', item);
     return `
     <article class="listing-card" id="${escapeHtml(id)}">
       <div class="card-top">
         <span class="tag">${escapeHtml(item.Category || 'Listing')}</span>
         <span class="price">${escapeHtml(item.Price || 'See details')}</span>
       </div>
-      <h3>${escapeHtml(item.Title)}</h3>
+      <h3><a class="card-title-link" href="${escapeHtml(detailUrl)}">${escapeHtml(item.Title)}</a></h3>
       ${photoHtml(item, 'listing')}
       <div class="meta-list">
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
         ${item.Posted ? `<span class="pill">Posted ${escapeHtml(item.Posted)}</span>` : ''}
         ${item.Expires ? `<span class="pill">Expires ${escapeHtml(item.Expires)}</span>` : ''}
       </div>
-      <p class="card-description">${escapeHtml(item.Description)}</p>
+      <p class="card-description">${escapeHtml(previewText(item.Description, 210))}</p>
       <div class="card-contact">
         <span>Contact the poster directly. Meet safely.</span>
         <div class="card-actions">
+          <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full listing</a>
           ${contactLink(item.Contact)}
-          ${shareButton('Share listing', item.Title || 'Tsitsalagi listing', `Listing on Tsitsalagi${item.Area ? ` in ${item.Area}` : ''}.`, url)}
-          ${reportLink('listing', item.Title, url)}
+          ${shareButton('Share listing', item.Title || 'Tsitsalagi listing', `Listing on Tsitsalagi${item.Area ? ` in ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
+          ${reportLink('listing', item.Title, detailUrl)}
         </div>
       </div>
     </article>
   `;
-  }).join('');
+  }).join('') + (homePreview && total > visibleItems.length ? `<div class="view-all-card"><a class="button primary" href="/listings.html">View all ${total} listings</a></div>` : '');
 }
-
 
 function itemPhotoUrl(item) {
   const preferredKeys = [
@@ -457,44 +515,152 @@ function renderIssues() {
   if (!grid) return;
 
   const filters = state.issueFilters;
-  const items = state.issues
+  let items = state.issues
     .filter(isApproved)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => filters.status === 'all' || item.Status === filters.status)
     .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Status', 'Area', 'Question', 'Ask']));
 
-  count.textContent = `${items.length} issue${items.length === 1 ? '' : 's'} shown`;
+  items = sortNewest(items, ['LastUpdated', 'Updated', 'Posted']);
+  const total = items.length;
+  const homePreview = isHomePage();
+  const visibleItems = homePreview ? items.slice(0, 6) : items;
+
+  if (count) {
+    count.textContent = homePreview
+      ? `Showing ${visibleItems.length} newest of ${total} approved issue${total === 1 ? '' : 's'}`
+      : `${items.length} issue${items.length === 1 ? '' : 's'} shown`;
+  }
 
   if (!items.length) {
     grid.innerHTML = `<div class="empty-state">No issues match those filters. Clear filters or check back later.</div>`;
     return;
   }
 
-  grid.innerHTML = items.map((item) => {
+  grid.innerHTML = visibleItems.map((item) => {
     const id = itemId('issue', item.Title, item.Area);
-    const url = pageUrl(`#${id}`);
+    const detailUrl = detailPageUrl('issue', item);
+    const question = item.Question || item.Description || '';
+    const ask = item.Ask || '';
     return `
     <article class="issue-card" id="${escapeHtml(id)}">
       <div class="card-top">
         <span class="tag clay">${escapeHtml(item.Category || 'Issue')}</span>
         <span class="pill ${statusClass(item.Status)}">${escapeHtml(item.Status || 'Open')}</span>
       </div>
-      <h3>${escapeHtml(item.Title)}</h3>
+      <h3><a class="card-title-link" href="${escapeHtml(detailUrl)}">${escapeHtml(item.Title)}</a></h3>
       ${photoHtml(item, 'issue')}
       <div class="meta-list">
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
         ${item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.LastUpdated)}</span>` : ''}
       </div>
-      <p class="question"><strong>Citizen question:</strong> ${escapeHtml(item.Question)}</p>
-      <p class="ask"><strong>Public ask:</strong> ${escapeHtml(item.Ask)}</p>
+      ${question ? `<p class="question"><strong>Citizen question:</strong> ${escapeHtml(previewText(question, 220))}</p>` : ''}
+      ${ask ? `<p class="ask"><strong>Public ask:</strong> ${escapeHtml(previewText(ask, 180))}</p>` : ''}
       <footer>
+        <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full issue</a>
         ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
-        ${shareButton('Share issue', item.Title || 'Tsitsalagi public issue', `Public issue on Tsitsalagi${item.Area ? ` about ${item.Area}` : ''}.`, url)}
-        ${reportLink('issue', item.Title, url)}
+        ${shareButton('Share issue', item.Title || 'Tsitsalagi public issue', `Public issue on Tsitsalagi${item.Area ? ` about ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
+        ${reportLink('issue', item.Title, detailUrl)}
       </footer>
     </article>
   `;
-  }).join('');
+  }).join('') + (homePreview && total > visibleItems.length ? `<div class="view-all-card"><a class="button primary" href="/issues.html">View all ${total} issues</a></div>` : '');
+}
+
+function renderDetailPages() {
+  renderListingDetail();
+  renderIssueDetail();
+}
+
+function renderListingDetail() {
+  const box = document.getElementById('listing-detail');
+  if (!box) return;
+  const item = findItemForDetail('listing', state.listings);
+  if (!item) {
+    box.innerHTML = `<div class="empty-state detail-empty"><h2>Listing not found</h2><p>This listing may have been removed, not approved yet, or the link may be old.</p><a class="button primary" href="/listings.html">Back to all listings</a></div>`;
+    return;
+  }
+
+  document.title = `${item.Title || 'Listing'} | Tsitsalagi`;
+  const detailUrl = `${window.location.origin}${detailPageUrl('listing', item)}`;
+  box.innerHTML = `
+    <article class="detail-card listing-detail-card">
+      <div class="detail-kicker">
+        <span class="tag">${escapeHtml(item.Category || 'Listing')}</span>
+        <span class="price">${escapeHtml(item.Price || 'See details')}</span>
+      </div>
+      <h1>${escapeHtml(item.Title)}</h1>
+      ${photoHtml(item, 'listing')}
+      <div class="meta-list detail-meta">
+        ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
+        ${item.Posted ? `<span class="pill">Posted ${escapeHtml(item.Posted)}</span>` : ''}
+        ${item.Expires ? `<span class="pill">Expires ${escapeHtml(item.Expires)}</span>` : ''}
+        ${item.Tags ? `<span class="pill">${escapeHtml(item.Tags)}</span>` : ''}
+      </div>
+      <section class="detail-section">
+        <h2>Listing details</h2>
+        <p>${nl2br(item.Description || 'No description provided.')}</p>
+      </section>
+      <section class="detail-section">
+        <h2>Contact</h2>
+        <p>Use the public contact method provided by the poster. Meet safely and verify details before paying or sharing information.</p>
+        <div class="card-actions detail-actions">
+          ${contactLink(item.Contact) || `<span>${escapeHtml(item.Contact || 'No contact method listed')}</span>`}
+          ${shareButton('Share listing', item.Title || 'Tsitsalagi listing', `Listing on Tsitsalagi${item.Area ? ` in ${item.Area}` : ''}.`, detailUrl)}
+          ${reportLink('listing', item.Title, detailUrl)}
+        </div>
+      </section>
+      <div class="detail-nav">
+        <a class="button ghost" href="/listings.html">Back to all listings</a>
+        <a class="button secondary" href="/submit-listing.html">Submit a listing</a>
+      </div>
+    </article>`;
+}
+
+function renderIssueDetail() {
+  const box = document.getElementById('issue-detail');
+  if (!box) return;
+  const item = findItemForDetail('issue', state.issues);
+  if (!item) {
+    box.innerHTML = `<div class="empty-state detail-empty"><h2>Issue not found</h2><p>This issue may have been removed, not approved yet, or the link may be old.</p><a class="button primary" href="/issues.html">Back to all issues</a></div>`;
+    return;
+  }
+
+  document.title = `${item.Title || 'Issue'} | Tsitsalagi`;
+  const detailUrl = `${window.location.origin}${detailPageUrl('issue', item)}`;
+  const question = item.Question || item.Description || '';
+  const ask = item.Ask || '';
+  box.innerHTML = `
+    <article class="detail-card issue-detail-card">
+      <div class="detail-kicker">
+        <span class="tag clay">${escapeHtml(item.Category || 'Issue')}</span>
+        <span class="pill ${statusClass(item.Status)}">${escapeHtml(item.Status || 'Open')}</span>
+      </div>
+      <h1>${escapeHtml(item.Title)}</h1>
+      ${photoHtml(item, 'issue')}
+      <div class="meta-list detail-meta">
+        ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
+        ${item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.LastUpdated)}</span>` : ''}
+        ${item.Tags ? `<span class="pill">${escapeHtml(item.Tags)}</span>` : ''}
+      </div>
+      <section class="detail-section">
+        <h2>Issue description</h2>
+        <p>${nl2br(question || 'No description provided.')}</p>
+      </section>
+      ${ask ? `<section class="detail-section"><h2>Public ask</h2><p>${nl2br(ask)}</p></section>` : ''}
+      ${item.Source ? `<section class="detail-section"><h2>Source or related link</h2><p><a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Open source / related link</a></p></section>` : ''}
+      <section class="detail-section">
+        <h2>Share or report</h2>
+        <div class="card-actions detail-actions">
+          ${shareButton('Share issue', item.Title || 'Tsitsalagi public issue', `Public issue on Tsitsalagi${item.Area ? ` about ${item.Area}` : ''}.`, detailUrl)}
+          ${reportLink('issue', item.Title, detailUrl)}
+        </div>
+      </section>
+      <div class="detail-nav">
+        <a class="button ghost" href="/issues.html">Back to all issues</a>
+        <a class="button secondary" href="/submit-issue.html">Submit an issue</a>
+      </div>
+    </article>`;
 }
 
 function renderResources() {
@@ -584,7 +750,8 @@ function setupLinks() {
       listingLink.href = config.listingFormUrl;
       if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
     } else {
-      listingLink.href = 'admin-setup.html';
+      listingLink.href = '/submit-listing.html';
+      if (listingNote) listingNote.textContent = 'Submissions are reviewed before appearing publicly.';
     }
   }
 
@@ -593,7 +760,8 @@ function setupLinks() {
       issueLink.href = config.issueFormUrl;
       if (issueNote) issueNote.textContent = 'Submissions are reviewed before appearing publicly.';
     } else {
-      issueLink.href = 'admin-setup.html';
+      issueLink.href = '/submit-issue.html';
+      if (issueNote) issueNote.textContent = 'Submissions are reviewed before appearing publicly.';
     }
   }
 
@@ -644,6 +812,7 @@ async function init() {
   if (state.resources.length) renderResources();
   renderLatest();
   renderFeaturedResources();
+  renderDetailPages();
 }
 
 init();

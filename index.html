@@ -27,7 +27,7 @@
 
   <header class="site-header" id="top">
     <nav class="nav" aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="Tsitsalagi home">
+      <a class="brand" href="/" aria-label="Tsitsalagi home">
         <img class="brand-favicon" src="favicon.png" alt="" aria-hidden="true" />
         <span>
           <strong>Tsitsalagi</strong>
@@ -36,12 +36,12 @@
       </a>
       <button class="menu-button" aria-expanded="false" aria-controls="nav-links">Menu</button>
       <div class="nav-links" id="nav-links">
-        <a href="#latest">Latest</a>
-        <a href="#listings">Listings</a>
-        <a href="#issues">Issues</a>
+        <a href="/">Home</a>
+        <a href="/listings.html">Listing Board</a>
+        <a href="/issues.html">Issue Board</a>
         <a href="#resources">Resources</a>
         <a href="#submit">Submit</a>
-        <a href="#rules">Rules</a>
+        <a href="/contact-report.html">Contact</a>
       </div>
     </nav>
 
@@ -51,9 +51,9 @@
         <h1>Find local help. Share listings. Follow public issues.</h1>
         <p class="hero-text">Tsitsalagi is a simple public board for Cherokee Nation citizens and neighbors. Browse local listings, find useful resources, and follow documented community issues without creating an account.</p>
         <div class="hero-actions" aria-label="Primary actions">
-          <a class="button primary" href="#listings">Browse listings</a>
+          <a class="button primary" href="/listings.html">Browse listings</a>
           <a class="button secondary" href="#submit">Submit something</a>
-          <a class="button ghost" href="#issues">View issues</a>
+          <a class="button ghost" href="/issues.html">View issues</a>
           <button class="button ghost share-button site-share" type="button"
             data-share-button
             data-share-title="Tsitsalagi — Cherokee Community Board"
@@ -76,12 +76,12 @@
 
   <main id="main">
     <section class="section quick-grid" aria-label="Quick actions">
-      <a class="quick-card" href="#listings">
+      <a class="quick-card" href="/listings.html">
         <span>Community Board</span>
         <strong>Browse local listings</strong>
         <small>See items, services, jobs, events, rides, and local help.</small>
       </a>
-      <a class="quick-card" href="#issues">
+      <a class="quick-card" href="/issues.html">
         <span>Citizen Issues</span>
         <strong>Follow public issues</strong>
         <small>See documented questions about EMS, housing, language, broadband, water, taxes, records, and more.</small>
@@ -129,14 +129,14 @@
         <article class="latest-panel">
           <div class="latest-panel-head">
             <h3>Newest listings</h3>
-            <a href="#listings">View all listings</a>
+            <a href="/listings.html" data-listings-link>View all listings</a>
           </div>
           <div id="latest-listings" class="latest-list" aria-live="polite">Loading listings…</div>
         </article>
         <article class="latest-panel">
           <div class="latest-panel-head">
             <h3>Newest issues</h3>
-            <a href="#issues">View all issues</a>
+            <a href="/issues.html" data-issues-link>View all issues</a>
           </div>
           <div id="latest-issues" class="latest-list" aria-live="polite">Loading issues…</div>
         </article>
