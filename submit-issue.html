@@ -468,29 +468,7 @@
   </style>
 </head>
 <body>
-  <!--
-    Tsitsalagi custom Submit an Issue page
-    ------------------------------------------------------------
-    Upload this file to the root of your GitHub repo as:
-      submit-issue.html
-
-    IMPORTANT: To make the custom form submit into your existing Google Form,
-    replace every entry.REPLACE_* value in GOOGLE_FORM_FIELDS below with the real
-    Google Form entry IDs.
-
-    Fast way to get entry IDs:
-      1. Open your Google Form.
-      2. Click the three dots > Get pre-filled link.
-      3. Put obvious fake text in every field, like TITLE_TEST, ASK_TEST, etc.
-      4. Click Get link / Copy link.
-      5. In the copied URL, match each entry.123456789 value to the fake answer.
-      6. Paste those entry IDs below.
-
-    File uploads cannot be submitted to Google Forms through a custom static HTML page.
-    Use a source/evidence link field instead, or keep the original Google Form for uploads.
-  -->
-
-  <div class="page">
+<div class="page">
     <header class="topbar" aria-label="Tsitsalagi header">
       <a class="brand" href="/" aria-label="Back to Tsitsalagi homepage">
         <span class="brand-mark" aria-hidden="true">Ꮳ</span>
@@ -510,9 +488,9 @@
       <div class="stripe" aria-hidden="true"></div>
       <div class="hero-content">
         <p class="kicker">Citizen issue board</p>
-        <h1 id="issue-title">Submit a public issue for review.</h1>
+        <h1 id="issue-title">Submit a community issue for review.</h1>
         <div class="rule" aria-hidden="true"></div>
-        <p class="lead">Use this form to share a documented concern, public question, source link, or request for follow-up. Submissions are reviewed before appearing on Tsitsalagi.</p>
+        <p class="lead">Use this form to report a local issue, concern, hazard, or community problem. Approved submissions may appear publicly on Tsitsalagi to help inform the community.</p>
       </div>
     </section>
 
@@ -522,79 +500,74 @@
         <form id="issueForm" autocomplete="on">
           <div class="field">
             <label for="issueTitle">Issue title <span aria-hidden="true">*</span></label>
-            <input id="issueTitle" name="issueTitle" type="text" required maxlength="120" placeholder="Example: EMS response times in Adair County" />
+            <input id="issueTitle" name="issueTitle" type="text" required maxlength="120" placeholder="Example: Pothole on Main Street, downed tree blocking road" />
             <p class="hint">Keep it short and factual.</p>
           </div>
 
           <div class="field">
-            <label for="category">Category <span aria-hidden="true">*</span></label>
+            <label for="category">Issue category <span aria-hidden="true">*</span></label>
             <select id="category" name="category" required>
               <option value="">Select a category</option>
+              <option>Roads / Transportation</option>
+              <option>Utilities / Power</option>
+              <option>Water / Sewer</option>
+              <option>Public Safety</option>
+              <option>Animal Concern</option>
+              <option>Environmental Issue</option>
+              <option>Property Damage</option>
               <option>Community Concern</option>
-              <option>EMS / Health</option>
-              <option>Housing</option>
-              <option>Taxes / Fees</option>
-              <option>Voting / Elections</option>
-              <option>Records / Transparency</option>
-              <option>Broadband / Utilities</option>
-              <option>Language / Culture</option>
-              <option>Website Correction</option>
+              <option>Accessibility Issue</option>
+              <option>Elder Assistance Need</option>
               <option>Other</option>
             </select>
           </div>
 
           <div class="field">
-            <label for="area">Area or community</label>
-            <input id="area" name="area" type="text" maxlength="100" placeholder="Example: Tahlequah, Stilwell, Adair County, Cherokee Nation Reservation" />
-          </div>
-
-          <div class="field">
-            <label for="citizenQuestion">Citizen question <span aria-hidden="true">*</span></label>
-            <textarea id="citizenQuestion" name="citizenQuestion" required placeholder="What is the public question people need answered?"></textarea>
-          </div>
-
-          <div class="field">
-            <label for="publicAsk">Public ask <span aria-hidden="true">*</span></label>
-            <textarea id="publicAsk" name="publicAsk" required placeholder="What are you asking an agency, office, business, or official to do or answer?"></textarea>
-          </div>
-
-          <div class="field">
-            <label for="sourceLink">Source or related link</label>
-            <input id="sourceLink" name="sourceLink" type="url" placeholder="https://example.com/source-document-or-public-page" />
-            <p class="hint">Use a public source link when possible. This makes the issue easier to verify.</p>
-          </div>
-
-          <div class="field">
-            <label for="details">Extra details</label>
-            <textarea id="details" name="details" placeholder="Add helpful context, dates, names of agencies/offices, or links to public records."></textarea>
-          </div>
-
-          <div class="field">
-            <label for="contact">Your email or contact name</label>
-            <input id="contact" name="contact" type="text" maxlength="120" placeholder="Optional. Used only if clarification is needed." />
+            <label for="area">Area / town / county <span aria-hidden="true">*</span></label>
+            <input id="area" name="area" type="text" required maxlength="120" placeholder="Example: Tahlequah, Stilwell, Jay, Nowata, at-large" />
           </div>
 
           <fieldset>
-            <legend>Urgency</legend>
+            <legend>Severity / urgency <span aria-hidden="true">*</span></legend>
             <div class="choice-grid">
               <label class="choice">
-                <input type="radio" name="urgency" value="Low" checked />
-                <span><strong>Low</strong>General issue</span>
+                <input type="radio" name="severity" value="Low" required />
+                <span><strong>Low</strong>General concern</span>
               </label>
               <label class="choice">
-                <input type="radio" name="urgency" value="Medium" />
-                <span><strong>Medium</strong>Needs follow-up</span>
+                <input type="radio" name="severity" value="Moderate" />
+                <span><strong>Moderate</strong>Needs attention</span>
               </label>
               <label class="choice">
-                <input type="radio" name="urgency" value="High" />
-                <span><strong>High</strong>Time-sensitive</span>
+                <input type="radio" name="severity" value="High" />
+                <span><strong>High</strong>Serious issue</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="severity" value="Urgent" />
+                <span><strong>Urgent</strong>Time-sensitive</span>
               </label>
             </div>
           </fieldset>
 
+          <div class="field">
+            <label for="description">Issue description <span aria-hidden="true">*</span></label>
+            <textarea id="description" name="description" required placeholder="Describe the issue in detail. Include location, when it started, who is affected, and any important information that may help others understand the situation."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="contact">Public contact method <span aria-hidden="true">*</span></label>
+            <input id="contact" name="contact" type="text" required maxlength="180" placeholder="Only enter contact info you are comfortable having shown publicly." />
+            <p class="hint">Example: phone number, email, Facebook profile link, or “message through Facebook group.”</p>
+          </div>
+
+          <div class="field">
+            <label for="tags">Tags / keywords</label>
+            <input id="tags" name="tags" type="text" maxlength="180" placeholder="Example: pothole, flooding, stray animals, power outage, elder assistance" />
+          </div>
+
           <div class="checkbox-row">
-            <input id="confirm" name="confirm" type="checkbox" required />
-            <label for="confirm">I confirm this submission is factual to the best of my knowledge and appropriate for public review.</label>
+            <input id="agreement" name="agreement" type="checkbox" required />
+            <label for="agreement">I understand this report may be publicly posted if approved, and I will not submit false information, private documents, personal attacks, threats, illegal content, or sensitive personal information about others.</label>
           </div>
 
           <div class="button-row">
@@ -618,9 +591,7 @@
           <li>Submissions may be edited for clarity before publication.</li>
         </ul>
         <p class="fine-print">Need a correction or takedown instead? Email <a href="mailto:tsitsalagi.com@gmail.com">tsitsalagi.com@gmail.com</a>.</p>
-        <div id="setupWarning" class="setup-warning" hidden>
-          Setup needed: replace the <code>entry.REPLACE_*</code> values in this file with your Google Form entry IDs before this custom form can submit directly.
-        </div>
+        
       </aside>
     </main>
 
@@ -636,33 +607,28 @@
     const GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScwWnvZpnYbh8mB_4wduYEjcbMXQnIX2jWunjZQEOENxBJ8iA/formResponse';
     const RETURN_TO_WEBSITE = 'https://tsitsalagi.com/#issues';
 
-    // Replace these placeholders with the real Google Form entry IDs.
+    const AGREEMENT_TEXT = 'I understand this report may be publicly posted if approved, and I will not submit false information, private documents, personal attacks, threats, illegal content, or sensitive personal information about others.';
+
+    // These entry IDs came from your Google Form pre-filled link.
     const GOOGLE_FORM_FIELDS = {
-      issueTitle: 'entry.REPLACE_ISSUE_TITLE',
-      category: 'entry.REPLACE_CATEGORY',
-      area: 'entry.REPLACE_AREA',
-      citizenQuestion: 'entry.REPLACE_CITIZEN_QUESTION',
-      publicAsk: 'entry.REPLACE_PUBLIC_ASK',
-      sourceLink: 'entry.REPLACE_SOURCE_LINK',
-      details: 'entry.REPLACE_DETAILS',
-      contact: 'entry.REPLACE_CONTACT',
-      urgency: 'entry.REPLACE_URGENCY',
-      confirm: 'entry.REPLACE_CONFIRMATION'
+      issueTitle: 'entry.1264954800',
+      category: 'entry.448298041',
+      area: 'entry.1391773237',
+      severity: 'entry.40337481',
+      description: 'entry.819802142',
+      contact: 'entry.1471154427',
+      tags: 'entry.1930413836',
+      agreement: 'entry.531598003'
     };
 
     const form = document.getElementById('issueForm');
     const statusBox = document.getElementById('statusBox');
-    const setupWarning = document.getElementById('setupWarning');
     const submitButton = document.getElementById('submitButton');
 
     function showStatus(message, isError = false) {
       statusBox.textContent = message;
       statusBox.classList.toggle('error', isError);
       statusBox.style.display = 'block';
-    }
-
-    function entriesAreConfigured() {
-      return Object.values(GOOGLE_FORM_FIELDS).every(value => value && !value.includes('REPLACE_'));
     }
 
     function appendHiddenInput(postForm, name, value) {
@@ -673,23 +639,11 @@
       postForm.appendChild(input);
     }
 
-    if (!entriesAreConfigured()) {
-      setupWarning.hidden = false;
-    }
-
     form.addEventListener('submit', event => {
       event.preventDefault();
 
       if (!form.checkValidity()) {
         form.reportValidity();
-        return;
-      }
-
-      if (!entriesAreConfigured()) {
-        showStatus('This custom form still needs Google Form entry IDs. Opening the current Google Form instead so no submission is lost.', true);
-        setTimeout(() => {
-          window.location.href = GOOGLE_FORM_VIEW;
-        }, 1100);
         return;
       }
 
@@ -707,13 +661,11 @@
       appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.issueTitle, formData.get('issueTitle'));
       appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.category, formData.get('category'));
       appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.area, formData.get('area'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.citizenQuestion, formData.get('citizenQuestion'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.publicAsk, formData.get('publicAsk'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.sourceLink, formData.get('sourceLink'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.details, formData.get('details'));
+      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.severity, formData.get('severity'));
+      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.description, formData.get('description'));
       appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.contact, formData.get('contact'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.urgency, formData.get('urgency'));
-      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.confirm, formData.get('confirm') ? 'Yes' : 'No');
+      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.tags, formData.get('tags'));
+      appendHiddenInput(postForm, GOOGLE_FORM_FIELDS.agreement, formData.get('agreement') ? AGREEMENT_TEXT : '');
 
       document.body.appendChild(postForm);
       postForm.submit();
@@ -724,7 +676,7 @@
 
       setTimeout(() => {
         window.location.href = RETURN_TO_WEBSITE;
-      }, 1600);
+      }, 1700);
     });
   </script>
 </body>

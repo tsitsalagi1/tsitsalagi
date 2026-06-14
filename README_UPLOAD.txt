@@ -1,34 +1,30 @@
-TSITSALAGI SUBMIT ISSUE FORM PATCH
+Tsitsalagi Submit Issue Form - Google Form Ready
 
 Upload these files to the ROOT of your GitHub repo:
 
 1. submit-issue.html
-   - New custom Submit an Issue page styled to match Tsitsalagi.
-
 2. config.js
-   - Changes the homepage "Open issue form" button from the Google Form link to:
-     /submit-issue.html
-   - Keeps your listing form, CSV links, resources, and contact email.
-
 3. script.js
-   - Small link-handling fix so the local issue form opens in the same tab instead of a new tab.
-   - External Google Forms still open safely in a new tab.
 
-IMPORTANT ABOUT SUBMISSIONS
+What this update does:
+- Adds the custom Tsitsalagi-styled Submit an Issue page.
+- Makes the homepage Open Issue Form button point to /submit-issue.html.
+- Submits the custom form into your existing Google Form using the entry IDs from your pre-filled link.
+- Redirects the visitor back to https://tsitsalagi.com/#issues after submission.
 
-The custom issue form is visually ready, but Google Forms requires hidden entry IDs before a custom HTML form can post directly into your existing Google Form and then redirect back to Tsitsalagi.
+Google Form field mapping used:
+- Issue title: entry.1264954800
+- Issue category: entry.448298041
+- Area / town / county: entry.1391773237
+- Severity / urgency: entry.40337481
+- Issue description: entry.819802142
+- Public contact method: entry.1471154427
+- Tags / keywords: entry.1930413836
+- Agreement to rules: entry.531598003
 
-Until those entry IDs are added, the custom page will safely fall back by sending users to your original Google Issue Form so submissions are not lost.
-
-To finish direct submit + redirect:
-1. Open your Google Issue Form.
-2. Three dots > Get pre-filled link.
-3. Put obvious fake text in each field, like TITLE_TEST, CATEGORY_TEST, AREA_TEST.
-4. Copy the pre-filled link.
-5. Send that pre-filled link to ChatGPT.
-6. ChatGPT can replace the entry.REPLACE_* placeholders in submit-issue.html.
-
-After that, the form can submit directly and redirect users back to:
-https://tsitsalagi.com/#issues
-
-Do not upload IDs, CDIB cards, birthdates, private records, passwords, or private documents through this public form workflow.
+After uploading:
+1. Wait for Cloudflare to deploy.
+2. Open https://tsitsalagi.com/submit-issue.html?fresh=1
+3. Submit a test issue.
+4. Confirm it appears in your Google Form response sheet.
+5. Approve it in the sheet if you want it public on Tsitsalagi.
