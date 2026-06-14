@@ -197,9 +197,18 @@ function boardPageUrl(type) {
   return type === 'issue' ? '/issues.html' : '/listings.html';
 }
 
+function itemIdParts(type, item) {
+  if (type === 'resource') return [item.Title, item.Category, item.Area];
+  return [item.Title, item.Area];
+}
+
 function detailPageUrl(type, item) {
-  const id = itemId(type, item.Title, item.Area);
+  const id = itemId(type, ...itemIdParts(type, item));
   return `/${type}.html?id=${encodeURIComponent(id)}`;
+}
+
+function resourceUrl(item) {
+  return item.Link || item.URL || item.Url || item.Website || item.WebsiteURL || '';
 }
 
 function displayDate(item, keys) {
@@ -230,7 +239,7 @@ function findItemForDetail(type, items) {
   const params = new URLSearchParams(window.location.search);
   const wanted = params.get('id') || window.location.hash.replace(/^#/, '');
   if (!wanted) return null;
-  return items.filter(isApproved).find((item) => itemId(type, item.Title, item.Area) === wanted) || null;
+  return items.filter(isApproved).find((item) => itemId(type, ...itemIdParts(type, item)) === wanted) || null;
 }
 
 function shareButton(label, title, text, url) {
@@ -335,7 +344,7 @@ function renderFeaturedResources() {
       <span>Start with official links and high-use services.</span>
     </div>
     <div class="featured-grid">
-      ${items.map((item) => `<a class="featured-link" href="${escapeHtml(item.Link || item.URL || '#resources')}" target="_blank" rel="noopener">
+      ${items.map((item) => `<a class="featured-link" href="${escapeHtml(detailPageUrl('resource', item))}">
         <span>${escapeHtml(item.Category || 'Resource')}</span>
         <strong>${escapeHtml(item.Title)}</strong>
       </a>`).join('')}
@@ -570,6 +579,7 @@ function renderIssues() {
 function renderDetailPages() {
   renderListingDetail();
   renderIssueDetail();
+  renderResourceDetail();
 }
 
 function renderListingDetail() {
@@ -663,37 +673,97 @@ function renderIssueDetail() {
     </article>`;
 }
 
+function renderResourceDetail() {
+  const box = document.getElementById('resource-detail');
+  if (!box) return;
+  const item = findItemForDetail('resource', state.resources);
+  if (!item) {
+    box.innerHTML = `<div class="empty-state detail-empty"><h2>Resource not found</h2><p>This resource may have been removed, not approved yet, or the link may be old.</p><a class="button primary" href="/resources.html">Back to all resources</a></div>`;
+    return;
+  }
+
+  document.title = `${item.Title || 'Resource'} | Tsitsalagi`;
+  const detailUrl = `${window.location.origin}${detailPageUrl('resource', item)}`;
+  const external = resourceUrl(item);
+  box.innerHTML = `
+    <article class="detail-card resource-detail-card">
+      <div class="detail-kicker">
+        <span class="tag gold">${escapeHtml(item.Category || 'Resource')}</span>
+        ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
+      </div>
+      <h1>${escapeHtml(item.Title)}</h1>
+      <div class="meta-list detail-meta">
+        ${item.Tags ? `<span class="pill">${escapeHtml(item.Tags)}</span>` : ''}
+        ${item.Updated || item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.Updated || item.LastUpdated)}</span>` : ''}
+      </div>
+      <section class="detail-section">
+        <h2>Resource details</h2>
+        <p>${nl2br(item.Description || 'No description provided.')}</p>
+      </section>
+      ${external ? `<section class="detail-section"><h2>Official or related link</h2><p><a class="button primary" href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a></p><p class="detail-note">Always verify information on the official site before relying on deadlines, benefits, services, rules, or forms.</p></section>` : ''}
+      <section class="detail-section">
+        <h2>Share or report</h2>
+        <div class="card-actions detail-actions">
+          ${shareButton('Share resource', item.Title || 'Tsitsalagi resource', 'Useful resource listed on Tsitsalagi.', detailUrl)}
+          ${reportLink('resource', item.Title, detailUrl)}
+        </div>
+      </section>
+      <div class="detail-nav">
+        <a class="button ghost" href="/resources.html">Back to all resources</a>
+        <a class="button secondary" href="/contact-report.html?subject=Resource%20suggestion&body=Hello%20Tsitsalagi%2C%0A%0AI%20would%20like%20to%20suggest%20a%20resource%3A%0A%0AResource%20name%3A%0AOfficial%20link%3A%0AWhy%20it%20is%20useful%3A%0A%0AThank%20you.">Suggest a resource</a>
+      </div>
+    </article>`;
+}
+
 function renderResources() {
   const grid = document.getElementById('resource-grid');
+  const count = document.getElementById('resource-count');
   if (!grid) return;
 
   const filters = state.resourceFilters;
-  const items = state.resources
+  let items = state.resources
     .filter(isApproved)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
-    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Description']));
+    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Description', 'Area', 'Tags']));
+
+  items = items.sort((a, b) => `${a.Category || ''} ${a.Title || ''}`.localeCompare(`${b.Category || ''} ${b.Title || ''}`));
+  const total = items.length;
+  const homePreview = isHomePage();
+  const visibleItems = homePreview ? items.slice(0, 6) : items;
+
+  if (count) {
+    count.textContent = homePreview
+      ? `Showing ${visibleItems.length} of ${total} approved resource${total === 1 ? '' : 's'}`
+      : `${items.length} resource${items.length === 1 ? '' : 's'} shown`;
+  }
 
   if (!items.length) {
     grid.innerHTML = `<div class="empty-state">No resources match those filters.</div>`;
     return;
   }
 
-  grid.innerHTML = items.map((item) => {
-    const id = itemId('resource', item.Title, item.Category);
-    const url = pageUrl(`#${id}`);
+  grid.innerHTML = visibleItems.map((item) => {
+    const id = itemId('resource', ...itemIdParts('resource', item));
+    const detailUrl = detailPageUrl('resource', item);
+    const external = resourceUrl(item);
     return `
     <article class="resource-card" id="${escapeHtml(id)}">
       <span class="tag gold">${escapeHtml(item.Category || 'Resource')}</span>
-      <h3>${escapeHtml(item.Title)}</h3>
-      <p>${escapeHtml(item.Description)}</p>
+      <h3><a class="card-title-link" href="${escapeHtml(detailUrl)}">${escapeHtml(item.Title)}</a></h3>
+      <div class="meta-list">
+        ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
+        ${item.Tags ? `<span class="pill">${escapeHtml(item.Tags)}</span>` : ''}
+      </div>
+      <p>${escapeHtml(previewText(item.Description, 220))}</p>
       <div class="card-actions resource-actions">
-        ${(item.Link || item.URL) ? `<a href="${escapeHtml(item.Link || item.URL)}" target="_blank" rel="noopener">Open resource</a>` : ''}
-        ${shareButton('Share resource', item.Title || 'Tsitsalagi resource', 'Useful resource listed on Tsitsalagi.', url)}
-        ${reportLink('resource', item.Title, url)}
+        <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full resource</a>
+        ${external ? `<a href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a>` : ''}
+        ${shareButton('Share resource', item.Title || 'Tsitsalagi resource', 'Useful resource listed on Tsitsalagi.', `${window.location.origin}${detailUrl}`)}
+        ${reportLink('resource', item.Title, detailUrl)}
       </div>
     </article>
   `;
-  }).join('');
+  }).join('') + (homePreview && total > visibleItems.length ? `<div class="view-all-card"><a class="button primary" href="/resources.html">View all ${total} resources</a></div>` : '');
 }
 
 function setupFilters() {
@@ -736,6 +806,12 @@ function setupFilters() {
 
   resourceSearch?.addEventListener('input', (event) => { state.resourceFilters.search = event.target.value; renderResources(); });
   resourceCategory?.addEventListener('change', (event) => { state.resourceFilters.category = event.target.value; renderResources(); });
+  document.getElementById('clear-resource-filters')?.addEventListener('click', () => {
+    state.resourceFilters = { search: '', category: 'all' };
+    if (resourceSearch) resourceSearch.value = '';
+    if (resourceCategory) resourceCategory.value = 'all';
+    renderResources();
+  });
 }
 
 function setupLinks() {

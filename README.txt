@@ -1,4 +1,4 @@
-Tsitsalagi all-pages upgrade
+Tsitsalagi resource pages upgrade
 
 Upload/replace these files in the root of your GitHub repo:
 
@@ -7,21 +7,21 @@ listings.html
 issues.html
 listing.html
 issue.html
+resources.html
+resource.html
 script.js
 styles.css
 
 What this adds:
-- /listings.html = all approved listings with search/filter
-- /issues.html = all approved issues with search/filter
-- /listing.html?id=... = full page for one listing
-- /issue.html?id=... = full page for one issue
-- Homepage shows shorter preview cards and links to full pages
+- /resources.html = all approved resources with search/filter
+- /resource.html?id=... = one full resource page
+- Homepage shows resource preview cards and links to full resource pages
+- Navigation points to the full Resources page instead of only the homepage section
 
-Do not replace your working submit forms, worker, config, or Cloudflare files unless you intentionally want to change those later.
+Do not replace your working submit forms, worker, config, wrangler.jsonc, .assetsignore, or Cloudflare settings.
 
 After Cloudflare deploys, test:
-https://tsitsalagi.com/?fresh=detail1
-https://tsitsalagi.com/listings.html?fresh=detail1
-https://tsitsalagi.com/issues.html?fresh=detail1
+https://tsitsalagi.com/?fresh=resources1
+https://tsitsalagi.com/resources.html?fresh=resources1
 
-Then click any listing or issue title / Read full link.
+Then click a resource title or Read full resource.

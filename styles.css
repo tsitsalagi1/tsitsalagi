@@ -1007,3 +1007,8 @@ button.button {
   .detail-shell { padding-left: 1rem; padding-right: 1rem; }
   .detail-card h1 { font-size: clamp(2.25rem, 11vw, 4rem); }
 }
+
+.compact-actions { margin-top: 1rem; }
+.detail-note { font-size: .95rem; color: var(--muted); }
+.resource-detail-card h1 { max-width: 16ch; }
+.resource-card .meta-list { margin: .15rem 0 .2rem; }

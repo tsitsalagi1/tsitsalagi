@@ -39,7 +39,7 @@
         <a href="/">Home</a>
         <a href="/listings.html">Listing Board</a>
         <a href="/issues.html">Issue Board</a>
-        <a href="#resources">Resources</a>
+        <a href="/resources.html">Resources</a>
         <a href="#submit">Submit</a>
         <a href="/contact-report.html">Contact</a>
       </div>
@@ -86,7 +86,7 @@
         <strong>Follow public issues</strong>
         <small>See documented questions about EMS, housing, language, broadband, water, taxes, records, and more.</small>
       </a>
-      <a class="quick-card" href="#resources">
+      <a class="quick-card" href="/resources.html">
         <span>Official Links</span>
         <strong>Find useful links</strong>
         <small>Official websites and helpful resources in one place.</small>
@@ -220,6 +220,7 @@
         <p class="eyebrow">Resource directory</p>
         <h2>Official links and useful places</h2>
         <p>Find official links and useful resources in one place. Always use official websites for registration, benefits, deadlines, legal requirements, and final answers.</p>
+        <div class="hero-actions compact-actions"><a class="button ghost" href="/resources.html">View all resources</a></div>
       </div>
 
       <div class="featured-resources" id="featured-resources" aria-live="polite"></div>
@@ -235,6 +236,11 @@
             <option value="all">All categories</option>
           </select>
         </label>
+      </div>
+
+      <div class="board-meta">
+        <span id="resource-count">Loading resources…</span>
+        <button class="small-button" id="clear-resource-filters" type="button">Clear filters</button>
       </div>
 
       <div class="card-grid resource-grid" id="resource-grid" aria-live="polite"></div>
