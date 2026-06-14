@@ -47,8 +47,6 @@ async function handleSubmit(request, env, type) {
   let photoUrl = '';
   const photo = formData.get('photo');
   if (photo && typeof photo === 'object' && photo.size > 0) {
-    const photoError = validatePhoto(photo);
-    if (photoError) return json({ ok: false, error: photoError }, 400);
     const upload = await savePhoto(request, env, type, photo);
     photoUrl = upload.photoUrl;
   }
@@ -114,13 +112,15 @@ function validateFields(type, fields, formData) {
   return '';
 }
 
-function validatePhoto(photo) {
-  if (!ALLOWED_IMAGE_TYPES.has(photo.type)) return 'Only JPG, PNG, WebP, or GIF images are allowed.';
-  if (photo.size > MAX_UPLOAD_BYTES) return 'Image is too large. Maximum size is 7 MB.';
-  return '';
-}
-
 async function savePhoto(request, env, type, photo) {
+  if (!ALLOWED_IMAGE_TYPES.has(photo.type)) {
+    throwResponse('Only JPG, PNG, WebP, or GIF images are allowed.', 400);
+  }
+
+  if (photo.size > MAX_UPLOAD_BYTES) {
+    throwResponse('Image is too large. Maximum size is 7 MB.', 400);
+  }
+
   const extension = extensionFor(photo.type, photo.name || 'photo');
   const now = new Date();
   const datePath = now.toISOString().slice(0, 10);
@@ -182,3 +182,9 @@ function json(data, status = 200) {
   });
 }
 
+function throwResponse(message, status) {
+  throw new Response(JSON.stringify({ ok: false, error: message }), {
+    status,
+    headers: { 'Content-Type': 'application/json;charset=utf-8' }
+  });
+}
