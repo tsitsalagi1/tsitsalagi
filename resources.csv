@@ -1,5 +1,13 @@
-Approved,Title,Category,Area,Description,URL,Tags
-yes,Cherokee Nation official website,Official,Cherokee Nation,Official Cherokee Nation government website,https://www.cherokee.org,official government
-yes,Cherokee Nation Election Commission,Elections,Cherokee Nation,Official election information and voter resources,https://election.cherokee.org,elections voting
-yes,Cherokee Nation Gadugi Portal,Services,Cherokee Nation,Online access point for Cherokee Nation citizen services,https://gadugiportal.cherokee.org,services citizenship
-yes,Cherokee Phoenix,News,Cherokee Nation,Cherokee Nation news and public information,https://www.cherokeephoenix.org,news
+Approved,Title,Category,Description,Link
+"yes","Cherokee Nation Election Commission","Voting","Official voter registration and election information.","https://election.cherokee.org/"
+"yes","Cherokee Vote","Voting","Cherokee voter registration and mobilization information.","https://www.cherokeevote.com/"
+"yes","Cherokee Nation Tribal Council","Government","Official Cherokee Nation legislative branch and councilor information.","https://www.cherokee.org/our-government/legislative-branch/"
+"yes","Cherokee Nation FOIA / GRA Requests","Public Records","Official Cherokee Nation Attorney General FOIA/GRA request information.","https://attorneygeneral.cherokee.org/foia-gra-requests/"
+"yes","Cherokee Nation Health Services","Health","Official health services information.","https://health.cherokee.org/"
+"yes","Housing Authority of the Cherokee Nation","Housing","Housing programs and assistance information.","https://hacn.org/"
+"yes","Cherokee Nation Language Department","Language","Cherokee language programs and resources.","https://language.cherokee.org/"
+"yes","Cherokee Nation Gadugi Corps","Volunteer","Volunteer and service opportunities.","https://gadugi-corps.cherokee.org/"
+"yes","Cherokee Nation Career Services","Jobs / Training","Career, job, and training resources.","https://career-services.cherokee.org/"
+"yes","Cherokee Nation Environmental Programs","Environment","Environmental protection, water, air, brownfields, pesticides, and related program information.","https://www.cherokee.org/all-services/environmental-protection/"
+"yes","Anadisgoi","News","Official Cherokee Nation news and press releases.","https://anadisgoi.com/"
+"yes","Cherokee Nation Main Website","General","Official Cherokee Nation website and services directory.","https://www.cherokee.org/"

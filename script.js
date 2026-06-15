@@ -258,7 +258,7 @@ function renderLoadMore(containerId, total, shown, type, renderFn) {
   }
   box.innerHTML = `<button class="button secondary load-more-button" type="button">Load more</button><p class="load-note">Showing ${shown} of ${total} result${total === 1 ? '' : 's'}.</p>`;
   box.querySelector('button')?.addEventListener('click', () => {
-    state.visibleLimits[type] += Number.isFinite(DEFAULT_LIMIT) ? DEFAULT_LIMIT : total;
+    state.visibleLimits[type] += DEFAULT_LIMIT;
     renderFn();
   });
 }
