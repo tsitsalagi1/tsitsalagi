@@ -2,7 +2,7 @@ const config = window.TSITSALAGI_CONFIG || {};
 const approvedValue = (value) => String(value || '').trim().toLowerCase();
 const isApproved = (row) => config.showUnapproved || ['yes', 'true', 'approved', '1', 'y'].includes(approvedValue(row.Approved));
 
-const DEFAULT_LIMIT = 12;
+const DEFAULT_LIMIT = Number.POSITIVE_INFINITY;
 const HOME_LIMIT = 6;
 
 const state = {
@@ -258,7 +258,7 @@ function renderLoadMore(containerId, total, shown, type, renderFn) {
   }
   box.innerHTML = `<button class="button secondary load-more-button" type="button">Load more</button><p class="load-note">Showing ${shown} of ${total} result${total === 1 ? '' : 's'}.</p>`;
   box.querySelector('button')?.addEventListener('click', () => {
-    state.visibleLimits[type] += DEFAULT_LIMIT;
+    state.visibleLimits[type] += Number.isFinite(DEFAULT_LIMIT) ? DEFAULT_LIMIT : total;
     renderFn();
   });
 }
@@ -494,8 +494,8 @@ function renderListings() {
   items = sortItems(items, 'listing', filters.sort || 'newest');
   const total = items.length;
   const homePreview = isHomePage();
-  const limit = homePreview ? HOME_LIMIT : state.visibleLimits.listings;
-  const visibleItems = items.slice(0, limit);
+  const limit = homePreview ? HOME_LIMIT : items.length;
+  const visibleItems = homePreview ? items.slice(0, limit) : items;
 
   if (count) {
     count.textContent = homePreview
@@ -608,8 +608,8 @@ function renderIssues() {
   items = sortItems(items, 'issue', filters.sort || 'newest');
   const total = items.length;
   const homePreview = isHomePage();
-  const limit = homePreview ? HOME_LIMIT : state.visibleLimits.issues;
-  const visibleItems = items.slice(0, limit);
+  const limit = homePreview ? HOME_LIMIT : items.length;
+  const visibleItems = homePreview ? items.slice(0, limit) : items;
 
   if (count) {
     count.textContent = homePreview
@@ -810,8 +810,8 @@ function renderResources() {
   items = sortItems(items, 'resource', filters.sort || 'az');
   const total = items.length;
   const homePreview = isHomePage();
-  const limit = homePreview ? HOME_LIMIT : state.visibleLimits.resources;
-  const visibleItems = items.slice(0, limit);
+  const limit = homePreview ? HOME_LIMIT : items.length;
+  const visibleItems = homePreview ? items.slice(0, limit) : items;
 
   if (count) {
     count.textContent = homePreview
