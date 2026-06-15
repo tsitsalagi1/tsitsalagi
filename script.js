@@ -2,6 +2,18 @@ const config = window.TSITSALAGI_CONFIG || {};
 const approvedValue = (value) => String(value || '').trim().toLowerCase();
 const isApproved = (row) => config.showUnapproved || ['yes', 'true', 'approved', '1', 'y'].includes(approvedValue(row.Approved));
 
+function hasPublicTitle(row) {
+  return String(row?.Title || row?.['Listing title'] || row?.['Issue title'] || row?.Name || '').trim().length > 0;
+}
+
+function isPublicItem(row) {
+  return isApproved(row) && hasPublicTitle(row);
+}
+
+function publicItems(items) {
+  return (items || []).filter(isPublicItem);
+}
+
 const DEFAULT_LIMIT = Number.POSITIVE_INFINITY;
 const HOME_LIMIT = 6;
 
@@ -276,9 +288,9 @@ function latestDateText(items, keys) {
 function renderSiteStats() {
   const box = document.getElementById('site-stats');
   if (!box) return;
-  const approvedListings = state.listings.filter(isApproved);
-  const approvedIssues = state.issues.filter(isApproved);
-  const approvedResources = state.resources.filter(isApproved);
+  const approvedListings = publicItems(state.listings);
+  const approvedIssues = publicItems(state.issues);
+  const approvedResources = publicItems(state.resources);
   const latestValues = [
     latestDateText(approvedListings, ['Posted', 'Updated', 'LastUpdated']),
     latestDateText(approvedIssues, ['LastUpdated', 'Updated', 'Posted'])
@@ -306,7 +318,7 @@ function findItemForDetail(type, items) {
   const params = new URLSearchParams(window.location.search);
   const wanted = params.get('id') || window.location.hash.replace(/^#/, '');
   if (!wanted) return null;
-  return items.filter(isApproved).find((item) => itemId(type, ...itemIdParts(type, item)) === wanted) || null;
+  return publicItems(items).find((item) => itemId(type, ...itemIdParts(type, item)) === wanted) || null;
 }
 
 function shareButton(label, title, text, url) {
@@ -373,7 +385,7 @@ function itemDate(item, keys) {
 
 function recentItems(items, keys, count = 3) {
   return items
-    .filter(isApproved)
+    .filter(isPublicItem)
     .map((item, index) => ({ item, index, date: itemDate(item, keys) }))
     .sort((a, b) => (b.date - a.date) || (b.index - a.index))
     .slice(0, count)
@@ -415,7 +427,7 @@ function renderLatest() {
 function renderFeaturedResources() {
   const box = document.getElementById('featured-resources');
   if (!box) return;
-  const items = state.resources.filter(isApproved).slice(0, 4);
+  const items = publicItems(state.resources).slice(0, 4);
   if (!items.length) {
     box.innerHTML = '';
     return;
@@ -500,7 +512,7 @@ function renderListings() {
 
   const filters = state.listingFilters;
   let items = state.listings
-    .filter(isApproved)
+    .filter(isPublicItem)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => filters.area === 'all' || item.Area === filters.area)
     .filter((item) => !filters.photoOnly || itemPhotoUrl(item))
@@ -615,7 +627,7 @@ function renderIssues() {
 
   const filters = state.issueFilters;
   let items = state.issues
-    .filter(isApproved)
+    .filter(isPublicItem)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => filters.status === 'all' || item.Status === filters.status)
     .filter((item) => !filters.photoOnly || itemPhotoUrl(item))
@@ -820,7 +832,7 @@ function renderResources() {
 
   const filters = state.resourceFilters;
   let items = state.resources
-    .filter(isApproved)
+    .filter(isPublicItem)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
     .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Description', 'Area', 'Tags']));
 
@@ -870,11 +882,11 @@ function renderResources() {
 }
 
 function setupFilters() {
-  fillSelect('listing-category', uniqueValues(state.listings.filter(isApproved), 'Category'), 'categories');
-  fillSelect('listing-area', uniqueValues(state.listings.filter(isApproved), 'Area'), 'areas');
-  fillSelect('issue-category', uniqueValues(state.issues.filter(isApproved), 'Category'), 'categories');
-  fillSelect('issue-status', uniqueValues(state.issues.filter(isApproved), 'Status'), 'statuses');
-  fillSelect('resource-category', uniqueValues(state.resources.filter(isApproved), 'Category'), 'categories');
+  fillSelect('listing-category', uniqueValues(publicItems(state.listings), 'Category'), 'categories');
+  fillSelect('listing-area', uniqueValues(publicItems(state.listings), 'Area'), 'areas');
+  fillSelect('issue-category', uniqueValues(publicItems(state.issues), 'Category'), 'categories');
+  fillSelect('issue-status', uniqueValues(publicItems(state.issues), 'Status'), 'statuses');
+  fillSelect('resource-category', uniqueValues(publicItems(state.resources), 'Category'), 'categories');
 
   const listingSearch = document.getElementById('listing-search');
   const listingCategory = document.getElementById('listing-category');
