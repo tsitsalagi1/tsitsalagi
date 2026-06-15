@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Author Removal Request | Tsitsalagi.com Community Board</title>
+  <meta name="description" content="Request removal or status update for your own Tsitsalagi.com Community Board listing or issue using your private code." />
+  <meta property="og:site_name" content="Tsitsalagi.com Community Board" />
+  <meta property="og:title" content="Author Removal Request | Tsitsalagi.com Community Board" />
+  <meta property="og:description" content="Use your private author email and removal code to request that your listing or issue be removed, marked sold, or marked resolved." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tsitsalagi.com/remove-request.html" />
+  <meta property="og:image" content="https://tsitsalagi.com/favicon-512.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Author Removal Request | Tsitsalagi.com Community Board" />
+  <meta name="twitter:description" content="Request removal or status update for your own Tsitsalagi.com post." />
+  <meta name="twitter:image" content="https://tsitsalagi.com/favicon-512.png" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="removal-request-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header compact-header" id="top">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/" aria-label="Tsitsalagi.com Community Board home">
+        <img class="brand-favicon" src="/favicon.png" alt="" aria-hidden="true" />
+        <span><strong>Tsitsalagi.com</strong><small>Community Board</small></span>
+      </a>
+      <button class="menu-button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+      <div class="nav-links" id="nav-links">
+        <a href="/">Home</a>
+        <a href="/listings.html">Listing Board</a>
+        <a href="/issues.html">Issue Board</a>
+        <a href="/resources.html">Resources</a>
+        <a href="/about.html">About</a>
+        <a href="/contact-report.html">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" class="section">
+    <section class="page-hero compact-page-hero" aria-labelledby="remove-title">
+      <p class="eyebrow">AUTHOR REQUEST</p>
+      <h1 id="remove-title">Request removal or update for your own post.</h1>
+      <p class="hero-text">Use this page when your listing is sold, no longer available, posted by mistake, or when your public issue has been resolved. This request requires the private email and removal/update code sent to the original author.</p>
+      <div class="hero-actions">
+        <a class="button ghost" href="/listings.html">Back to listings</a>
+        <a class="button ghost" href="/issues.html">Back to issues</a>
+      </div>
+    </section>
+
+    <section class="form-shell removal-form-shell">
+      <article class="panel removal-panel">
+        <h2>Verified author request</h2>
+        <p class="small-note">This does not instantly delete a post. It verifies the private author email and code, then sends the request to the admin sheet for review.</p>
+
+        <form id="removeRequestForm" class="form-grid" autocomplete="on">
+          <div class="field">
+            <label for="typeInput">Post type <span aria-hidden="true">*</span></label>
+            <select id="typeInput" name="type" required>
+              <option value="listing">Listing</option>
+              <option value="issue">Issue</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="titleInput">Post title</label>
+            <input id="titleInput" name="title" type="text" maxlength="180" placeholder="Title of the listing or issue" />
+          </div>
+
+          <div class="field">
+            <label for="privateEmailInput">Private author email <span aria-hidden="true">*</span></label>
+            <input id="privateEmailInput" name="privateEmail" type="email" required maxlength="180" autocomplete="email" placeholder="Email used when the post was submitted" />
+          </div>
+
+          <div class="field">
+            <label for="removalCodeInput">Removal / update code <span aria-hidden="true">*</span></label>
+            <input id="removalCodeInput" name="removalCode" type="text" required maxlength="40" autocomplete="one-time-code" placeholder="Code from the email you received" />
+          </div>
+
+          <div class="field">
+            <label for="reasonInput">Reason <span aria-hidden="true">*</span></label>
+            <select id="reasonInput" name="reason" required>
+              <option value="">Select a reason</option>
+              <option>Sold / no longer available</option>
+              <option>Issue resolved</option>
+              <option>Posted by mistake</option>
+              <option>Needs correction</option>
+              <option>Duplicate post</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="messageInput">Optional message</label>
+            <textarea id="messageInput" name="message" placeholder="Add any short note for the admin reviewing the request."></textarea>
+          </div>
+
+          <input id="itemUrlInput" name="itemUrl" type="hidden" />
+
+          <div class="button-row">
+            <button class="button primary" id="removeSubmitButton" type="submit">Send verified request</button>
+            <a class="button ghost" href="/">Cancel</a>
+          </div>
+
+          <div id="removeStatusBox" class="status-box" role="status" aria-live="polite"></div>
+        </form>
+      </article>
+
+      <aside class="panel removal-help-panel">
+        <h2>Why a code is required</h2>
+        <p>Only the original author should be able to request removal, mark a listing sold, or mark an issue resolved. The private code prevents someone else from removing another person’s post just because they can see it online.</p>
+        <ul>
+          <li>Your private email is not shown publicly.</li>
+          <li>Your removal/update code is not shown publicly.</li>
+          <li>Requests are reviewed before public changes are made.</li>
+        </ul>
+        <p class="small-note">Lost your code? Use the Contact / Report page and include the public title, your private author email, and what needs to change.</p>
+        <a class="button secondary" href="/contact-report.html?subject=Lost%20removal%20code">Contact / report</a>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Tsitsalagi.com Community Board</strong> is an independent, nonpartisan, citizen-led community board.</p>
+    <a href="/">Back home</a>
+  </footer>
+
+  <script src="/config.js"></script>
+  <script src="/script.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const typeInput = document.getElementById('typeInput');
+    const titleInput = document.getElementById('titleInput');
+    const itemUrlInput = document.getElementById('itemUrlInput');
+    const form = document.getElementById('removeRequestForm');
+    const statusBox = document.getElementById('removeStatusBox');
+    const submitButton = document.getElementById('removeSubmitButton');
+
+    const type = params.get('type');
+    if (type === 'issue' || type === 'listing') typeInput.value = type;
+    titleInput.value = params.get('title') || '';
+    itemUrlInput.value = params.get('url') || document.referrer || '';
+
+    function showRemoveStatus(message, isError = false) {
+      statusBox.textContent = message;
+      statusBox.classList.toggle('error', isError);
+      statusBox.style.display = 'block';
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Checking code...';
+      showRemoveStatus('Checking the private author email and code...');
+
+      const payload = {
+        type: typeInput.value,
+        title: titleInput.value.trim(),
+        privateEmail: document.getElementById('privateEmailInput').value.trim(),
+        removalCode: document.getElementById('removalCodeInput').value.trim(),
+        reason: document.getElementById('reasonInput').value,
+        message: document.getElementById('messageInput').value.trim(),
+        itemUrl: itemUrlInput.value || window.location.href
+      };
+
+      try {
+        const response = await fetch('/api/removal-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok === false) throw new Error(result.error || 'Request failed.');
+        showRemoveStatus('Verified request received. The post will be reviewed for removal, sold status, or resolved status.');
+        submitButton.textContent = 'Request sent';
+      } catch (error) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Send verified request';
+        showRemoveStatus(error.message || 'Request failed. Please check your private email and removal code.', true);
+      }
+    });
+  </script>
+</body>
+</html>

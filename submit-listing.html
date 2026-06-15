@@ -105,6 +105,12 @@
             <p class="hint">Example: phone number, email, Facebook profile link, or “message through Facebook group.”</p>
           </div>
 
+          <div class="field private-author-field">
+            <label for="privateEmail">Private email for post management <span aria-hidden="true">*</span></label>
+            <input id="privateEmail" name="privateEmail" type="email" required maxlength="180" autocomplete="email" placeholder="Your private email — not shown publicly" />
+            <p class="hint">We will email a private removal/update code to this address. This email stays off the public board.</p>
+          </div>
+
           <div class="field">
             <label for="tags">Tags / keywords</label>
             <input id="tags" name="tags" type="text" maxlength="180" placeholder="Example: tools, lawn care, handmade, tutoring, ride, event" />
@@ -144,7 +150,7 @@
           <li>Use a safe public contact method.</li>
           <li>Submissions may be edited for clarity before publication.</li>
         </ul>
-        <p class="fine-print">Need a correction or takedown instead? Email <a href="mailto:tsitsalagi.com@gmail.com">tsitsalagi.com@gmail.com</a>.</p>
+        <p class="fine-print">Already submitted a listing? Use the removal/update link on your listing page and the private code emailed to you.</p>
       </aside>
     </main>
 
@@ -198,7 +204,7 @@
           throw new Error(result.error || 'Submission failed.');
         }
 
-        showStatus('Listing submitted. Redirecting back to Tsitsalagi.com Community Board...');
+        showStatus('Listing submitted. Check your private email for a removal/update code. Redirecting back to Tsitsalagi.com Community Board...');
         setTimeout(() => {
           window.location.href = RETURN_TO_WEBSITE;
         }, 1300);

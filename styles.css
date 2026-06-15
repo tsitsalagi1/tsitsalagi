@@ -945,3 +945,35 @@ body:not(.home-page) .hero:not(.home-hero) .lead {
     min-height: 52px;
   }
 }
+
+
+/* Verified author removal/update requests */
+.private-author-field {
+  border-left: 6px solid var(--gold);
+  padding-left: 1rem;
+  background: linear-gradient(90deg, rgba(180,122,17,.08), transparent 65%);
+  border-radius: 12px;
+}
+.author-action-link {
+  white-space: normal;
+}
+.removal-request-page .compact-page-hero h1 {
+  max-width: 18ch;
+}
+.removal-form-shell {
+  align-items: start;
+}
+.removal-panel,
+.removal-help-panel {
+  min-width: 0;
+}
+.removal-help-panel ul {
+  padding-left: 1.25rem;
+}
+.removal-help-panel li {
+  margin-bottom: .45rem;
+}
+@media (max-width: 720px) {
+  .private-author-field { padding-left: .75rem; }
+  .removal-request-page .compact-page-hero h1 { max-width: none; }
+}

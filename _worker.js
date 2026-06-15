@@ -1,5 +1,5 @@
 // Tsitsalagi photo upload + sheet submission Worker for Cloudflare Pages/Workers.
-// Diagnostic version: returns detailed but safe error messages so setup can be fixed faster.
+// Adds verified author removal/update requests.
 
 const MAX_UPLOAD_BYTES = 7 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
@@ -27,6 +27,10 @@ export default {
       return safeHandleSubmit(request, env, 'listing');
     }
 
+    if (request.method === 'POST' && url.pathname === '/api/removal-request') {
+      return safeHandleRemovalRequest(request, env);
+    }
+
     if (request.method === 'GET' && url.pathname.startsWith('/photos/')) {
       return handlePhoto(request, env, url);
     }
@@ -42,6 +46,16 @@ async function safeHandleSubmit(request, env, type) {
   } catch (err) {
     const message = readableError(err);
     console.log('Tsitsalagi submit error:', message, err && err.stack ? err.stack : '');
+    return json({ ok: false, error: message }, 500);
+  }
+}
+
+async function safeHandleRemovalRequest(request, env) {
+  try {
+    return await handleRemovalRequest(request, env);
+  } catch (err) {
+    const message = readableError(err);
+    console.log('Tsitsalagi removal request error:', message, err && err.stack ? err.stack : '');
     return json({ ok: false, error: message }, 500);
   }
 }
@@ -65,12 +79,65 @@ async function handleSubmit(request, env, type) {
 
   const payload = {
     token: env.SHEETS_TOKEN,
+    action: 'submit',
     type,
     createdAt: new Date().toISOString(),
     photoUrl,
     fields
   };
 
+  const sheetResult = await postToSheets(env, payload);
+  if (!sheetResult.ok) return json(sheetResult, 502);
+
+  return json({ ok: true, type, photoUrl });
+}
+
+async function handleRemovalRequest(request, env) {
+  if (!env.SHEETS_WEBHOOK_URL) return json({ ok: false, error: 'Runtime variable missing: SHEETS_WEBHOOK_URL.' }, 500);
+  if (!env.SHEETS_TOKEN) return json({ ok: false, error: 'Runtime secret missing: SHEETS_TOKEN.' }, 500);
+
+  const contentType = request.headers.get('content-type') || '';
+  let data = {};
+  if (contentType.includes('application/json')) {
+    data = await request.json();
+  } else {
+    const formData = await request.formData();
+    for (const [key, value] of formData.entries()) data[key] = clean(value);
+  }
+
+  const type = clean(data.type).toLowerCase();
+  const privateEmail = clean(data.privateEmail || data.authorEmail).toLowerCase();
+  const removalCode = clean(data.removalCode || data.code).replace(/\s+/g, '').toUpperCase();
+  const reason = clean(data.reason);
+
+  if (!['listing', 'issue'].includes(type)) return json({ ok: false, error: 'Choose listing or issue.' }, 400);
+  if (!isEmail(privateEmail)) return json({ ok: false, error: 'Enter the private author email used when the post was submitted.' }, 400);
+  if (!removalCode || removalCode.length < 6) return json({ ok: false, error: 'Enter the removal/update code from the author email.' }, 400);
+  if (!reason) return json({ ok: false, error: 'Choose a removal or update reason.' }, 400);
+
+  const payload = {
+    token: env.SHEETS_TOKEN,
+    action: 'removal-request',
+    type,
+    requestedAt: new Date().toISOString(),
+    title: clean(data.title),
+    privateEmail,
+    removalCode,
+    reason,
+    message: clean(data.message),
+    itemUrl: clean(data.itemUrl || data.url)
+  };
+
+  const sheetResult = await postToSheets(env, payload);
+  if (!sheetResult.ok) {
+    const isAuth = /not match|not found|private email|code/i.test(sheetResult.error || '');
+    return json({ ok: false, error: isAuth ? 'That private email and removal code did not match an author record. Please check the code email or contact Tsitsalagi.com Community Board.' : sheetResult.error }, isAuth ? 403 : 502);
+  }
+
+  return json({ ok: true });
+}
+
+async function postToSheets(env, payload) {
   let sheetResponse;
   let sheetText = '';
   try {
@@ -81,18 +148,20 @@ async function handleSubmit(request, env, type) {
     });
     sheetText = await sheetResponse.text();
   } catch (err) {
-    return json({ ok: false, error: 'Could not reach Google Apps Script webhook: ' + readableError(err) }, 502);
+    return { ok: false, error: 'Could not reach Google Apps Script webhook: ' + readableError(err) };
   }
 
   if (!sheetResponse.ok) {
-    return json({ ok: false, error: `Google Apps Script returned HTTP ${sheetResponse.status}: ${trimForDisplay(sheetText)}` }, 502);
+    return { ok: false, error: `Google Apps Script returned HTTP ${sheetResponse.status}: ${trimForDisplay(sheetText)}` };
   }
 
-  if (!sheetText.includes('"ok":true')) {
-    return json({ ok: false, error: `Google Apps Script did not confirm success. Response: ${trimForDisplay(sheetText)}` }, 502);
+  let parsed = null;
+  try { parsed = JSON.parse(sheetText); } catch (err) { parsed = null; }
+  if (!parsed || parsed.ok !== true) {
+    return { ok: false, error: parsed && parsed.error ? parsed.error : `Google Apps Script did not confirm success. Response: ${trimForDisplay(sheetText)}` };
   }
 
-  return json({ ok: true, type, photoUrl });
+  return { ok: true, data: parsed };
 }
 
 function readIssueFields(formData) {
@@ -103,6 +172,7 @@ function readIssueFields(formData) {
     severity: clean(formData.get('severity')),
     description: clean(formData.get('description')),
     contact: clean(formData.get('contact')),
+    privateEmail: clean(formData.get('privateEmail')).toLowerCase(),
     tags: clean(formData.get('tags'))
   };
 }
@@ -115,20 +185,18 @@ function readListingFields(formData) {
     price: clean(formData.get('price')),
     description: clean(formData.get('description')),
     contact: clean(formData.get('contact')),
+    privateEmail: clean(formData.get('privateEmail')).toLowerCase(),
     tags: clean(formData.get('tags'))
   };
 }
 
 function validateFields(type, fields, formData) {
   if (type === 'issue') {
-    if (!fields.issueTitle || !fields.category || !fields.area || !fields.severity || !fields.description || !fields.contact) {
-      return 'Missing required issue fields.';
-    }
+    if (!fields.issueTitle || !fields.category || !fields.area || !fields.severity || !fields.description || !fields.contact) return 'Missing required issue fields.';
   } else {
-    if (!fields.listingTitle || !fields.category || !fields.area || !fields.price || !fields.description || !fields.contact) {
-      return 'Missing required listing fields.';
-    }
+    if (!fields.listingTitle || !fields.category || !fields.area || !fields.price || !fields.description || !fields.contact) return 'Missing required listing fields.';
   }
+  if (!isEmail(fields.privateEmail)) return 'Private author email is required so the author can later request removal or updates.';
   if (!formData.get('agreement')) return 'Agreement is required.';
   return '';
 }
@@ -143,15 +211,8 @@ async function savePhoto(request, env, type, photo) {
   const key = `${type}/${datePath}/${crypto.randomUUID()}.${extension}`;
 
   await env.PHOTOS_BUCKET.put(key, await photo.arrayBuffer(), {
-    httpMetadata: {
-      contentType: photo.type,
-      cacheControl: 'public, max-age=31536000, immutable'
-    },
-    customMetadata: {
-      originalName: safeMetadata(photo.name || 'photo'),
-      uploadType: type,
-      uploadedAt: now.toISOString()
-    }
+    httpMetadata: { contentType: photo.type, cacheControl: 'public, max-age=31536000, immutable' },
+    customMetadata: { originalName: safeMetadata(photo.name || 'photo'), uploadType: type, uploadedAt: now.toISOString() }
   });
 
   const origin = new URL(request.url).origin;
@@ -172,6 +233,7 @@ async function handlePhoto(request, env, url) {
 }
 
 function clean(value) { return String(value || '').trim().slice(0, 4000); }
+function isEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim()); }
 function safeMetadata(value) { return String(value || '').replace(/[\r\n]/g, ' ').slice(0, 120); }
 function trimForDisplay(text) { return String(text || '').replace(/\s+/g, ' ').trim().slice(0, 700); }
 function readableError(err) { return String(err && err.message ? err.message : err || 'Unknown error'); }
@@ -186,8 +248,5 @@ function extensionFor(type, filename) {
 }
 
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json;charset=utf-8' }
-  });
+  return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json;charset=utf-8' } });
 }

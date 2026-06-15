@@ -341,6 +341,21 @@ function reportLink(type, title, url) {
   return `<a class="report-link" href="${escapeHtml(href)}">Report / correct</a>`;
 }
 
+function removalRequestUrl(type, title, url) {
+  const params = new URLSearchParams();
+  params.set('type', type || 'post');
+  if (title) params.set('title', title);
+  if (url) params.set('url', url);
+  return `/remove-request.html?${params.toString()}`;
+}
+
+function authorRemovalLink(type, item, url) {
+  const title = item && item.Title ? item.Title : '';
+  const label = type === 'listing' ? 'Author removal / mark sold' : 'Author update / mark resolved';
+  const href = removalRequestUrl(type, title, url || detailPageUrl(type, item || {}));
+  return `<a class="button secondary author-action-link" href="${escapeHtml(href)}">${escapeHtml(label)}</a>`;
+}
+
 function parseDateValue(value) {
   const raw = String(value || '').trim();
   if (!raw) return 0;
@@ -535,6 +550,7 @@ function renderListings() {
           ${contactLink(item.Contact)}
           ${shareButton('Share listing', item.Title || 'Tsitsalagi.com listing', `Listing on Tsitsalagi.com Community Board${item.Area ? ` in ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
           ${reportLink('listing', item.Title, detailUrl)}
+          ${authorRemovalLink('listing', item, detailUrl)}
         </div>
       </div>
     </article>
@@ -745,6 +761,7 @@ function renderIssueDetail() {
         <div class="card-actions detail-actions">
           ${shareButton('Share issue', item.Title || 'Tsitsalagi.com public issue', `Public issue on Tsitsalagi.com Community Board${item.Area ? ` about ${item.Area}` : ''}.`, detailUrl)}
           ${reportLink('issue', item.Title, detailUrl)}
+          ${authorRemovalLink('issue', item, detailUrl)}
         </div>
       </section>
       <div class="detail-nav">
