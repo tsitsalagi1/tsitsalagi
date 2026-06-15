@@ -753,3 +753,195 @@ input, select, textarea { font-size: 1rem; }
   h2 { font-size: 1.45rem; }
   .purpose-list a, .latest-item, .quick-card, .submit-card, .rule-card { border-radius: 14px; }
 }
+
+
+/* =========================================================
+   Final layout polish: spacing, mobile/desktop readability,
+   simple home panels, and share-preview support.
+   ========================================================= */
+:root {
+  --page-pad-desktop: clamp(1.65rem, 3.6vw, 3.2rem);
+  --page-pad-mobile: 1rem;
+}
+
+/* Do not let short links break one letter at a time */
+a, button, .button, .small-button, .pill-link, .form-link, .contact-link, .report-link, .share-button, .load-more-button,
+.latest-panel-head a, .section-header a, .featured-head a, .nav-links a {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+.latest-panel-head a, .featured-head a, .section-header a { white-space: nowrap; }
+.latest-panel-head, .featured-head, .section-header { flex-wrap: wrap; }
+
+/* Board page hero cards: add breathing room so labels/titles do not hug the edge */
+.page-hero,
+.mini-hero {
+  padding: var(--page-pad-desktop);
+  margin-top: 1.25rem;
+}
+.page-hero .eyebrow,
+.mini-hero .eyebrow { margin-top: 0; }
+.page-hero h1,
+.mini-hero h1 {
+  max-width: 13ch;
+  margin-top: .1rem;
+}
+.page-hero .hero-text,
+.mini-hero .hero-text { max-width: 66ch; }
+.page-hero .hero-actions,
+.mini-hero .hero-actions { margin-top: 1.25rem; }
+
+/* Board/list pages: more internal padding and cleaner spacing */
+.board-section,
+.latest-section,
+.submit-section,
+.rules-section,
+.guidance-section,
+.stats-section {
+  padding-left: .25rem;
+  padding-right: .25rem;
+}
+.toolbar,
+.dark-toolbar,
+.board-meta {
+  padding: clamp(1rem, 2.5vw, 1.35rem);
+}
+.card-grid { gap: 1.15rem; }
+.listing-card, .issue-card, .resource-card {
+  padding: clamp(1.15rem, 2.6vw, 1.55rem);
+}
+.card-actions { align-items: stretch; }
+.card-actions > a,
+.card-actions > button { margin-bottom: .15rem; }
+
+/* Homepage bottom: clean panels that do not crush or wrap awkwardly */
+.home-page .latest-grid,
+.home-page .clean-latest-grid,
+.home-page .submit-grid,
+.home-page .rules-grid,
+.home-page .guidance-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+}
+.home-page .latest-panel,
+.home-page .guidance-card,
+.home-page .submit-card,
+.home-page .rule-card {
+  min-width: 0;
+}
+.home-page .latest-panel-head {
+  display: flex;
+  align-items: flex-start;
+  gap: .8rem;
+}
+.home-page .latest-panel-head.simple-head { display: block; }
+.home-page .latest-panel-head h3 { min-width: 0; }
+.home-page .latest-panel-head a {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+.help-panel .card-actions { display: grid; grid-template-columns: 1fr; gap: .7rem; }
+.help-panel .button { width: 100%; }
+.home-page .guidance-card p,
+.home-page .submit-card p,
+.home-page .rule-card p,
+.home-page .latest-panel p {
+  max-width: 68ch;
+}
+
+/* Contact/report page hero: remove the large empty-left layout */
+.contact-report-page .hero,
+.wrap > .hero,
+body:not(.home-page) .hero:not(.home-hero) {
+  display: block;
+  padding: var(--page-pad-desktop);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.contact-report-page .hero::before,
+.wrap > .hero::before,
+body:not(.home-page) .hero:not(.home-hero)::before {
+  content: "";
+  display: block;
+  height: 6px;
+  margin: calc(-1 * var(--page-pad-desktop)) calc(-1 * var(--page-pad-desktop)) 1.4rem;
+  background: linear-gradient(90deg, var(--green), var(--gold), var(--clay), var(--green));
+}
+.contact-report-page .hero h1,
+.wrap > .hero h1,
+body:not(.home-page) .hero:not(.home-hero) h1 {
+  max-width: 13ch;
+}
+.contact-report-page .hero .lead,
+.wrap > .hero .lead,
+body:not(.home-page) .hero:not(.home-hero) .lead {
+  max-width: 62ch;
+}
+
+/* Mobile-specific spacing */
+@media (max-width: 720px) {
+  .page-hero,
+  .mini-hero,
+  .contact-report-page .hero,
+  .wrap > .hero,
+  body:not(.home-page) .hero:not(.home-hero) {
+    padding: var(--page-pad-mobile);
+    margin-top: .8rem;
+  }
+  .contact-report-page .hero::before,
+  .wrap > .hero::before,
+  body:not(.home-page) .hero:not(.home-hero)::before {
+    margin: calc(-1 * var(--page-pad-mobile)) calc(-1 * var(--page-pad-mobile)) 1rem;
+  }
+  .page-hero h1,
+  .mini-hero h1,
+  .contact-report-page .hero h1,
+  .wrap > .hero h1 {
+    max-width: none;
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+  .toolbar,
+  .dark-toolbar,
+  .board-meta,
+  .listing-card,
+  .issue-card,
+  .resource-card,
+  .detail-card,
+  .latest-panel,
+  .quick-card,
+  .guidance-card,
+  .submit-card,
+  .rule-card {
+    padding: 1rem;
+  }
+  .latest-panel-head,
+  .featured-head,
+  .section-header {
+    display: block;
+  }
+  .latest-panel-head a,
+  .featured-head a,
+  .section-header a {
+    display: inline-flex;
+    margin-top: .35rem;
+    white-space: normal;
+  }
+  .home-page .latest-grid,
+  .home-page .clean-latest-grid,
+  .home-page .submit-grid,
+  .home-page .rules-grid,
+  .home-page .guidance-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header, .section, .site-footer, .page, .wrap, .footer { width: min(100% - .85rem, var(--max)); }
+  .toolbar input, .toolbar select, .dark-toolbar input, .dark-toolbar select, input, select, textarea {
+    min-height: 52px;
+  }
+}
