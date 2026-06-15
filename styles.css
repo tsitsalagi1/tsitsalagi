@@ -977,3 +977,71 @@ body:not(.home-page) .hero:not(.home-hero) .lead {
   .private-author-field { padding-left: .75rem; }
   .removal-request-page .compact-page-hero h1 { max-width: none; }
 }
+
+/* Form radio/checkbox choice layout fix: keeps urgency options readable on desktop and mobile */
+fieldset {
+  border: 1px solid var(--line, #d9cbb5);
+  border-radius: 18px;
+  padding: 1rem;
+  margin: 1.1rem 0;
+  min-width: 0;
+}
+fieldset legend {
+  padding: 0 .45rem;
+  font-weight: 900;
+  color: var(--ink, #08382e);
+  letter-spacing: .01em;
+}
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem;
+  margin-top: .55rem;
+}
+.choice {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+  min-height: 62px;
+  padding: .85rem .95rem;
+  border: 1px solid var(--line, #d9cbb5);
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  line-height: 1.25;
+}
+.choice input[type="radio"],
+.choice input[type="checkbox"] {
+  width: 1.35rem;
+  height: 1.35rem;
+  min-width: 1.35rem;
+  min-height: 1.35rem;
+  margin: 0;
+  accent-color: var(--green, #0f4b3f);
+}
+.choice span {
+  display: block;
+  color: var(--text, #243b35);
+  font-weight: 650;
+}
+.choice strong {
+  display: block;
+  margin-bottom: .15rem;
+  color: var(--ink, #08382e);
+  font-weight: 950;
+}
+.choice:has(input:checked) {
+  border-color: var(--green, #0f4b3f);
+  background: rgba(15, 75, 63, .08);
+  box-shadow: 0 0 0 3px rgba(15, 75, 63, .12);
+}
+.choice:focus-within {
+  outline: 3px solid var(--focus, #d39b25);
+  outline-offset: 3px;
+}
+@media (max-width: 720px) {
+  fieldset { padding: .85rem; }
+  .choice-grid { grid-template-columns: 1fr; }
+  .choice { min-height: 58px; padding: .8rem .85rem; }
+}
