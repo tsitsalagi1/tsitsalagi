@@ -15,14 +15,14 @@
   <meta name="twitter:title" content="Tsitsalagi.com Community Board" />
   <meta name="twitter:description" content="Browse local listings, useful resources, and public issues on Tsitsalagi.com Community Board." />
   <meta name="twitter:image" content="https://tsitsalagi.com/favicon-512.png" />
-  <meta name="theme-color" content="#213f32" />
+  <meta name="theme-color" content="#0f3b33" />
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="shortcut icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="home-page">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header" id="top">
@@ -37,8 +37,8 @@
       <button class="menu-button" aria-expanded="false" aria-controls="nav-links">Menu</button>
       <div class="nav-links" id="nav-links">
         <a href="/">Home</a>
-        <a href="/listings.html">Listing Board</a>
-        <a href="/issues.html">Issue Board</a>
+        <a href="/listings.html">Listings</a>
+        <a href="/issues.html">Issues</a>
         <a href="/resources.html">Resources</a>
         <a href="/about.html">About</a>
         <a href="#submit">Submit</a>
@@ -46,317 +46,171 @@
       </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero home-hero">
       <div class="hero-copy">
         <p class="eyebrow">Independent • Nonpartisan • Citizen-led</p>
         <h1>Tsitsalagi.com Community Board</h1>
-        <p class="hero-text">Find local help, share public listings, follow community issues, and access useful resources. Tsitsalagi.com Community Board is a citizen-led public board for Cherokee Nation citizens and neighbors — no account required to browse.</p>
+        <p class="hero-text">A clear public place to find local listings, follow community issues, and access useful resources. Browse without an account. Submit when you have something helpful to share.</p>
         <div class="hero-actions" aria-label="Primary actions">
-          <a class="button primary" href="/listings.html">Browse listings</a>
-          <a class="button secondary" href="#submit">Submit something</a>
-          <a class="button ghost" href="/issues.html">View issues</a>
-          <button class="button ghost share-button site-share" type="button"
-            data-share-button
-            data-share-title="Tsitsalagi.com Community Board"
-            data-share-text="Browse local listings, useful resources, and public issues on Tsitsalagi.com Community Board."
-            data-share-url="https://tsitsalagi.com/">Share site</button>
+          <a class="button primary" href="/listings.html">View listings</a>
+          <a class="button secondary" href="/issues.html">View issues</a>
+          <a class="button ghost" href="/resources.html">View resources</a>
+          <a class="button ghost" href="#submit">Submit</a>
         </div>
-        <p class="notice"><strong>Notice:</strong> Tsitsalagi.com Community Board is citizen-led and independent. It is not an official tribal, county, city, state, or federal government website. Submissions are reviewed before posting and may be edited for clarity and public safety.</p>
+        <p class="notice"><strong>Review first:</strong> Submissions are reviewed before posting. Do not send IDs, CDIB cards, citizenship cards, private records, passwords, payment information, or anything you do not want public.</p>
       </div>
-      <aside class="hero-panel" aria-label="What this site does">
-        <h2>What Tsitsalagi.com does</h2>
-        <ul class="check-list">
-          <li><strong>Listings:</strong> Find items, services, jobs, events, rides, free items, and local help.</li>
-          <li><strong>Issues:</strong> Submit and follow public issues for community awareness.</li>
-          <li><strong>Resources:</strong> Find useful public links without digging through social media.</li>
-          <li><strong>Review first:</strong> Approved posts are reviewed before publication, but users should still verify details.</li>
-        </ul>
+      <aside class="hero-panel simple-panel" aria-label="Site purpose">
+        <h2>What you can do here</h2>
+        <div class="purpose-list">
+          <a href="/listings.html"><strong>Listings</strong><span>Services, items, events, rides, jobs, and local help.</span></a>
+          <a href="/issues.html"><strong>Issues</strong><span>Public community concerns and questions.</span></a>
+          <a href="/resources.html"><strong>Resources</strong><span>Helpful public links and official websites.</span></a>
+        </div>
       </aside>
     </section>
   </header>
 
   <main id="main">
-    <section class="section quick-grid" aria-label="Quick actions">
-      <a class="quick-card" href="/listings.html">
-        <span>Community Board</span>
-        <strong>Browse local listings</strong>
-        <small>See items, services, jobs, events, rides, and local help.</small>
-      </a>
-      <a class="quick-card" href="/issues.html">
-        <span>Citizen Issues</span>
-        <strong>Follow public issues</strong>
-        <small>See documented questions about EMS, housing, language, broadband, water, taxes, records, and more.</small>
-      </a>
-      <a class="quick-card" href="/resources.html">
-        <span>Official Links</span>
-        <strong>Find useful links</strong>
-        <small>Official websites and helpful resources in one place.</small>
-      </a>
-      <a class="quick-card" href="#submit">
-        <span>Submit</span>
-        <strong>Send something in</strong>
-        <small>Submit a listing, public issue, correction, or resource suggestion.</small>
-      </a>
-    </section>
-
-    <section class="section stats-section" aria-label="Site stats">
+    <section class="section stats-section compact-section" aria-label="Site stats">
       <div class="stats-strip" id="site-stats" aria-live="polite">
         <div class="stat-card"><strong>Loading…</strong><span>Public updates</span></div>
       </div>
     </section>
 
-    <section class="section guidance-section" id="how-to-use">
-      <div class="guidance-grid">
-        <article class="guidance-card">
-          <p class="eyebrow">How to use Tsitsalagi.com Community Board</p>
-          <h2>Browse, submit, verify</h2>
-          <ol>
-            <li>Browse listings, issues, and resources without creating an account.</li>
-            <li>Use the forms to submit a listing, public issue, correction, or helpful link.</li>
-            <li>Submissions are reviewed before they appear publicly.</li>
-            <li>Contact posters directly and verify everything yourself.</li>
-          </ol>
-        </article>
-        <article class="guidance-card privacy-card">
-          <p class="eyebrow">Privacy first</p>
-          <h2>Do not send private documents</h2>
-          <p>Tsitsalagi.com Community Board does not need CDIB cards, citizenship cards, birthdates, Social Security numbers, passwords, payment information, or private records. Do not submit anything you do not want public.</p>
-          <a class="button ghost" href="#rules">Read safety rules</a>
-        </article>
-      </div>
+    <section class="section quick-grid home-actions-grid" aria-label="Quick actions">
+      <a class="quick-card" href="/listings.html">
+        <span>Browse</span>
+        <strong>All listings</strong>
+        <small>Search local services, items, jobs, events, rides, and help.</small>
+      </a>
+      <a class="quick-card" href="/issues.html">
+        <span>Follow</span>
+        <strong>All issues</strong>
+        <small>See public concerns, status notes, photos, and source links.</small>
+      </a>
+      <a class="quick-card" href="/resources.html">
+        <span>Find</span>
+        <strong>Resources</strong>
+        <small>Use public links without digging through social media.</small>
+      </a>
+      <a class="quick-card" href="/about.html">
+        <span>Trust</span>
+        <strong>How it works</strong>
+        <small>Learn what is reviewed and what information should stay private.</small>
+      </a>
     </section>
 
-    <section class="section latest-section" id="latest">
-      <div class="section-header">
+    <section class="section latest-section home-latest" id="latest">
+      <div class="section-header stacked-header">
         <p class="eyebrow">Latest updates</p>
-        <h2>Newest posts and public issues</h2>
-        <p>Quickly see what has been added recently. New submissions may take time to appear because posts are reviewed first.</p>
+        <h2>Newest posts</h2>
+        <p>Short previews only. Open a full page to read longer listings or issues.</p>
       </div>
-      <div class="latest-grid">
+      <div class="latest-grid clean-latest-grid">
         <article class="latest-panel">
           <div class="latest-panel-head">
             <h3>Newest listings</h3>
-            <a href="/listings.html" data-listings-link>View all listings</a>
+            <a href="/listings.html">View all</a>
           </div>
           <div id="latest-listings" class="latest-list" aria-live="polite">Loading listings…</div>
         </article>
         <article class="latest-panel">
           <div class="latest-panel-head">
             <h3>Newest issues</h3>
-            <a href="/issues.html" data-issues-link>View all issues</a>
+            <a href="/issues.html">View all</a>
           </div>
           <div id="latest-issues" class="latest-list" aria-live="polite">Loading issues…</div>
         </article>
+        <article class="latest-panel help-panel">
+          <div class="latest-panel-head">
+            <h3>Need help using the board?</h3>
+            <a href="/about.html">About</a>
+          </div>
+          <p>Use search and filters on each board page. Each full listing, issue, or resource has its own page for longer details and sharing.</p>
+          <div class="card-actions">
+            <a class="button ghost" href="/about.html">How it works</a>
+            <a class="button ghost" href="/contact-report.html">Contact / report</a>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="section board-section" id="listings">
-      <div class="section-header">
-        <p class="eyebrow">Community board</p>
-        <h2>Local listings</h2>
-        <p>Browse local items, services, jobs, events, rides, free items, lost-and-found posts, and community help. Contact the poster directly, meet safely, and verify details yourself.</p>
+    <section class="section guidance-section home-info-section" id="how-to-use">
+      <div class="guidance-grid clean-guidance-grid">
+        <article class="guidance-card">
+          <p class="eyebrow">Simple workflow</p>
+          <h2>Browse, submit, verify</h2>
+          <ol class="large-steps">
+            <li>Browse the board without creating an account.</li>
+            <li>Submit a listing, issue, correction, or resource suggestion.</li>
+            <li>Approved posts appear publicly after review.</li>
+            <li>Always verify details before relying on them.</li>
+          </ol>
+        </article>
+        <article class="guidance-card privacy-card">
+          <p class="eyebrow">Privacy first</p>
+          <h2>Keep private information off the site</h2>
+          <p>Do not upload IDs, CDIB cards, citizenship cards, birthdates, Social Security numbers, medical records, legal records, payment details, or passwords.</p>
+          <a class="button ghost" href="#rules">Read safety rules</a>
+        </article>
       </div>
-
-      <div class="safety-box" role="note">
-        <strong>Listing safety:</strong> Meet in public, verify before paying, and never send gift cards, deposits, passwords, ID documents, citizenship cards, CDIB cards, or bank information to a stranger.
-      </div>
-
-      <div class="toolbar" aria-label="Listing filters">
-        <label>
-          <span>Search</span>
-          <input id="listing-search" type="search" placeholder="Search listings, towns, services…" autocomplete="off" />
-        </label>
-        <label>
-          <span>Category</span>
-          <select id="listing-category">
-            <option value="all">All categories</option>
-          </select>
-        </label>
-        <label>
-          <span>Area</span>
-          <select id="listing-area">
-            <option value="all">All areas</option>
-          </select>
-        </label>
-        <label>
-          <span>Sort</span>
-          <select id="listing-sort">
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-            <option value="az">Title A–Z</option>
-            <option value="area">Area A–Z</option>
-          </select>
-        </label>
-        <label class="checkbox-filter">
-          <input id="listing-photo-only" type="checkbox" />
-          <span>Photos only</span>
-        </label>
-      </div>
-
-      <div class="board-meta">
-        <span id="listing-count">Loading listings…</span>
-        <button class="small-button" id="clear-listing-filters" type="button">Clear filters</button>
-      </div>
-
-      <div class="card-grid listing-grid" id="listing-grid" aria-live="polite"></div>
     </section>
 
-    <section class="section section-dark" id="issues">
-      <div class="section-header">
-        <p class="eyebrow">Citizen issue board</p>
-        <h2>Follow public issues</h2>
-        <p>See community concerns written as clear public questions. Each issue can show what is being asked, where it matters, the current status, and a source or related link.</p>
-      </div>
-
-      <div class="toolbar dark-toolbar" aria-label="Issue filters">
-        <label>
-          <span>Search</span>
-          <input id="issue-search" type="search" placeholder="Search EMS, housing, tax, records…" autocomplete="off" />
-        </label>
-        <label>
-          <span>Category</span>
-          <select id="issue-category">
-            <option value="all">All categories</option>
-          </select>
-        </label>
-        <label>
-          <span>Status</span>
-          <select id="issue-status">
-            <option value="all">All statuses</option>
-          </select>
-        </label>
-        <label>
-          <span>Sort</span>
-          <select id="issue-sort">
-            <option value="newest">Newest update</option>
-            <option value="oldest">Oldest update</option>
-            <option value="az">Title A–Z</option>
-            <option value="category">Category A–Z</option>
-          </select>
-        </label>
-        <label class="checkbox-filter">
-          <input id="issue-photo-only" type="checkbox" />
-          <span>Photos only</span>
-        </label>
-      </div>
-
-      <div class="board-meta dark-meta">
-        <span id="issue-count">Loading issues…</span>
-        <button class="small-button light" id="clear-issue-filters" type="button">Clear filters</button>
-      </div>
-
-      <div class="card-grid issue-grid" id="issue-grid" aria-live="polite"></div>
-    </section>
-
-    <section class="section" id="resources">
-      <div class="section-header">
-        <p class="eyebrow">Resource directory</p>
-        <h2>Official links and useful places</h2>
-        <p>Find official links and useful resources in one place. Always use official websites for registration, benefits, deadlines, legal requirements, and final answers.</p>
-        <div class="hero-actions compact-actions"><a class="button ghost" href="/resources.html">View all resources</a></div>
-      </div>
-
-      <div class="featured-resources" id="featured-resources" aria-live="polite"></div>
-
-      <div class="toolbar" aria-label="Resource filters">
-        <label>
-          <span>Search</span>
-          <input id="resource-search" type="search" placeholder="Search voting, health, housing…" autocomplete="off" />
-        </label>
-        <label>
-          <span>Category</span>
-          <select id="resource-category">
-            <option value="all">All categories</option>
-          </select>
-        </label>
-        <label>
-          <span>Sort</span>
-          <select id="resource-sort">
-            <option value="az">Title A–Z</option>
-            <option value="za">Title Z–A</option>
-            <option value="category">Category A–Z</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="board-meta">
-        <span id="resource-count">Loading resources…</span>
-        <button class="small-button" id="clear-resource-filters" type="button">Clear filters</button>
-      </div>
-
-      <div class="card-grid resource-grid" id="resource-grid" aria-live="polite"></div>
-    </section>
-
-    <section class="section submit-section" id="submit">
-      <div class="section-header">
+    <section class="section submit-section clean-submit" id="submit">
+      <div class="section-header stacked-header">
         <p class="eyebrow">Submit</p>
         <h2>Send something to Tsitsalagi.com Community Board</h2>
-        <p>Use the forms below to send a listing or public issue. Submissions are reviewed before they appear on the site. Do not upload IDs, CDIB cards, citizenship cards, birthdates, private records, or anything you do not want public.</p>
+        <p>Choose the right form. Submissions are reviewed before they appear publicly.</p>
       </div>
 
-      <div class="submit-grid">
+      <div class="submit-grid clean-submit-grid">
         <article class="submit-card">
-          <span class="tag green">Community</span>
+          <span class="tag green">Listing</span>
           <h3>Submit a listing</h3>
-          <p>Post an item, service, job, event, ride, free item, lost-and-found notice, or community help request.</p>
-          <a class="button primary form-link" id="listing-form-link" href="#" target="_blank" rel="noopener">Open listing form</a>
-          <small class="form-note" id="listing-form-note">Submissions are reviewed before appearing publicly.</small>
+          <p>Items, services, events, rides, jobs, free items, lost-and-found, or local help.</p>
+          <a class="button primary form-link" id="listing-form-link" href="/submit-listing.html">Open listing form</a>
+          <small class="form-note" id="listing-form-note">Reviewed before posting.</small>
         </article>
         <article class="submit-card">
-          <span class="tag clay">Accountability</span>
+          <span class="tag clay">Issue</span>
           <h3>Submit a public issue</h3>
-          <p>Ask for public answers on EMS, roads, housing, water, taxes, records, voting, language, or another community concern.</p>
-          <a class="button secondary form-link" id="issue-form-link" href="#" target="_blank" rel="noopener">Open issue form</a>
-          <small class="form-note" id="issue-form-note">Submissions are reviewed before appearing publicly.</small>
+          <p>Roads, EMS, water, housing, broadband, public records, language, or other community concerns.</p>
+          <a class="button secondary form-link" id="issue-form-link" href="/submit-issue.html">Open issue form</a>
+          <small class="form-note" id="issue-form-note">Reviewed before posting.</small>
         </article>
         <article class="submit-card">
           <span class="tag gold">Contact</span>
-          <h3>Contact the project</h3>
-          <p>Report a correction, request a takedown, send a helpful link, suggest a resource, or ask a question about the project.</p>
-          <a class="button ghost form-link" id="contact-link" href="mailto:contact@example.com">Email project</a>
-          <small></small>
+          <h3>Correction or question</h3>
+          <p>Report a problem, request a correction, suggest a resource, or ask about the project.</p>
+          <a class="button ghost form-link" id="contact-link" href="/contact-report.html">Contact / report</a>
+          <small>Works on phone and desktop.</small>
         </article>
       </div>
     </section>
 
-    <section class="section rules-section" id="rules">
-      <div class="section-header">
-        <p class="eyebrow">Rules & safety</p>
+    <section class="section rules-section clean-rules" id="rules">
+      <div class="section-header stacked-header">
+        <p class="eyebrow">Safety</p>
         <h2>Use the board safely</h2>
-        <p>This is a public community board, not a payment service or buyer-protection service. Protect your information, use public meeting places, verify posts yourself, and use official sources for programs, elections, services, and deadlines.</p>
+        <p>Tsitsalagi.com Community Board is a public information board. It is not a payment service, buyer-protection service, or government website.</p>
       </div>
 
-      <div class="rules-grid">
+      <div class="rules-grid clean-rules-grid">
         <article class="rule-card">
-          <h3>Protect your privacy</h3>
-          <ul>
-            <li>Do not post CDIB numbers or citizenship numbers</li>
-            <li>Do not post birth dates, IDs, signatures, or voter forms</li>
-            <li>Do not share private medical, financial, or legal records</li>
-            <li>Do not send passwords, payment information, or card numbers</li>
-          </ul>
+          <h3>Protect privacy</h3>
+          <p>Do not post private documents, numbers, birthdates, signatures, passwords, medical records, legal records, or payment details.</p>
         </article>
         <article class="rule-card danger">
-          <h3>Do not allow</h3>
-          <ul>
-            <li>firearms, ammunition, weapons, or explosives</li>
-            <li>alcohol, tobacco, nicotine, cannabis, THC, CBD, or drugs</li>
-            <li>adult content, counterfeit goods, stolen items, or fake documents</li>
-            <li>hazardous materials or anything illegal</li>
-          </ul>
+          <h3>Do not post prohibited items</h3>
+          <p>No weapons, ammunition, alcohol, tobacco, nicotine, cannabis, drugs, adult content, scams, stolen items, fake documents, or illegal materials.</p>
         </article>
         <article class="rule-card">
-          <h3>Make a clear post</h3>
-          <ul>
-            <li>Use a clear title, town or area, category, price, and public contact method</li>
-            <li>Say whether the item is free, for sale, trade, or contact-for-price</li>
-            <li>Use facts and source links when submitting a public issue</li>
-            <li>Ask for a correction or removal if something is wrong</li>
-          </ul>
+          <h3>Verify before acting</h3>
+          <p>Use official sources for deadlines, benefits, forms, laws, elections, and public services. Meet safely and verify posts yourself.</p>
         </article>
       </div>
     </section>
-</main>
+  </main>
 
   <footer class="site-footer">
     <div class="footer-brand">
