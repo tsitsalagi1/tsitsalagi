@@ -7,9 +7,11 @@ window.TSITSALAGI_CONFIG = {
   // Update resources.csv whenever you add approved resources in the Resources sheet.
   resourcesCsvUrl: "resources.csv",
 
-  listingFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeOazBvPNLRTc0NumD5oV3TnajeoD4rdMq0UO--4HQTtMmcaA/viewform?usp=sharing&ouid=101078332389551426862",
+  // Keep homepage and board buttons on the custom Tsitsalagi.com submission pages.
+  // Do not point these back to Google Forms or the photo/private-code workflow will be bypassed.
+  listingFormUrl: "/submit-listing.html",
 
-  issueFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScwWnvZpnYbh8mB_4wduYEjcbMXQnIX2jWunjZQEOENxBJ8iA/viewform?usp=sharing&ouid=101078332389551426862",
+  issueFormUrl: "/submit-issue.html",
 
   contactEmail: "tsitsalagi.com@gmail.com"
 };
