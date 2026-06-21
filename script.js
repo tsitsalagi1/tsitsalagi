@@ -223,16 +223,22 @@ function detailPageUrl(type, item) {
   return `/${type}.html?id=${encodeURIComponent(id)}`;
 }
 
-function normalizeExternalUrl(value) {
-  const raw = String(value || '').trim();
-  if (!raw) return '';
-  if (/^https?:\/\//i.test(raw)) return raw;
-  if (/^[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(raw)) return `https://${raw}`;
-  return raw;
-}
-
 function resourceUrl(item) {
-  return normalizeExternalUrl(item.Link || item.URL || item.Url || item.Website || item.WebsiteURL || '');
+  const title = normalize(item && item.Title);
+  const resourceUrlOverrides = {
+    'cherokee-nation-career-services': 'https://www.cherokee.org/all-services/career-services/',
+    'cherokee-nation-environmental-programs': 'https://www.cherokee.org/our-government/environmental-protection-commission/'
+  };
+
+  const titleKey = title
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  if (resourceUrlOverrides[titleKey]) {
+    return resourceUrlOverrides[titleKey];
+  }
+
+  return item.Link || item.URL || item.Url || item.Website || item.WebsiteURL || '';
 }
 
 function displayDate(item, keys) {
@@ -446,14 +452,10 @@ function renderFeaturedResources() {
       <span>Start with official links and high-use services.</span>
     </div>
     <div class="featured-grid">
-      ${items.map((item) => {
-        const external = resourceUrl(item);
-        const href = external || detailPageUrl('resource', item);
-        return `<a class="featured-link" href="${escapeHtml(href)}">
-          <span>${escapeHtml(item.Category || 'Resource')}</span>
-          <strong>${escapeHtml(item.Title)}</strong>
-        </a>`;
-      }).join('')}
+      ${items.map((item) => `<a class="featured-link" href="${escapeHtml(detailPageUrl('resource', item))}">
+        <span>${escapeHtml(item.Category || 'Resource')}</span>
+        <strong>${escapeHtml(item.Title)}</strong>
+      </a>`).join('')}
     </div>
   `;
 }
@@ -924,7 +926,7 @@ function resourcePreviewHtml(item, external) {
   const favicon = faviconForUrl(external);
   const initials = String(title || 'R').trim().slice(0, 2).toUpperCase();
 
-  return `<a class="resource-preview-card" href="${escapeHtml(external)}" aria-label="Open ${escapeHtml(title)} official resource">
+  return `<a class="resource-preview-card" href="${escapeHtml(external)}" target="_blank" rel="noopener" aria-label="Open ${escapeHtml(title)} official resource">
     <div class="resource-preview-icon" aria-hidden="true">
       ${favicon ? `<img src="${escapeHtml(favicon)}" alt="" loading="lazy" onerror="this.remove(); this.parentElement.textContent='${escapeHtml(initials)}';" />` : escapeHtml(initials)}
     </div>
@@ -966,7 +968,7 @@ function renderResourceDetail() {
         <h2>Resource details</h2>
         <p>${nl2br(item.Description || 'No description provided.')}</p>
       </section>
-      ${external ? `<section class="detail-section"><h2>Official or related link</h2><p><a class="button primary" href="${escapeHtml(external)}">Open resource</a></p><p class="detail-note">Always verify information on the official site before relying on deadlines, benefits, services, rules, or forms.</p></section>` : ''}
+      ${external ? `<section class="detail-section"><h2>Official or related link</h2><p><a class="button primary" href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a></p><p class="detail-note">Always verify information on the official site before relying on deadlines, benefits, services, rules, or forms.</p></section>` : ''}
       <section class="detail-section">
         <h2>Share or report</h2>
         <div class="card-actions detail-actions">
@@ -990,7 +992,7 @@ function renderResources() {
   let items = state.resources
     .filter(isPublicItem)
     .filter((item) => filters.category === 'all' || item.Category === filters.category)
-    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Description', 'Area', 'Tags', 'Link', 'URL', 'Website']));
+    .filter((item) => matchesSearch(item, filters.search, ['Title', 'Category', 'Description', 'Area', 'Tags']));
 
   items = sortItems(items, 'resource', filters.sort || 'az');
   const total = items.length;
@@ -1015,19 +1017,18 @@ function renderResources() {
     const id = itemId('resource', ...itemIdParts('resource', item));
     const detailUrl = detailPageUrl('resource', item);
     const external = resourceUrl(item);
-    const titleHref = external || detailUrl;
     return `
     <article class="resource-card" id="${escapeHtml(id)}">
       <span class="tag gold">${escapeHtml(item.Category || 'Resource')}</span>
-      <h3><a class="card-title-link" href="${escapeHtml(titleHref)}">${escapeHtml(item.Title)}</a></h3>
+      <h3><a class="card-title-link" href="${escapeHtml(detailUrl)}">${escapeHtml(item.Title)}</a></h3>
       <div class="meta-list">
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
         ${item.Tags ? `<span class="pill">${escapeHtml(item.Tags)}</span>` : ''}
       </div>
       <p>${escapeHtml(previewText(item.Description, 220))}</p>
       <div class="card-actions resource-actions">
-        ${external ? `<a class="contact-link" href="${escapeHtml(external)}">Open resource</a>` : ''}
-        <a class="button secondary" href="${escapeHtml(detailUrl)}">Details</a>
+        <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full resource</a>
+        ${external ? `<a href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a>` : ''}
         ${shareButton('Share resource', item.Title || 'Tsitsalagi.com resource', 'Useful resource listed on Tsitsalagi.com Community Board.', `${window.location.origin}${detailUrl}`)}
         ${reportLink('resource', item.Title, detailUrl)}
       </div>
