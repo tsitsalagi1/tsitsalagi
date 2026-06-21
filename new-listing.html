@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tsitsalagi.com Community Board - New Listing</title>
+  <style>
+    :root {
+      --green: #123f36;
+      --green-dark: #0b3029;
+      --cream: #fbf7ef;
+      --border: #c7b99e;
+      --soft-blue: #eaf2ff;
+      --danger: #8b0000;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f6f1ea;
+      color: #112e29;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: var(--cream);
+      min-height: 100vh;
+      padding: 0 28px 48px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 24px;
+      border: 1px solid #e0d4bf;
+      border-top: 0;
+      border-radius: 0 0 24px 24px;
+      background: rgba(255,255,255,0.9);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #d8eadf;
+      border: 2px solid #b7c9be;
+      font-size: 22px;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      color: var(--green-dark);
+      text-decoration: none;
+      font-weight: 800;
+      padding: 14px 22px;
+      border: 2px solid var(--green);
+      border-radius: 999px;
+      background: #fff;
+    }
+
+    nav a.active {
+      background: var(--green);
+      color: #fff;
+    }
+
+    main {
+      padding: 28px 24px 0;
+    }
+
+    .card {
+      border: 1px solid #dfd0b7;
+      border-radius: 24px;
+      padding: 22px;
+      background: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      background: var(--soft-blue);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+      font-weight: 500;
+      background: #fff;
+    }
+
+    .photo-box {
+      border: 2px dashed #a99b83;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 14px;
+    }
+
+    .photo-row {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+      margin-bottom: 18px;
+    }
+
+    .help {
+      font-weight: 800;
+      line-height: 1.55;
+      color: #2c4a45;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 16px 0 24px;
+      line-height: 1.45;
+      font-size: 17px;
+    }
+
+    .check-row input {
+      margin-top: 4px;
+      accent-color: var(--green);
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    button,
+    .button-link {
+      border: 0;
+      border-radius: 999px;
+      padding: 15px 24px;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .submit {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .cancel {
+      background: #fff3f3;
+      color: #8a2b2b;
+      border: 2px solid #9b4040;
+    }
+
+    .status {
+      min-height: 24px;
+      font-weight: 900;
+      margin: 8px 0 22px;
+    }
+
+    .status.error { color: var(--danger); }
+    .status.success { color: #126b33; }
+
+    .note {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #294641;
+    }
+
+    .review-card h1 {
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.03;
+      margin: 10px 0 18px;
+      color: #0d372f;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #e9f2ef;
+      font-weight: 900;
+    }
+
+    @media (max-width: 700px) {
+      .page { padding: 0 12px 32px; }
+      header { align-items: flex-start; flex-direction: column; }
+      nav { justify-content: flex-start; }
+      nav a { padding: 10px 14px; }
+      main { padding: 20px 12px 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🌄</div>
+        <div>
+          <div>Tsitsalagi.com</div>
+          <div>Community Board</div>
+        </div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/listing-board.html">Listing Board</a>
+        <a href="/issues.html" class="active">Issues</a>
+      </nav>
+    </header>
+
+    <main>
+      <form id="listingForm" class="card" novalidate>
+        <div>
+          <label for="listingTitle">Listing title</label>
+          <input id="listingTitle" name="listingTitle" type="text" value="lawn" maxlength="90" required />
+        </div>
+
+        <div style="margin-top:16px;">
+          <label for="listingDescription">Listing description</label>
+          <textarea id="listingDescription" name="listingDescription" maxlength="1200" placeholder="Describe the listing clearly."></textarea>
+        </div>
+
+        <div style="margin-top:16px;">
+          <label>Listing photo</label>
+          <div class="photo-box">
+            <label for="listingPhoto">Optional photo upload</label>
+            <div class="photo-row">
+              <input id="listingPhoto" name="listingPhoto" type="file" accept="image/*" />
+            </div>
+            <p class="help">
+              Images only. Maximum 7 MB. Do not upload IDs, private documents,
+              payment information, or anything unsafe to post publicly.
+            </p>
+          </div>
+        </div>
+
+        <label class="check-row" for="listingAgreement">
+          <input id="listingAgreement" name="listingAgreement" type="checkbox" required checked />
+          <span>
+            I understand this listing may be publicly posted if approved, and I will not submit illegal items,
+            weapons, drugs, alcohol, tobacco, adult content, scams, private documents, or false information.
+          </span>
+        </label>
+
+        <div class="buttons">
+          <button class="submit" type="submit">Submit listing</button>
+          <button class="cancel" type="button" id="cancelButton">Cancel</button>
+        </div>
+
+        <div id="formStatus" class="status" role="status" aria-live="polite"></div>
+
+        <p class="note">
+          After submission, you will be redirected back to Tsitsalagi.com Community Board.
+        </p>
+      </form>
+
+      <section class="card review-card">
+        <span class="pill">Review first</span>
+        <h1>Keep listings safe, useful, and public-ready.</h1>
+        <p class="note">
+          Strong listings are clear, honest, and include only public contact information.
+          Do not upload private documents, IDs, payment information, or anything you would not want public.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    /*
+      Fixed single-file listing form.
+
+      This avoids the error:
+        TypeError: "" is not a function
+
+      Main fix:
+      - Do not call any optional callback unless it is actually a function.
+      - Do not use inline onclick="" or onsubmit="" handlers.
+      - Attach one real submit handler with addEventListener.
+    */
+
+    const MAX_PHOTO_BYTES = 7 * 1024 * 1024;
+
+    const form = document.getElementById("listingForm");
+    const statusBox = document.getElementById("formStatus");
+    const cancelButton = document.getElementById("cancelButton");
+
+    function setStatus(message, type) {
+      statusBox.textContent = message || "";
+      statusBox.className = "status" + (type ? " " + type : "");
+    }
+
+    function safeRedirect(url) {
+      if (typeof url === "string" && url.trim() !== "") {
+        window.location.href = url;
+      }
+    }
+
+    function readPhotoAsDataUrl(file) {
+      return new Promise(function(resolve, reject) {
+        if (!file) {
+          resolve("");
+          return;
+        }
+
+        if (!file.type || !file.type.startsWith("image/")) {
+          reject(new Error("Please upload an image file only."));
+          return;
+        }
+
+        if (file.size > MAX_PHOTO_BYTES) {
+          reject(new Error("Image is too large. Maximum photo size is 7 MB."));
+          return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function() {
+          resolve(String(reader.result || ""));
+        };
+
+        reader.onerror = function() {
+          reject(new Error("The image could not be read. Please try a different image."));
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function getExistingListings() {
+      try {
+        const raw = localStorage.getItem("tsitsalagiPendingListings");
+        const parsed = JSON.parse(raw || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveListingLocally(listing) {
+      const listings = getExistingListings();
+      listings.push(listing);
+      localStorage.setItem("tsitsalagiPendingListings", JSON.stringify(listings));
+    }
+
+    async function handleListingSubmit(event) {
+      event.preventDefault();
+      setStatus("");
+
+      const title = document.getElementById("listingTitle").value.trim();
+      const description = document.getElementById("listingDescription").value.trim();
+      const agreement = document.getElementById("listingAgreement").checked;
+      const photoFile = document.getElementById("listingPhoto").files[0];
+
+      if (!title) {
+        setStatus("Please enter a listing title.", "error");
+        return;
+      }
+
+      if (!agreement) {
+        setStatus("Please confirm the public posting and safety agreement before submitting.", "error");
+        return;
+      }
+
+      try {
+        setStatus("Submitting listing...", "");
+
+        const photoDataUrl = await readPhotoAsDataUrl(photoFile);
+
+        const listing = {
+          id: "listing-" + Date.now(),
+          title: title,
+          description: description,
+          photoDataUrl: photoDataUrl,
+          status: "pending-review",
+          submittedAt: new Date().toISOString()
+        };
+
+        /*
+          Replace this localStorage save with your real backend/API call later.
+
+          Example:
+          await fetch("/api/listings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(listing)
+          });
+        */
+        saveListingLocally(listing);
+
+        setStatus("Listing submitted for review.", "success");
+
+        window.setTimeout(function() {
+          safeRedirect("/listing-board.html");
+        }, 900);
+
+      } catch (error) {
+        setStatus(error && error.message ? error.message : "The listing could not be submitted.", "error");
+      }
+    }
+
+    form.addEventListener("submit", handleListingSubmit);
+
+    cancelButton.addEventListener("click", function() {
+      safeRedirect("/listing-board.html");
+    });
+  </script>
+</body>
+</html>
