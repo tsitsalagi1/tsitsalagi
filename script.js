@@ -310,6 +310,14 @@ function previewText(value, max = 240) {
   return `${text.slice(0, max).replace(/\s+\S*$/, '')}…`;
 }
 
+
+function cleanPublicContact(value) {
+  let text = String(value || '').replace(/\s+/g, ' ').trim();
+  text = text.replace(/^Review and help identify the correct office, department, or community contact\.\s*/i, '');
+  text = text.replace(/^Public contact:\s*/i, '');
+  return text.trim();
+}
+
 function nl2br(value) {
   return escapeHtml(value).replace(/\n/g, '<br>');
 }
@@ -656,7 +664,7 @@ function renderIssues() {
     const id = itemId('issue', item.Title, item.Area);
     const detailUrl = detailPageUrl('issue', item);
     const question = item.Question || item.Description || '';
-    const publicContact = item['Public contact method'] || item.Contact || item.Ask || '';
+    const publicContact = cleanPublicContact(item['Public contact method'] || item.Contact || '');
     return `
     <article class="issue-card" id="${escapeHtml(id)}">
       <div class="card-top">
@@ -748,7 +756,7 @@ function renderIssueDetail() {
   document.title = `${item.Title || 'Issue'} | Tsitsalagi.com Community Board`;
   const detailUrl = `${window.location.origin}${detailPageUrl('issue', item)}`;
   const question = item.Question || item.Description || '';
-  const publicContact = item['Public contact method'] || item.Contact || item.Ask || '';
+  const publicContact = cleanPublicContact(item['Public contact method'] || item.Contact || '');
   box.innerHTML = `
     <article class="detail-card issue-detail-card">
       <div class="detail-kicker">
