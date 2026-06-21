@@ -664,7 +664,7 @@ function renderIssues() {
     const id = itemId('issue', item.Title, item.Area);
     const detailUrl = detailPageUrl('issue', item);
     const question = item.Question || item.Description || '';
-    const publicContact = cleanPublicContact(item['Public contact method'] || item.Contact || '');
+    const publicContact = cleanPublicContact(item['Public contact method'] || item.PublicContact || item.Contact || item.Ask || '');
     return `
     <article class="issue-card" id="${escapeHtml(id)}">
       <div class="card-top">
@@ -756,7 +756,7 @@ function renderIssueDetail() {
   document.title = `${item.Title || 'Issue'} | Tsitsalagi.com Community Board`;
   const detailUrl = `${window.location.origin}${detailPageUrl('issue', item)}`;
   const question = item.Question || item.Description || '';
-  const publicContact = cleanPublicContact(item['Public contact method'] || item.Contact || '');
+  const publicContact = cleanPublicContact(item['Public contact method'] || item.PublicContact || item.Contact || item.Ask || '');
   box.innerHTML = `
     <article class="detail-card issue-detail-card">
       <div class="detail-kicker">
