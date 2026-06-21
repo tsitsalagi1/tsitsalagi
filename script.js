@@ -656,7 +656,7 @@ function renderIssues() {
     const id = itemId('issue', item.Title, item.Area);
     const detailUrl = detailPageUrl('issue', item);
     const question = item.Question || item.Description || '';
-    const ask = item.Ask || '';
+    const publicContact = item['Public contact method'] || item.Contact || item.Ask || '';
     return `
     <article class="issue-card" id="${escapeHtml(id)}">
       <div class="card-top">
@@ -671,7 +671,7 @@ function renderIssues() {
         ${itemPhotoUrl(item) ? `<span class="pill photo-pill">Photo</span>` : ''}
       </div>
       ${question ? `<p class="question"><strong>Citizen question:</strong> ${escapeHtml(previewText(question, 220))}</p>` : ''}
-      ${ask ? `<p class="ask"><strong>Public ask:</strong> ${escapeHtml(previewText(ask, 180))}</p>` : ''}
+      ${publicContact ? `<p class="ask"><strong>Public contact:</strong> ${escapeHtml(previewText(publicContact, 180))}</p>` : ''}
       <footer>
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full issue</a>
         ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : ''}
@@ -748,7 +748,7 @@ function renderIssueDetail() {
   document.title = `${item.Title || 'Issue'} | Tsitsalagi.com Community Board`;
   const detailUrl = `${window.location.origin}${detailPageUrl('issue', item)}`;
   const question = item.Question || item.Description || '';
-  const ask = item.Ask || '';
+  const publicContact = item['Public contact method'] || item.Contact || item.Ask || '';
   box.innerHTML = `
     <article class="detail-card issue-detail-card">
       <div class="detail-kicker">
@@ -766,7 +766,7 @@ function renderIssueDetail() {
         <h2>Issue description</h2>
         <p>${nl2br(question || 'No description provided.')}</p>
       </section>
-      ${ask ? `<section class="detail-section"><h2>Public ask</h2><p>${nl2br(ask)}</p></section>` : ''}
+      ${publicContact ? `<section class="detail-section"><h2>Public contact</h2><p>${nl2br(publicContact)}</p></section>` : ''}
       ${item.Source ? `<section class="detail-section"><h2>Source or related link</h2><p><a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Open source / related link</a></p></section>` : ''}
       <section class="detail-section">
         <h2>Share or report</h2>
