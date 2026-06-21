@@ -732,7 +732,7 @@ function renderIssues() {
       ${ask ? `<p class="ask"><strong>Public ask:</strong> ${escapeHtml(previewText(ask, 180))}</p>` : ''}
       <footer>
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full issue</a>
-        ${item.Source ? `<a class="button primary issue-source-button" href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
+        ${item.Source ? `<a class="button primary issue-source-button" href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : ''}
         ${shareButton('Share issue', item.Title || 'Tsitsalagi.com public issue', `Public issue on Tsitsalagi.com Community Board${item.Area ? ` about ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
         ${reportLink('issue', item.Title, detailUrl)}
       </footer>
