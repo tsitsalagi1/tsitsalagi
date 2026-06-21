@@ -224,20 +224,6 @@ function detailPageUrl(type, item) {
 }
 
 function resourceUrl(item) {
-  const title = normalize(item && item.Title);
-  const resourceUrlOverrides = {
-    'cherokee-nation-career-services': 'https://www.cherokee.org/all-services/career-services/',
-    'cherokee-nation-environmental-programs': 'https://www.cherokee.org/our-government/environmental-protection-commission/'
-  };
-
-  const titleKey = title
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-  if (resourceUrlOverrides[titleKey]) {
-    return resourceUrlOverrides[titleKey];
-  }
-
   return item.Link || item.URL || item.Url || item.Website || item.WebsiteURL || '';
 }
 
@@ -688,7 +674,7 @@ function renderIssues() {
       ${ask ? `<p class="ask"><strong>Public ask:</strong> ${escapeHtml(previewText(ask, 180))}</p>` : ''}
       <footer>
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full issue</a>
-        ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : ''}
+        ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
         ${shareButton('Share issue', item.Title || 'Tsitsalagi.com public issue', `Public issue on Tsitsalagi.com Community Board${item.Area ? ` about ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
         ${reportLink('issue', item.Title, detailUrl)}
       </footer>
@@ -983,7 +969,29 @@ function renderResourceDetail() {
     </article>`;
 }
 
+
+function ensureResourceCardButtonStyles() {
+  if (document.getElementById('resource-card-button-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'resource-card-button-styles';
+  style.textContent = `
+    .resource-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .resource-actions .resource-open-button {
+      text-decoration: none;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+
 function renderResources() {
+  ensureResourceCardButtonStyles();
   const grid = document.getElementById('resource-grid');
   const count = document.getElementById('resource-count');
   if (!grid) return;
@@ -1028,7 +1036,7 @@ function renderResources() {
       <p>${escapeHtml(previewText(item.Description, 220))}</p>
       <div class="card-actions resource-actions">
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full resource</a>
-        ${external ? `<a href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a>` : ''}
+        ${external ? `<a class="button primary resource-open-button" href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a>` : ''}
         ${shareButton('Share resource', item.Title || 'Tsitsalagi.com resource', 'Useful resource listed on Tsitsalagi.com Community Board.', `${window.location.origin}${detailUrl}`)}
         ${reportLink('resource', item.Title, detailUrl)}
       </div>
