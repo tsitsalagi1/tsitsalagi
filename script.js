@@ -674,7 +674,7 @@ function renderIssues() {
       ${ask ? `<p class="ask"><strong>Public ask:</strong> ${escapeHtml(previewText(ask, 180))}</p>` : ''}
       <footer>
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full issue</a>
-        ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : ''}
+        ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : '<span>No source link yet</span>'}
         ${shareButton('Share issue', item.Title || 'Tsitsalagi.com public issue', `Public issue on Tsitsalagi.com Community Board${item.Area ? ` about ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
         ${reportLink('issue', item.Title, detailUrl)}
       </footer>
@@ -783,6 +783,149 @@ function renderIssueDetail() {
     </article>`;
 }
 
+
+function ensureResourcePreviewStyles() {
+  if (document.getElementById('resource-preview-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'resource-preview-styles';
+  style.textContent = `
+    .resource-preview-card {
+      display: grid;
+      grid-template-columns: minmax(90px, 150px) 1fr;
+      gap: 18px;
+      align-items: stretch;
+      border: 1px solid rgba(33, 63, 50, 0.22);
+      border-radius: 22px;
+      padding: 18px;
+      background: linear-gradient(135deg, #fffaf0 0%, #f4fbf7 100%);
+      box-shadow: 0 12px 28px rgba(18, 54, 45, 0.08);
+      text-decoration: none;
+      color: inherit;
+      margin: 18px 0 24px;
+    }
+
+    .resource-preview-card:hover,
+    .resource-preview-card:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 34px rgba(18, 54, 45, 0.12);
+      outline: 3px solid rgba(178, 128, 39, 0.25);
+      outline-offset: 3px;
+    }
+
+    .resource-preview-icon {
+      min-height: 120px;
+      border-radius: 18px;
+      background: #123f36;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      overflow: hidden;
+    }
+
+    .resource-preview-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .resource-preview-content {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .resource-preview-label {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #eaf4ef;
+      color: #123f36;
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    .resource-preview-title {
+      margin: 0;
+      color: #0d3b32;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .resource-preview-description {
+      margin: 0;
+      color: #28463f;
+      line-height: 1.45;
+    }
+
+    .resource-preview-url {
+      color: #6d4b10;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 680px) {
+      .resource-preview-card {
+        grid-template-columns: 1fr;
+      }
+
+      .resource-preview-icon {
+        min-height: 96px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function hostFromUrl(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch (error) {
+    return '';
+  }
+}
+
+function faviconForUrl(url) {
+  try {
+    const host = new URL(url).origin;
+    return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(host)}&sz=128`;
+  } catch (error) {
+    return '';
+  }
+}
+
+function resourcePreviewHtml(item, external) {
+  if (!external) return '';
+  ensureResourcePreviewStyles();
+
+  const title = item.Title || 'Open resource';
+  const description = previewText(item.Description || item.Category || 'Official or related resource listed on Tsitsalagi.com Community Board.', 170);
+  const host = hostFromUrl(external);
+  const favicon = faviconForUrl(external);
+  const initials = String(title || 'R').trim().slice(0, 2).toUpperCase();
+
+  return `<a class="resource-preview-card" href="${escapeHtml(external)}" target="_blank" rel="noopener" aria-label="Open ${escapeHtml(title)} official resource">
+    <div class="resource-preview-icon" aria-hidden="true">
+      ${favicon ? `<img src="${escapeHtml(favicon)}" alt="" loading="lazy" onerror="this.remove(); this.parentElement.textContent='${escapeHtml(initials)}';" />` : escapeHtml(initials)}
+    </div>
+    <div class="resource-preview-content">
+      <span class="resource-preview-label">Official resource</span>
+      <h2 class="resource-preview-title">${escapeHtml(title)}</h2>
+      <p class="resource-preview-description">${escapeHtml(description)}</p>
+      ${host ? `<span class="resource-preview-url">${escapeHtml(host)} ↗</span>` : ''}
+    </div>
+  </a>`;
+}
+
+
 function renderResourceDetail() {
   const box = document.getElementById('resource-detail');
   if (!box) return;
@@ -802,6 +945,7 @@ function renderResourceDetail() {
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
       </div>
       <h1>${escapeHtml(item.Title)}</h1>
+      ${resourcePreviewHtml(item, external)}
       <div class="meta-list detail-meta">
         ${item.Tags ? `<span class="pill">${escapeHtml(item.Tags)}</span>` : ''}
         ${item.Updated || item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.Updated || item.LastUpdated)}</span>` : ''}
