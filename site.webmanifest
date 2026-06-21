@@ -1,20 +1,31 @@
 {
-  "name": "Tsitsalagi — Cherokee Community Board",
+  "id": "/",
+  "name": "Tsitsalagi.com Community Board",
   "short_name": "Tsitsalagi",
+  "description": "Cherokee community listings, issues, updates, and local information.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f8f2e6",
   "theme_color": "#213f32",
   "icons": [
     {
-      "src": "favicon-192.png",
+      "src": "/favicon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "favicon-512.png",
+      "src": "/favicon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
