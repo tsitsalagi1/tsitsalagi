@@ -310,6 +310,14 @@ function previewText(value, max = 240) {
   return `${text.slice(0, max).replace(/\s+\S*$/, '')}…`;
 }
 
+
+function cleanPublicContact(value) {
+  let text = String(value || '').replace(/\s+/g, ' ').trim();
+  text = text.replace(/^Review and help identify the correct office, department, or community contact\.\s*/i, '');
+  text = text.replace(/^Public contact:\s*/i, '');
+  return text.trim();
+}
+
 function nl2br(value) {
   return escapeHtml(value).replace(/\n/g, '<br>');
 }
@@ -620,65 +628,7 @@ function statusClass(status) {
   return 'status-open';
 }
 
-
-function ensureIssueSourceButtonStyles() {
-  if (document.getElementById('issue-source-button-styles')) return;
-  const style = document.createElement('style');
-  style.id = 'issue-source-button-styles';
-  style.textContent = `
-    .issue-card-actions,
-    .issue-actions,
-    .detail-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .issue-source-button,
-    .detail-source-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      min-height: 44px;
-      padding: 10px 18px;
-      border: 2px solid #0d3b32;
-      border-radius: 999px;
-      background: #0d3b32;
-      color: #fff !important;
-      font-weight: 900;
-      text-decoration: none !important;
-      line-height: 1.1;
-      box-shadow: none;
-    }
-
-    .issue-source-button:hover,
-    .issue-source-button:focus,
-    .detail-source-button:hover,
-    .detail-source-button:focus {
-      background: #173f35;
-      color: #fff !important;
-      text-decoration: none !important;
-      transform: translateY(-1px);
-    }
-
-    .issue-source-section {
-      margin: 18px 0;
-      padding-top: 16px;
-      border-top: 1px solid rgba(33, 63, 50, 0.18);
-    }
-
-    .issue-source-section h2 {
-      margin-bottom: 12px;
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-
 function renderIssues() {
-  ensureIssueSourceButtonStyles();
   const grid = document.getElementById('issue-grid');
   const count = document.getElementById('issue-count');
   if (!grid) return;
@@ -714,7 +664,7 @@ function renderIssues() {
     const id = itemId('issue', item.Title, item.Area);
     const detailUrl = detailPageUrl('issue', item);
     const question = item.Question || item.Description || '';
-    const ask = item.Ask || '';
+    const publicContact = cleanPublicContact(item['Public contact method'] || item.PublicContact || item.Contact || item.Ask || '');
     return `
     <article class="issue-card" id="${escapeHtml(id)}">
       <div class="card-top">
@@ -729,10 +679,10 @@ function renderIssues() {
         ${itemPhotoUrl(item) ? `<span class="pill photo-pill">Photo</span>` : ''}
       </div>
       ${question ? `<p class="question"><strong>Citizen question:</strong> ${escapeHtml(previewText(question, 220))}</p>` : ''}
-      ${ask ? `<p class="ask"><strong>Public ask:</strong> ${escapeHtml(previewText(ask, 180))}</p>` : ''}
+      ${publicContact ? `<p class="ask"><strong>Public contact:</strong> ${escapeHtml(previewText(publicContact, 180))}</p>` : ''}
       <footer>
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full issue</a>
-        ${item.Source ? `<a class="button primary issue-source-button" href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : ''}
+        ${item.Source ? `<a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Source / related link</a>` : ''}
         ${shareButton('Share issue', item.Title || 'Tsitsalagi.com public issue', `Public issue on Tsitsalagi.com Community Board${item.Area ? ` about ${item.Area}` : ''}.`, `${window.location.origin}${detailUrl}`)}
         ${reportLink('issue', item.Title, detailUrl)}
       </footer>
@@ -795,7 +745,6 @@ function renderListingDetail() {
 }
 
 function renderIssueDetail() {
-  ensureIssueSourceButtonStyles();
   const box = document.getElementById('issue-detail');
   if (!box) return;
   const item = findItemForDetail('issue', state.issues);
@@ -807,7 +756,7 @@ function renderIssueDetail() {
   document.title = `${item.Title || 'Issue'} | Tsitsalagi.com Community Board`;
   const detailUrl = `${window.location.origin}${detailPageUrl('issue', item)}`;
   const question = item.Question || item.Description || '';
-  const ask = item.Ask || '';
+  const publicContact = cleanPublicContact(item['Public contact method'] || item.PublicContact || item.Contact || item.Ask || '');
   box.innerHTML = `
     <article class="detail-card issue-detail-card">
       <div class="detail-kicker">
@@ -825,8 +774,8 @@ function renderIssueDetail() {
         <h2>Issue description</h2>
         <p>${nl2br(question || 'No description provided.')}</p>
       </section>
-      ${ask ? `<section class="detail-section"><h2>Public ask</h2><p>${nl2br(ask)}</p></section>` : ''}
-      ${item.Source ? `<section class="detail-section"><h2>Source or related link</h2><p><a class="button primary detail-source-button" href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Open source / related link</a></p></section>` : ''}
+      ${publicContact ? `<section class="detail-section"><h2>Public contact</h2><p>${nl2br(publicContact)}</p></section>` : ''}
+      ${item.Source ? `<section class="detail-section"><h2>Source or related link</h2><p><a href="${escapeHtml(item.Source)}" target="_blank" rel="noopener">Open source / related link</a></p></section>` : ''}
       <section class="detail-section">
         <h2>Share or report</h2>
         <div class="card-actions detail-actions">
@@ -841,6 +790,149 @@ function renderIssueDetail() {
       </div>
     </article>`;
 }
+
+
+function ensureResourcePreviewStyles() {
+  if (document.getElementById('resource-preview-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'resource-preview-styles';
+  style.textContent = `
+    .resource-preview-card {
+      display: grid;
+      grid-template-columns: minmax(90px, 150px) 1fr;
+      gap: 18px;
+      align-items: stretch;
+      border: 1px solid rgba(33, 63, 50, 0.22);
+      border-radius: 22px;
+      padding: 18px;
+      background: linear-gradient(135deg, #fffaf0 0%, #f4fbf7 100%);
+      box-shadow: 0 12px 28px rgba(18, 54, 45, 0.08);
+      text-decoration: none;
+      color: inherit;
+      margin: 18px 0 24px;
+    }
+
+    .resource-preview-card:hover,
+    .resource-preview-card:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 34px rgba(18, 54, 45, 0.12);
+      outline: 3px solid rgba(178, 128, 39, 0.25);
+      outline-offset: 3px;
+    }
+
+    .resource-preview-icon {
+      min-height: 120px;
+      border-radius: 18px;
+      background: #123f36;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      overflow: hidden;
+    }
+
+    .resource-preview-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .resource-preview-content {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .resource-preview-label {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #eaf4ef;
+      color: #123f36;
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    .resource-preview-title {
+      margin: 0;
+      color: #0d3b32;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .resource-preview-description {
+      margin: 0;
+      color: #28463f;
+      line-height: 1.45;
+    }
+
+    .resource-preview-url {
+      color: #6d4b10;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 680px) {
+      .resource-preview-card {
+        grid-template-columns: 1fr;
+      }
+
+      .resource-preview-icon {
+        min-height: 96px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function hostFromUrl(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch (error) {
+    return '';
+  }
+}
+
+function faviconForUrl(url) {
+  try {
+    const host = new URL(url).origin;
+    return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(host)}&sz=128`;
+  } catch (error) {
+    return '';
+  }
+}
+
+function resourcePreviewHtml(item, external) {
+  if (!external) return '';
+  ensureResourcePreviewStyles();
+
+  const title = item.Title || 'Open resource';
+  const description = previewText(item.Description || item.Category || 'Official or related resource listed on Tsitsalagi.com Community Board.', 170);
+  const host = hostFromUrl(external);
+  const favicon = faviconForUrl(external);
+  const initials = String(title || 'R').trim().slice(0, 2).toUpperCase();
+
+  return `<a class="resource-preview-card" href="${escapeHtml(external)}" target="_blank" rel="noopener" aria-label="Open ${escapeHtml(title)} official resource">
+    <div class="resource-preview-icon" aria-hidden="true">
+      ${favicon ? `<img src="${escapeHtml(favicon)}" alt="" loading="lazy" onerror="this.remove(); this.parentElement.textContent='${escapeHtml(initials)}';" />` : escapeHtml(initials)}
+    </div>
+    <div class="resource-preview-content">
+      <span class="resource-preview-label">Official resource</span>
+      <h2 class="resource-preview-title">${escapeHtml(title)}</h2>
+      <p class="resource-preview-description">${escapeHtml(description)}</p>
+      ${host ? `<span class="resource-preview-url">${escapeHtml(host)} ↗</span>` : ''}
+    </div>
+  </a>`;
+}
+
 
 function renderResourceDetail() {
   const box = document.getElementById('resource-detail');
@@ -861,6 +953,7 @@ function renderResourceDetail() {
         ${item.Area ? `<span class="pill">${escapeHtml(item.Area)}</span>` : ''}
       </div>
       <h1>${escapeHtml(item.Title)}</h1>
+      ${resourcePreviewHtml(item, external)}
       <div class="meta-list detail-meta">
         ${item.Tags ? `<span class="pill">${escapeHtml(item.Tags)}</span>` : ''}
         ${item.Updated || item.LastUpdated ? `<span class="pill">Updated ${escapeHtml(item.Updated || item.LastUpdated)}</span>` : ''}
@@ -884,7 +977,29 @@ function renderResourceDetail() {
     </article>`;
 }
 
+
+function ensureResourceCardButtonStyles() {
+  if (document.getElementById('resource-card-button-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'resource-card-button-styles';
+  style.textContent = `
+    .resource-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .resource-actions .resource-open-button {
+      text-decoration: none;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+
 function renderResources() {
+  ensureResourceCardButtonStyles();
   const grid = document.getElementById('resource-grid');
   const count = document.getElementById('resource-count');
   if (!grid) return;
@@ -929,7 +1044,7 @@ function renderResources() {
       <p>${escapeHtml(previewText(item.Description, 220))}</p>
       <div class="card-actions resource-actions">
         <a class="contact-link" href="${escapeHtml(detailUrl)}">Read full resource</a>
-        ${external ? `<a href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a>` : ''}
+        ${external ? `<a class="button primary resource-open-button" href="${escapeHtml(external)}" target="_blank" rel="noopener">Open resource</a>` : ''}
         ${shareButton('Share resource', item.Title || 'Tsitsalagi.com resource', 'Useful resource listed on Tsitsalagi.com Community Board.', `${window.location.origin}${detailUrl}`)}
         ${reportLink('resource', item.Title, detailUrl)}
       </div>
